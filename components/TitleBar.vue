@@ -4,7 +4,11 @@
       <div class="level-left">
         <div class="level-item">
           <ul>
-            <li v-for="(title, index) in titleStack" :key="index">
+            <li
+              v-for="(title, index) in titleStack"
+              :key="index"
+              class="is-capitalized"
+            >
               {{ title }}
             </li>
           </ul>
@@ -13,14 +17,10 @@
       <div class="level-right">
         <div class="level-item">
           <div class="buttons is-right">
-            <a
-              href="https://admin-null-nuxt.justboil.me/"
-              target="_blank"
-              class="button is-light"
-            >
-              <b-icon icon="credit-card" custom-size="default" />
-              <span>Premium Demo</span>
-            </a>
+            <b-button to="/" tag="nuxt-link" class="button is-dark">
+              <b-icon icon="desktop-mac" custom-size="default" />
+              <span>Dashboard</span>
+            </b-button>
           </div>
         </div>
       </div>

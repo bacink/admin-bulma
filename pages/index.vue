@@ -1,8 +1,13 @@
 <template>
   <div>
-    <title-bar :title-stack="titleStack" />
     <hero-bar :has-right-visible="false">
       Dashboard
+      <div class="container">
+        <p v-if="loggedIn">Hello {{ user.name }}</p>
+        <p v-if="!loggedIn">
+          Please sign in
+        </p>
+      </div>
     </hero-bar>
     <section class="section is-main-section">
       <tiles>
@@ -60,7 +65,6 @@
 <script>
 // @ is an alias to /src
 import * as chartConfig from '@/components/Charts/chart.config'
-import TitleBar from '@/components/TitleBar'
 import HeroBar from '@/components/HeroBar'
 import Tiles from '@/components/Tiles'
 import CardWidget from '@/components/CardWidget'
@@ -76,7 +80,6 @@ export default {
     CardWidget,
     Tiles,
     HeroBar,
-    TitleBar,
   },
   data() {
     return {
@@ -86,11 +89,7 @@ export default {
       },
     }
   },
-  computed: {
-    titleStack() {
-      return ['Admin', 'Dashboard']
-    },
-  },
+  computed: {},
   mounted() {
     this.fillChartData()
 
@@ -164,7 +163,7 @@ export default {
   },
   head() {
     return {
-      title: 'Dashboard — Admin Null Nuxt.js Bulma',
+      title: 'Dashboard — Siul Jafa',
     }
   },
 }

@@ -4,18 +4,19 @@
 /* Base: Size  */
 $size-base: 1rem;
 $default-padding: $size-base * 1.5;
-$pink: #eb8392;
+
 /* Default font */
 $family-sans-serif: 'Nunito', sans-serif;
 
 /* Base color */
 $base-color: #2e323a;
-$base-color-light: rgba(24, 28, 33, 0.06);
+$base-color-light: #ccd3d3;
+// $base-color-light: #f1f2f2;
 
 /* General overrides */
 $primary: $turquoise;
-$body-background-color: #f8f8f8;
-$link: $pink;
+$body-background-color: $white;
+$link: $blue;
 $link-visited: $purple;
 $light-border: 1px solid $base-color-light;
 $hr-height: 1px;
@@ -33,8 +34,8 @@ $navbar-dropdown-item-active-background-color: transparent;
 /* NavBar: specifics */
 $navbar-input-color: $grey-darker;
 $navbar-input-placeholder-color: $grey-lighter;
-$navbar-box-shadow: 0 1px 0 rgba(24, 28, 33, 0.04);
-$navbar-divider-border: 1px solid rgba($grey-lighter, 0.25);
+$navbar-box-shadow: 0 1px $base-color-light;
+$navbar-divider-border: 1px solid $base-color-light;
 $navbar-item-h-padding: $default-padding * 0.75;
 $navbar-avatar-size: 1.75rem;
 
@@ -42,11 +43,11 @@ $navbar-avatar-size: 1.75rem;
 $menu-item-radius: 0;
 $menu-list-link-padding: $size-base * 0.5 0;
 $menu-label-color: lighten($base-color, 25%);
-$menu-item-color: lighten($base-color, 30%);
-$menu-item-hover-color: $white;
-$menu-item-hover-background-color: darken($base-color, 3.5%);
-$menu-item-active-color: $white;
-$menu-item-active-background-color: darken($base-color, 2.5%);
+$menu-item-color: $link;
+$menu-item-hover-color: $black;
+$menu-item-hover-background-color: transparent;
+$menu-item-active-color: $black-ter;
+$menu-item-active-background-color: transparent;
 
 /* Aside: specifics */
 $aside-width: $size-base * 14;
@@ -54,22 +55,22 @@ $aside-mobile-width: $size-base * 15;
 $aside-icon-width: $size-base * 3;
 $aside-submenu-font-size: $size-base * 0.95;
 $aside-box-shadow: 1px 0 $base-color-light;
-$aside-background-color: $base-color;
-$aside-tools-background-color: darken($aside-background-color, 10%);
-$aside-tools-color: $white;
-$aside-dropdown-background-color: darken($aside-background-color, 10%);
+$aside-background-color: $white;
+$aside-tools-background-color: transparent;
+$aside-tools-color: $black-ter;
+$aside-dropdown-background-color: transparent;
 
 /* Title Bar: specifics */
 $title-bar-color: $grey;
 $title-bar-active-color: $black-ter;
 
 /* Hero Bar: specifics */
-$hero-bar-background: $white;
+$hero-bar-background: transparent;
 
 /* Card: Bulma override */
-$card-shadow: 0 1px 0 rgba(24, 28, 33, 0.04);
+$card-shadow: none;
 $card-header-shadow: none;
-$card-background-color: white;
+$card-background-color: transparent;
 
 /* Card: specifics */
 $card-border: 1px solid $base-color-light;

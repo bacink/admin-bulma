@@ -3,6 +3,7 @@ export const state = () => ({
   userName: null,
   userEmail: null,
   userAvatar: null,
+  userId: null,
 
   /* NavBar */
   isNavBarVisible: true,
@@ -17,6 +18,15 @@ export const state = () => ({
   /* Dark mode */
   isDarkModeActive: false,
 })
+
+export const getters = {
+  loggedIn(state) {
+    return state.auth.loggedIn
+  },
+  user(state) {
+    return state.auth.user
+  },
+}
 
 export const mutations = {
   /* A fit-them-all commit */
@@ -34,6 +44,9 @@ export const mutations = {
     }
     if (payload.avatar) {
       state.userAvatar = payload.avatar
+    }
+    if (payload.id) {
+      state.userId = payload.id
     }
   },
 

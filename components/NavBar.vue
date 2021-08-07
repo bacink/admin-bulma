@@ -8,9 +8,7 @@
         <b-icon :icon="menuToggleMobileIcon" />
       </a>
       <div class="navbar-item no-left-space-touch">
-        <div class="control">
-          <input class="input" placeholder="Search everywhere..." />
-        </div>
+        <div class="control"></div>
       </div>
     </div>
     <div class="navbar-brand is-right">
@@ -26,33 +24,6 @@
       :class="{ 'is-active': isMenuNavBarActive }"
     >
       <div class="navbar-end">
-        <nav-bar-menu class="has-divider">
-          <b-icon icon="menu" custom-size="default" />
-          <span>Sample Menu</span>
-          <div slot="dropdown" class="navbar-dropdown">
-            <nuxt-link
-              to="/profile"
-              class="navbar-item"
-              exact-active-class="is-active"
-            >
-              <b-icon icon="account" custom-size="default" />
-              <span>My Profile</span>
-            </nuxt-link>
-            <a class="navbar-item">
-              <b-icon icon="settings" custom-size="default" />
-              <span>Settings</span>
-            </a>
-            <a class="navbar-item">
-              <b-icon icon="email" custom-size="default" />
-              <span>Messages</span>
-            </a>
-            <hr class="navbar-divider" />
-            <a class="navbar-item">
-              <b-icon icon="logout" custom-size="default" />
-              <span>Log Out</span>
-            </a>
-          </div>
-        </nav-bar-menu>
         <nav-bar-menu class="has-divider has-user-avatar">
           <user-avatar />
           <div class="is-user-name">
@@ -78,7 +49,11 @@
             </a>
             <hr class="navbar-divider" />
             <a class="navbar-item">
-              <b-icon icon="logout" custom-size="default" />
+              <b-icon
+                icon="logout"
+                custom-size="default"
+                @click.prevent="logout"
+              />
               <span>Log Out</span>
             </a>
           </div>
@@ -92,19 +67,11 @@
           <span>Dark mode</span>
         </a>
         <a
-          href="https://justboil.me/bulma-admin-template/null-nuxt"
-          class="navbar-item has-divider is-desktop-icon-only"
-          title="About"
-        >
-          <b-icon icon="help-circle-outline" custom-size="default" />
-          <span>About</span>
-        </a>
-        <a
           class="navbar-item is-desktop-icon-only"
           title="Log out"
           @click="logout"
         >
-          <b-icon icon="logout" custom-size="default" />
+          <b-icon icon="logout" custom-size="default" @click.prevent="logout" />
           <span>Log out</span>
         </a>
       </div>
@@ -155,11 +122,12 @@ export default {
     darkModeToggle() {
       this.$store.commit('darkModeToggle')
     },
-    logout() {
+    async logout() {
       this.$buefy.snackbar.open({
         message: 'Log out clicked',
         queue: false,
       })
+      await this.$auth.logout()
     },
   },
 }

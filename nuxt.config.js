@@ -5,7 +5,7 @@ const routerBase =
   process.env.DEPLOY_ENV === 'GH_PAGES'
     ? {
         router: {
-          base: '/admin-null-nuxt/',
+          base: '/jafung/',
         },
       }
     : {}
@@ -19,7 +19,7 @@ export default {
    ** Nuxt rendering mode
    ** See https://nuxtjs.org/api/configuration-mode
    */
-  mode: 'universal',
+  ssr: false,
   /*
    ** Nuxt target
    ** See https://nuxtjs.org/api/configuration-target
@@ -68,7 +68,11 @@ export default {
    ** Plugins to load before mounting the App
    ** https://nuxtjs.org/guide/plugins
    */
-  plugins: [{ src: '~/plugins/after-each.js', mode: 'client' }],
+  plugins: [
+    { src: '~/plugins/after-each.js', mode: 'client' },
+    '~plugins/mixins/user.js',
+  ],
+
   /*
    ** Auto import components
    ** See https://nuxtjs.org/api/configuration-components
@@ -90,12 +94,41 @@ export default {
     // Doc: https://axios.nuxtjs.org/usage
     '@nuxtjs/axios',
     '@nuxtjs/pwa',
+    '@nuxtjs/auth',
   ],
   /*
    ** Axios module configuration
    ** See https://axios.nuxtjs.org/options
    */
-  axios: {},
+  axios: {
+    baseURL: 'https://backend.jafung.test/api',
+    proxyHeaders: false,
+    credentials: false,
+  },
+  auth: {
+    strategies: {
+      local: {
+        endpoints: {
+          login: {
+            url: 'auth/login',
+            method: 'post',
+            propertyName: 'access_token',
+          },
+          user: { url: 'auth/user-profile', method: 'get', propertyName: null },
+          logout: { url: 'auth/logout', method: 'post' },
+        },
+      },
+    },
+    redirect: {
+      login: '/login',
+      logout: '/login',
+      callback: '/login',
+      home: '/',
+    },
+  },
+  router: {
+    middleware: ['auth'],
+  },
   /*
    ** Build configuration
    ** See https://nuxtjs.org/api/configuration-build/

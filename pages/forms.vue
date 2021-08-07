@@ -1,6 +1,5 @@
 <template>
   <div>
-    <title-bar :title-stack="titleStack" />
     <hero-bar>
       Forms
       <nuxt-link slot="right" to="/" class="button">
@@ -126,7 +125,6 @@
 
 <script>
 import mapValues from 'lodash/mapValues'
-import TitleBar from '@/components/TitleBar'
 import CardComponent from '@/components/CardComponent'
 import CheckboxPicker from '@/components/CheckboxPicker'
 import RadioPicker from '@/components/RadioPicker'
@@ -140,7 +138,6 @@ export default {
     RadioPicker,
     CheckboxPicker,
     CardComponent,
-    TitleBar,
   },
   data() {
     return {
@@ -162,11 +159,7 @@ export default {
       departments: ['Business Development', 'Marketing', 'Sales'],
     }
   },
-  computed: {
-    titleStack() {
-      return ['Admin', 'Forms']
-    },
-  },
+  computed: {},
   methods: {
     submit() {},
     reset() {

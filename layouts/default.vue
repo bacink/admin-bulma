@@ -2,6 +2,7 @@
   <div id="app">
     <nav-bar />
     <aside-menu :menu="menu" @menu-click="menuClick" />
+    <title-bar :title-stack="titleStack" />
     <nuxt />
     <footer-bar />
   </div>
@@ -12,86 +13,27 @@
 import NavBar from '@/components/NavBar'
 import AsideMenu from '@/components/AsideMenu'
 import FooterBar from '@/components/FooterBar'
-
+import menu from '@/components/DataSet/menu'
+import TitleBar from '@/components/TitleBar'
 export default {
   name: 'App',
   components: {
     FooterBar,
     AsideMenu,
     NavBar,
+    TitleBar,
   },
   computed: {
     menu() {
-      return [
-        'General',
-        [
-          {
-            to: '/',
-            icon: 'desktop-mac',
-            label: 'Dashboard',
-          },
-        ],
-        'Examples',
-        [
-          {
-            action: 'dark-mode-toggle',
-            label: 'Dark / White',
-            icon: 'weather-night',
-          },
-          {
-            to: '/tables',
-            label: 'Tables',
-            icon: 'table',
-            updateMark: true,
-          },
-          {
-            to: '/forms',
-            label: 'Forms',
-            icon: 'square-edit-outline',
-          },
-          {
-            to: '/profile',
-            label: 'Profile',
-            icon: 'account-circle',
-          },
-          {
-            label: 'Submenus',
-            subLabel: 'Submenus Example',
-            icon: 'view-list',
-            menu: [
-              {
-                href: '#void',
-                label: 'Sub-item One',
-              },
-              {
-                href: '#void',
-                label: 'Sub-item Two',
-              },
-            ],
-          },
-        ],
-        'About',
-        [
-          {
-            href: 'https://admin-null-nuxt.justboil.me',
-            label: 'Premium Demo',
-            icon: 'credit-card',
-          },
-          {
-            href: 'https://justboil.me/bulma-admin-template/null-nuxt',
-            label: 'About',
-            icon: 'help-circle',
-          },
-        ],
-      ]
+      return menu
+    },
+    titleStack() {
+      const text = this.$route.name.split('-').join(' ')
+      return ['Admin', text]
     },
   },
   created() {
-    this.$store.commit('user', {
-      name: 'John Doe',
-      email: 'john@example.com',
-      avatar: 'https://avatars.dicebear.com/v2/gridy/John-Doe.svg',
-    })
+    this.$store.commit('user', this.user)
   },
   mounted() {
     document.documentElement.classList.add('has-aside-left')
