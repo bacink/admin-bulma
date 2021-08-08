@@ -1,25 +1,38 @@
 <template>
   <section>
-    <div v-for="(item, index) in syaratPengajuan" :key="index">
-      <b-field label="Separated filename">
-        <b-field class="file is-primary" :class="{ 'has-name': !!item[index] }">
-          <b-upload
-            v-model="item[index]"
-            class="file-label"
-            expanded
-            @input="handleUpload"
-          >
+    <nav class="panel">
+      <div class="panel-block">
+        <span class="panel-icon">
+          <b-icon icon="book" size="is-small"> </b-icon>
+        </span>
+        Surat Pengantar dari OPD
+        <div class="file is-small has-name">
+          <label class="file-label">
+            <input
+              class="file-input"
+              @change="uploadFile"
+              type="file"
+              name="file"
+            />
             <span class="file-cta">
-              <b-icon class="file-icon" icon="upload"></b-icon>
-              <span class="file-label">Click to upload</span>
+              <span class="file-icon">
+                <i class="fas fa-upload"></i>
+              </span>
+              <span class="file-label">
+                Small file…
+              </span>
             </span>
-            <span class="file-name" v-if="item[index]">
-              {{ item[index].name }}
+            <span class="file-name">
+              <div v-if="files">
+                <div v-for="(item, index) in files" :key="index">
+                  {{ item.name }}{{ item.id }}
+                </div>
+              </div>
             </span>
-          </b-upload>
-        </b-field>
-      </b-field>
-    </div>
+          </label>
+        </div>
+      </div>
+    </nav>
   </section>
 </template>
 <script>
@@ -29,6 +42,7 @@ export default {
       syaratPengajuan: null,
       idPengajuan: null,
       idSyaratPengajuan: null,
+      files: null,
     }
   },
   mounted() {
@@ -49,9 +63,16 @@ export default {
       })
   },
   methods: {
+    uploadFile(event) {
+      console.log(event.target)
+    },
     handleUpload() {
       this.$axios
-        .$post('/dokumen', this.formData)
+        .$post('/dokumen/', this.formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        })
         .then((resp) => {
           if (resp.success) {
             this.isLoading = false

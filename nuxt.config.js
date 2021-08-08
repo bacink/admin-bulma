@@ -101,7 +101,7 @@ export default {
    ** See https://axios.nuxtjs.org/options
    */
   axios: {
-    baseURL: 'https://backend.jafung.test/api',
+    baseURL: 'https://api.jafung.test/api',
     proxyHeaders: false,
     credentials: false,
   },
