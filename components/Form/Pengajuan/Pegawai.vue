@@ -82,7 +82,7 @@
               :loading="isLoading"
               native-type="submit"
             >
-              Submit
+              Lanjut
             </b-button>
           </b-field>
         </div>

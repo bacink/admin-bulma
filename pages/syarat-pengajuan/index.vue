@@ -1,5 +1,3 @@
 <template>
-  <div>
-    syarat pengajuan
-  </div>
+  <div>syarat pengajuan</div>
 </template>

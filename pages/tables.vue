@@ -2,9 +2,7 @@
   <div>
     <hero-bar>
       Tables
-      <nuxt-link slot="right" to="/" class="button">
-        Dashboard
-      </nuxt-link>
+      <nuxt-link slot="right" to="/" class="button"> Dashboard </nuxt-link>
     </hero-bar>
     <section class="section is-main-section">
       <notification class="is-info">

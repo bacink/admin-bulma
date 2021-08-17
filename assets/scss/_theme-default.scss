@@ -84,9 +84,10 @@ $table-avatar-size-mobile: 25vw;
 
 /* Form */
 $checkbox-border: 1px solid $base-color;
-
+$scheme-invert: $black;
 /* Overlay: specifics */
-$overlay-background-color: rgba($white, 0.85);
+// $overlay-background-color: rgba($white, 0.85);
+$overlay-background-color: bulmaRgba($scheme-invert, 0.86);
 
 /* Modal card: Bulma override */
 $modal-z: 60;

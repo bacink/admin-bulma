@@ -4,9 +4,7 @@
       Dashboard
       <div class="container">
         <p v-if="loggedIn">Hello {{ user.name }}</p>
-        <p v-if="!loggedIn">
-          Please sign in
-        </p>
+        <p v-if="!loggedIn">Please sign in</p>
       </div>
     </hero-bar>
     <section class="section is-main-section">
@@ -45,7 +43,7 @@
         <div v-if="defaultChart.chartData" class="chart-area">
           <line-chart
             ref="bigChart"
-            style="height: 100%;"
+            style="height: 100%"
             chart-id="big-line-chart"
             :chart-data="defaultChart.chartData"
             :extra-options="defaultChart.extraOptions"
