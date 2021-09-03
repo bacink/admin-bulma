@@ -3,13 +3,24 @@
     <form name="formData" @submit.prevent="submit">
       <div class="columns is-desktop">
         <div class="column">
-          <b-field label="Cari Pegawai">
-            <AcPegawai
-              v-model="formData.pegawai"
-              :required="true"
-              @input="getJabatan"
-            />
-          </b-field>
+          <div v-if="isRoleUser">
+            <b-field label="Detail Pegawai">
+              <b-input
+                v-model="formData.pegawai"
+                custom-class="is-static"
+                readonly
+              />
+            </b-field>
+          </div>
+          <div v-else>
+            <b-field label="Cari Pegawai">
+              <AcPegawai
+                v-model="formData.pegawai"
+                :required="true"
+                @input="getJabatan"
+              />
+            </b-field>
+          </div>
 
           <div v-if="animated">
             <b-skeleton :animated="animated"></b-skeleton>
@@ -100,6 +111,7 @@ export default {
   components: { AcPegawai, AcSkpd, AcUnitKerja, AcJabatan },
   data() {
     return {
+      isRoleUser: false,
       formData: {
         status: 'form',
         jabatan_lama: null,
@@ -136,6 +148,21 @@ export default {
     'formData.unit_kerja'() {
       this.formData.karir_baru.jabatan = null
     },
+  },
+  created() {
+    const role = this.$auth.user.role.nama.toLowerCase()
+    const user = this.$auth.user
+    if (role === 'user') {
+      this.isRoleUser = true
+    }
+
+    if (this.isRoleUser) {
+      this.formData.pegawai = user.pegawai.nama_lengkap
+      this.formData.nip = user.pegawai.nip
+      this.formData.id_pegawai = user.pegawai.id
+      this.getJabatanAktif(user.pegawai.id)
+      this.getGolonganAktif(user.pegawai.id)
+    }
   },
   methods: {
     getJabatanBaru(payload, payload2) {

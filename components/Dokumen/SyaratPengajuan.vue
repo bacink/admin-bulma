@@ -1,11 +1,7 @@
 <template>
-  <div>
-    <div class="modal-card" style="width: auto">
-      <header class="modal-card-head">
-        <p class="modal-card-title">Dokumen</p>
-        <button type="button" class="delete" @click="$emit('close')" />
-      </header>
-      <section class="modal-card-body section">
+  <div v-if="dokumen">
+    <div v-for="(item, index) in dokumen" :key="index">
+      <b-card :title="item.syarat_pengajuan.nama">
         <div class="columns is-centered">
           <div class="column is-half box">
             <b-field class="grouped group-multiline">
@@ -47,7 +43,7 @@
             <pdf-viewer
               ref="pdf"
               style="border: 1px solid red"
-              :src="`https://api.jafung.test/api/dokumen/pdf/${idDokumen}`"
+              :src="`https://api.jafung.test/api/dokumen/pdf/${item.id}`"
               :page="page"
               :rotate="rotate"
               @progress="loadedRatio = $event"
@@ -56,24 +52,20 @@
             ></pdf-viewer>
           </div>
         </div>
-      </section>
-      <footer class="modal-card-foot">
-        <b-button label="Close" @click="$emit('close')" />
-      </footer>
+      </b-card>
+      <hr />
     </div>
   </div>
 </template>
+
 <script>
 import pdfViewer from 'vue-pdf'
-
 export default {
-  components: {
-    pdfViewer,
-  },
+  components: { pdfViewer },
   props: {
-    idDokumen: {
-      type: Number,
-      default: 0,
+    dokumen: {
+      type: Array,
+      default: null,
     },
   },
   data() {
@@ -92,6 +84,8 @@ export default {
       if (val === this.numPages) {
         return (this.disabled_plus = true)
       } else if (val === 1) {
+        alert(this.numPages)
+
         return (this.disabled_min = true)
       } else {
         this.disabled_min = false

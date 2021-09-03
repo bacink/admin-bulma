@@ -2,7 +2,7 @@
   <section class="hero is-fullheight">
     <div class="hero-body has-text-centered">
       <div class="login">
-        <img src="https://logoipsum.com/logo/logo-1.svg" width="325px" />
+        <img src="/logoipsum.svg" width="325px" />
         <form @submit.prevent="addUser">
           <div class="field">
             <div class="control">

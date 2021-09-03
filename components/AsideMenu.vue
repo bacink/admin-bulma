@@ -5,8 +5,12 @@
     </aside-tools>
     <div class="menu is-menu-main">
       <template v-for="(menuGroup, index) in menu">
-        <p v-if="typeof menuGroup === 'string'" :key="index" class="menu-label">
-          {{ menuGroup }}
+        <p
+          v-if="menuGroup.type === 'group' && allowed(menuGroup.role)"
+          :key="index"
+          class="menu-label"
+        >
+          {{ menuGroup.label }}
         </p>
         <aside-menu-list
           v-else
@@ -29,8 +33,8 @@ export default {
   components: { AsideTools, AsideMenuList },
   props: {
     menu: {
-      type: Array,
-      default: () => [],
+      type: [Object, Array],
+      default: null,
     },
   },
   computed: {
@@ -39,6 +43,12 @@ export default {
   methods: {
     menuClick(item) {
       this.$emit('menu-click', item)
+    },
+    allowed(role) {
+      if (role) {
+        return role.split(',').includes(this.$auth.user.role.nama.toLowerCase())
+      }
+      return true
     },
   },
 }

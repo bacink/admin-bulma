@@ -27,7 +27,10 @@
         <nav-bar-menu class="has-divider has-user-avatar">
           <user-avatar />
           <div class="is-user-name">
-            <span>{{ userName }}</span>
+            <span
+              >{{ userName }},
+              <span class="tag is-primary">{{ role }}</span></span
+            >
           </div>
 
           <div slot="dropdown" class="navbar-dropdown">
@@ -47,15 +50,6 @@
               <b-icon icon="email" custom-size="default" />
               <span>Messages</span>
             </a>
-            <hr class="navbar-divider" />
-            <a class="navbar-item">
-              <b-icon
-                icon="logout"
-                custom-size="default"
-                @click.prevent="logout"
-              />
-              <span>Log Out</span>
-            </a>
           </div>
         </nav-bar-menu>
         <a
@@ -69,7 +63,7 @@
         <a
           class="navbar-item is-desktop-icon-only"
           title="Log out"
-          @click="logout"
+          @click.prevent="logout"
         >
           <b-icon icon="logout" custom-size="default" @click.prevent="logout" />
           <span>Log out</span>
@@ -110,6 +104,7 @@ export default {
       'isAsideMobileExpanded',
       'isDarkModeActive',
       'userName',
+      'role',
     ]),
   },
   methods: {

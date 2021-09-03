@@ -4,13 +4,16 @@
 const routerBase =
   process.env.DEPLOY_ENV === 'GH_PAGES'
     ? {
-        router: {
-          base: '/jafung/',
-        },
-      }
+      router: {
+        base: '/jafung/',
+      },
+    }
     : {}
 
 export default {
+  static: {
+    prefix: false
+  },
   /*
    ** Concat router base setting
    */
@@ -71,6 +74,7 @@ export default {
   plugins: [
     { src: '~/plugins/after-each.js', mode: 'client' },
     '~plugins/mixins/user.js',
+    '~plugins/buefyComponents.js',
   ],
 
   /*
@@ -114,7 +118,7 @@ export default {
             method: 'post',
             propertyName: 'access_token',
           },
-          user: { url: 'auth/user-profile', method: 'get', propertyName: null },
+          user: { url: 'auth/user-profile', method: 'get', propertyName: 'data' },
           logout: { url: 'auth/logout', method: 'post' },
         },
       },

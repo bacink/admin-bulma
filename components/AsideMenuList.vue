@@ -23,8 +23,8 @@ export default {
       default: false,
     },
     menu: {
-      type: Array,
-      default: () => [],
+      type: [Object, Array],
+      default: null,
     },
   },
   methods: {

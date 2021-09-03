@@ -54,21 +54,21 @@ export default {
           icon: 'account-key',
           title: 'Identitas Pegawai',
           type: 'is-success',
-          value: 1,
+          value: '1',
         },
         {
           label: 'Upload Berkas Persyaratan',
           icon: 'upload',
           title: 'Upload Berkas',
           type: 'is-primary',
-          value: 2,
+          value: '2',
         },
         {
           label: 'Selesai',
           icon: 'certificate',
           title: 'Selesai',
           type: 'is-success',
-          value: 3,
+          value: '3',
         },
       ],
     }
@@ -80,23 +80,17 @@ export default {
   },
   methods: {
     cekStep(id) {
-      this.$axios
-        .$get(`/pengajuan/${id}`)
-        .then((resp) => {
-          if (resp.success) {
-            const data = resp.data
-            if (data.status === 'form') {
-              this.activeStep = 2
-            }
+      this.$axios.$get(`/pengajuan/cekStep/${id}`).then((resp) => {
+        if (resp.success) {
+          const data = resp.data
+          if (data.status === 'form') {
+            this.activeStep = 2
           }
-        })
-        .catch((err) => {
-          this.$buefy.toast.open({
-            message: `Error: ${err.response.data.message}`,
-            type: 'is-danger',
-            queue: false,
-          })
-        })
+        }
+      })
+      /*  .catch((err) => {
+          console.error(err)
+        }) */
     },
   },
 }

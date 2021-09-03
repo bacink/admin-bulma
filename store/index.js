@@ -4,6 +4,8 @@ export const state = () => ({
   userEmail: null,
   userAvatar: null,
   userId: null,
+  roleId: null,
+  role: null,
 
   /* NavBar */
   isNavBarVisible: true,
@@ -47,6 +49,12 @@ export const mutations = {
     }
     if (payload.id) {
       state.userId = payload.id
+    }
+    if (payload.role) {
+      state.role = payload.role.nama
+    }
+    if (payload.id_role) {
+      state.roleId = payload.id_role
     }
   },
 

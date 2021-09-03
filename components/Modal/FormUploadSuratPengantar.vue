@@ -2,12 +2,11 @@
   <form @submit.prevent="submit">
     <div class="modal-card" style="width: auto">
       <header class="modal-card-head">
-        <p class="modal-card-title">Form Upload</p>
+        <p class="modal-card-title">Form Upload Surat Pengantar</p>
         <button type="button" class="delete" @click="$emit('close')" />
       </header>
       <section class="modal-card-body">
         <b-input type="hidden" :value="idPengajuan" required> </b-input>
-        <b-input type="hidden" :value="idSyaratPengajuan" required> </b-input>
         <b-field class="file">
           <b-upload v-model="file" expanded>
             <a class="button is-warning is-fullwidth">
@@ -55,7 +54,6 @@ export default {
     return {
       file: {},
       isLoading: false,
-      isFullPage: true,
     }
   },
   methods: {
@@ -64,7 +62,6 @@ export default {
       this.isLoading = true
       formData.append('file', this.file)
       formData.append('id_pengajuan', this.idPengajuan)
-      formData.append('id_syarat_pengajuan', this.idSyaratPengajuan)
 
       this.$axios
         .post(`/dokumen`, formData, {
@@ -74,9 +71,10 @@ export default {
         })
         .then((r) => {
           this.$buefy.toast.open({
-            message: `Success: ${r.data.message}`,
+            message: `Error: ${r.data.message}`,
             type: 'is-success',
           })
+          this.$router.go() // Refreshes page
           this.isLoading = false
           this.$parent.close()
         })

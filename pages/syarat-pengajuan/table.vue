@@ -4,27 +4,27 @@
       <section class="section is-main-section">
         <b-card
           class="has-table has-mobile-sort-spaced is-primary"
-          title="Data Pengajuan"
+          title="Data Syarat Pengajuan"
           header-icon="plus-box"
           @header-icon-click="addData"
         >
-          <PengajuanTable />
+          <SyaratPengajuan />
         </b-card>
       </section>
     </div>
   </section>
 </template>
 <script>
-import PengajuanTable from '@/components/Table/Pengajuan'
+import SyaratPengajuan from '@/components/Table/SyaratPengajuan'
 
 export default {
-  components: { PengajuanTable },
+  components: { SyaratPengajuan },
   data() {
     return {}
   },
   methods: {
     addData() {
-      this.$router.push('pengajuan/')
+      this.$router.push({ name: 'syarat-pengajuan-id' })
     },
   },
 }

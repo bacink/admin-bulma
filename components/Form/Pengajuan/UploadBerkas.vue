@@ -58,6 +58,11 @@
           </b-field>
         </form>
       </section>
+      <b-loading
+        v-model="isLoading"
+        :is-full-page="isFullPage"
+        :can-cancel="true"
+      ></b-loading>
     </div>
   </section>
 </template>
@@ -71,8 +76,9 @@ export default {
       isLoading: false,
       syaratPengajuan: null,
       dokumenPengajuan: null,
-      idPengajuan: this.$route.params.id,
+      idPengajuan: parseInt(this.$route.params.id),
       isComponentModalActive: false,
+      isFullPage: true,
     }
   },
   computed: {},
@@ -82,22 +88,19 @@ export default {
   },
   methods: {
     cardModal(x) {
-      this.$buefy.modal.open({
+      const modal = this.$buefy.modal.open({
         parent: this,
         component: ModalForm,
         hasModalCard: true,
         customClass: 'custom-class custom-class-2',
         trapFocus: true,
         props: {
-          idSyaratPengajuan: {
-            type: Number,
-            default: x,
-          },
-          idPengajuan: {
-            type: Number,
-            default: this.idPengajuan,
-          },
+          idSyaratPengajuan: x,
+          idPengajuan: this.idPengajuan,
         },
+      })
+      modal.$on('close', () => {
+        this.fetchdokumenPengajuan()
       })
     },
     pdfModal(x) {
@@ -107,58 +110,34 @@ export default {
         fullScreen: true,
         hasModalCard: true,
         props: {
-          idDokumen: {
-            type: Number,
-            default: x,
-          },
+          idDokumen: x,
         },
       })
     },
     fetchSyaratPengajuan() {
-      this.$axios
-        .$get(`/syarat_pengajuan/`)
-        .then((resp) => {
-          if (resp.success) {
-            const data = resp.data
-            this.syaratPengajuan = data.data
-          }
-        })
-        .catch((err) => {
-          this.$buefy.toast.open({
-            duration: 5000,
-            message: `Something's not good, ${err}`,
-            position: 'is-bottom',
-            type: 'is-danger',
-          })
-        })
+      this.$axios.$get(`/syarat_pengajuan/`).then((resp) => {
+        if (resp.success) {
+          const data = resp.data
+          this.syaratPengajuan = data.data
+        }
+      })
     },
     fetchdokumenPengajuan() {
-      this.$axios
-        .$get(`/dokumen/${this.idPengajuan}`)
-        .then((resp) => {
-          if (resp.success) {
-            const data = resp.data
-            this.dokumenPengajuan = data
-          }
-        })
-        .catch((err) => {
-          this.$buefy.toast.open({
-            duration: 5000,
-            message: `Something's not good, ${err}`,
-            position: 'is-bottom',
-            type: 'is-danger',
-          })
-        })
+      this.$axios.$get(`/dokumen/${this.idPengajuan}`).then((resp) => {
+        if (resp.success) {
+          const data = resp.data
+          this.dokumenPengajuan = data
+        }
+      })
     },
     submit() {
       this.isLoading = true
       this.$axios
-        .patch('/pengajuan', {
+        .post('/pengajuan/form_step', {
           id_pengajuan: this.idPengajuan,
           status: 'diajukan',
         })
         .then((resp) => {
-          console.log(resp)
           if (resp.data.success) {
             this.isLoading = false
             this.$buefy.toast.open({
@@ -172,7 +151,7 @@ export default {
         .catch((err) => {
           this.isLoading = false
           this.$buefy.toast.open({
-            message: `Error: ${err.message}`,
+            message: `Error: ${err.response.data.message}`,
             type: 'is-danger',
             queue: false,
           })

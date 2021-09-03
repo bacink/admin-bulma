@@ -1,5 +1,5 @@
 <template>
-  <li :class="{ 'is-active': isDropdownActive }">
+  <li v-if="allowed(item.role)" :class="{ 'is-active': isDropdownActive }">
     <component
       :is="componentIs"
       :to="itemTo"
@@ -37,7 +37,7 @@ export default {
   },
   props: {
     item: {
-      type: Object,
+      type: [Object, String],
       default: null,
     },
   },
@@ -70,6 +70,12 @@ export default {
       if (this.hasDropdown) {
         this.isDropdownActive = !this.isDropdownActive
       }
+    },
+    allowed(role) {
+      if (role) {
+        return role.split(',').includes(this.$auth.user.role.nama.toLowerCase())
+      }
+      return true
     },
   },
 }

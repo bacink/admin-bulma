@@ -126,7 +126,7 @@ export default {
                 'MMM D, YYYY'
               )
             } else {
-              this.$router.push({ name: 'jenis-jafung.new' })
+              this.$router.push({ name: 'jenis-jafung' })
             }
           })
           .catch((e) => {

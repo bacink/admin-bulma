@@ -1,132 +1,256 @@
 <template>
-  <div id="app" class="container">
-    <section>
-      <b-table
-        :data="data"
-        :loading="loading"
-        paginated
-        backend-pagination
-        :total="total"
-        :per-page="perPage"
-        @page-change="onPageChange"
-        aria-next-label="Next page"
-        aria-previous-label="Previous page"
-        aria-page-label="Page"
-        aria-current-label="Current page"
-        backend-sorting
-        :default-sort-direction="defaultSortOrder"
-        :default-sort="[sortField, sortOrder]"
-        @sort="onSort"
+  <section>
+    <div class="container">
+      <b-field>
+        <p class="control">
+          <b-select v-model="perPage">
+            <option value="5">5 per page</option>
+            <option value="10">10 per page</option>
+            <option value="15">15 per page</option>
+            <option value="20">20 per page</option>
+          </b-select>
+        </p>
+        <b-input
+          placeholder="Search..."
+          type="search"
+          icon="magnify"
+          icon-clickable
+          expanded
+          v-model="search"
+          @input="onSearch"
+        ></b-input>
+      </b-field>
+    </div>
+    <hr />
+    <b-table
+      aria-next-label="Next page"
+      aria-previous-label="Previous page"
+      aria-page-label="Page"
+      aria-current-label="Current page"
+      :loading="loading"
+      :data="isEmpty ? [] : data"
+      :total="total"
+      :per-page="perPage"
+      :opened-detailed="defaultOpenedDetails"
+      :detail-transition="useTransition"
+      :show-detail-icon="showDetailIcon"
+      :default-sort="[sortField, sortOrder]"
+      :default-sort-direction="defaultSortOrder"
+      :sort-icon="sortIcon"
+      :sort-icon-size="sortIconSize"
+      :narrowed="isNarrowed"
+      :striped="isStriped"
+      :mobile-cards="hasMobileCards"
+      paginated
+      backend-pagination
+      backend-sorting
+      detailed
+      detail-key="id"
+      @page-change="onPageChange"
+      @details-open="
+        (row) =>
+          $buefy.toast.open(`Detail Pegawai: ${row.pegawai.nama_lengkap}`)
+      "
+      @sort="onSort"
+    >
+      <b-table-column v-slot="props" field="nip" label="NIP" sortable>
+        {{ props.row.pegawai.nip }}
+      </b-table-column>
+      <b-table-column v-slot="props" field="nama" label="Nama" sortable>
+        {{ props.row.pegawai.nama_lengkap }}
+      </b-table-column>
+      <b-table-column
+        v-slot="props"
+        field="jabatan_lama"
+        label="Jabatan"
+        sortable
       >
-        <b-table-column
-          field="original_title"
-          label="Title"
-          sortable
-          v-slot="props"
-        >
-          {{ props.row.original_title }}
-        </b-table-column>
-
-        <b-table-column
-          field="vote_average"
-          label="Vote Average"
-          numeric
-          sortable
-          v-slot="props"
-        >
-          <span class="tag" :class="type(props.row.vote_average)">
-            {{ props.row.vote_average }}
+        {{ props.row.jabatan_lama.jabatan.nama }}
+        <b-taglist>
+          <b-tag type="is-info">
+            {{ props.row.jabatan_lama.jabatan.unit_kerja.nama_lengkap }}
+          </b-tag>
+          <b-tag type="is-success">
+            {{ props.row.jabatan_lama.jabatan.skpd.nama }}
+          </b-tag>
+        </b-taglist>
+      </b-table-column>
+      <b-table-column
+        v-slot="props"
+        field="jabatan_baru"
+        label="Jabatan Yang dilamar"
+        sortable
+      >
+        {{ props.row.jabatan_baru.nama_lengkap }}
+        <b-taglist>
+          <b-tag type="is-info">
+            {{ props.row.jabatan_baru.unit_kerja.nama }}
+          </b-tag>
+          <b-tag type="is-success">
+            {{ props.row.jabatan_baru.skpd.nama }}
+          </b-tag>
+        </b-taglist>
+      </b-table-column>
+      <b-table-column
+        v-slot="props"
+        field="status"
+        label="Status Pengajuan"
+        sortable
+        centered
+      >
+        <div v-if="props.row.status === 'diajukan'">
+          <span class="tag is-warning"> Menunggu verifikasi skpd </span>
+        </div>
+        <div v-else>
+          <span class="tag is-primary">
+            {{ props.row.status }}
           </span>
-        </b-table-column>
+        </div>
+      </b-table-column>
 
-        <b-table-column
-          field="vote_count"
-          label="Vote Count"
-          numeric
-          sortable
-          v-slot="props"
-        >
-          {{ props.row.vote_count }}
-        </b-table-column>
-
-        <b-table-column
-          field="release_date"
-          label="Release Date"
-          sortable
-          centered
-          v-slot="props"
-        >
-          {{
-            props.row.release_date
-              ? new Date(props.row.release_date).toLocaleDateString()
-              : 'unknown'
-          }}
-        </b-table-column>
-
-        <b-table-column label="Overview" width="500" v-slot="props">
-          {{ props.row.overview | truncate(80) }}
-        </b-table-column>
-      </b-table>
-    </section>
-  </div>
+      <b-table-column field="opsi" label="opsi" sortable centered>
+        <template v-slot:header="">
+          <b-icon icon="cogs"></b-icon>
+        </template>
+        <template v-slot="props">
+          <div v-if="isSkpd">
+            <div v-if="props.row.status === 'diverifikasi_skpd'">
+              <b-button
+                class="is-small is-primary"
+                icon-left="upload"
+                @click="cardModal(props.row.id)"
+              >
+                Upload Surat Pengantar
+              </b-button>
+            </div>
+            <div v-else-if="props.row.status === 'diajukan'">
+              <b-button
+                tag="router-link"
+                :to="`/pengajuan/verifikasi/${props.row.id}`"
+                type="is-info"
+              >
+                Verifikasi
+              </b-button>
+            </div>
+          </div>
+        </template>
+      </b-table-column>
+      <template #empty>
+        <div class="has-text-centered">No records</div>
+      </template>
+      <template #detail="props">
+        <article class="media">
+          <div class="media-content">
+            <div class="content">
+              <strong> Detail Pegawai </strong>
+              <ul>
+                <li>Pangkat: {{ props.row.golongan.referensi.pangkat }}</li>
+                <li>Golongan: {{ props.row.golongan.referensi.golongan }}</li>
+              </ul>
+            </div>
+          </div>
+        </article>
+      </template>
+    </b-table>
+  </section>
 </template>
 <script>
+import ModalForm from '@/components/Modal/FormUploadSuratPengantar.vue'
+
 export default {
+  filters: {
+    /**
+     * Filter to truncate string, accepts a length parameter
+     */
+    truncate(value, length) {
+      return value.length > length ? value.substr(0, length) + '...' : value
+    },
+  },
   data() {
     return {
       data: [],
       total: 0,
       loading: false,
-      sortField: 'vote_count',
+      sortField: 'id_pegawai',
       sortOrder: 'desc',
+      sortIcon: 'arrow-up',
+      sortIconSize: 'is-small',
+      isNarrowed: true,
+      isStriped: true,
+      isEmpty: true,
+      hasMobileCards: true,
       defaultSortOrder: 'desc',
+      defaultOpenedDetails: [1],
+      showDetailIcon: true,
+      useTransition: 'fade',
       page: 1,
       perPage: 20,
+      isPegawai: false,
+      isSkpd: false,
+      isBkpsdm: false,
+      isAnalis: false,
+      param: null,
     }
   },
   mounted() {
-    this.loadAsyncData()
+    const CurrentRole = this.$auth.user.role.nama.toLowerCase()
+    if (CurrentRole === 'user') {
+      this.isPegawai = true
+      this.param = 'user'
+    } else if (CurrentRole === 'admin bkpsdm') {
+      this.isBkpsdm = true
+      this.param = 'bkpsdm'
+    } else if (CurrentRole === 'admin skpd') {
+      this.isSkpd = true
+      this.param = 'skpd'
+    } else if (CurrentRole === 'analis jabatan') {
+      this.isAnalis = true
+      this.param = 'analis'
+    }
+
+    this.loadAsyncData(this.param)
   },
   methods: {
     /*
      * Load async data
      */
-    loadAsyncData() {
-      const params = [
-        'api_key=bb6f51bef07465653c3e553d6ab161a8',
-        'language=en-US',
-        'include_adult=false',
-        'include_video=false',
-        `sort_by=${this.sortField}.${this.sortOrder}`,
-        `page=${this.page}`,
-      ].join('&')
-
+    loadAsyncData(parameter) {
       this.loading = true
       this.$axios
-        .get(`https://api.themoviedb.org/3/discover/movie?${params}`)
+        .get(`/pengajuan/${parameter}`)
         .then(({ data }) => {
           // api.themoviedb.org manage max 1000 pages
           this.data = []
-          let currentTotal = data.total_results
-          if (data.total_results / this.perPage > 1000) {
+          let currentTotal = data.meta.total
+          if (data.meta.total / this.perPage > 1000) {
             currentTotal = this.perPage * 1000
           }
           this.total = currentTotal
-          data.results.forEach((item) => {
-            item.release_date = item.release_date
-              ? item.release_date.replace(/-/g, '/')
-              : null
+          data.data.forEach((item) => {
             this.data.push(item)
           })
-          console.log(this.data)
+          this.total > 0 ? (this.isEmpty = false) : (this.isEmpty = true)
           this.loading = false
         })
         .catch((error) => {
           this.data = []
           this.total = 0
           this.loading = false
+          this.isEmpty = true
           throw error
         })
+    },
+    cardModal(x) {
+      this.$buefy.modal.open({
+        parent: this,
+        component: ModalForm,
+        hasModalCard: true,
+        customClass: 'custom-class custom-class-2',
+        trapFocus: true,
+        props: {
+          idPengajuan: x,
+        },
+      })
     },
     /*
      * Handle page-change event
@@ -155,14 +279,6 @@ export default {
       } else if (number >= 8) {
         return 'is-success'
       }
-    },
-  },
-  filters: {
-    /**
-     * Filter to truncate string, accepts a length parameter
-     */
-    truncate(value, length) {
-      return value.length > length ? value.substr(0, length) + '...' : value
     },
   },
 }
