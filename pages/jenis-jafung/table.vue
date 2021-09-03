@@ -1,34 +1,31 @@
 <template>
-  <div>
-    <section class="section is-main-section">
-      <card-component
-        class="has-table has-mobile-sort-spaced"
-        title="Clients"
-        icon="account-multiple"
-      >
-        <table-jenis-jafung :data-url="`/jenis_jafung`" :checkable="true" />
-      </card-component>
-    </section>
-  </div>
+  <section class="section is-main-section">
+    <div>
+      <section class="section is-main-section">
+        <b-card
+          class="has-table has-mobile-sort-spaced is-primary"
+          title="Data Jenis Jafung"
+          header-icon="plus-box"
+          @header-icon-click="addData"
+        >
+          <JenisJafung />
+        </b-card>
+      </section>
+    </div>
+  </section>
 </template>
-
 <script>
-import CardComponent from '@/components/CardComponent'
-import TableJenisJafung from '@/components/Table/JenisJafung'
+import JenisJafung from '@/components/Table/JenisJafung'
+
 export default {
-  components: {
-    CardComponent,
-    TableJenisJafung,
+  components: { JenisJafung },
+  data() {
+    return {}
   },
-  computed: {
-    titleStack() {
-      return ['Admin', 'Tables']
+  methods: {
+    addData() {
+      this.$router.push({ name: 'jenis-jafung-id' })
     },
-  },
-  head() {
-    return {
-      title: 'Tables — Jenis Jafung',
-    }
   },
 }
 </script>

@@ -1,7 +1,7 @@
 <template>
   <section>
     <form name="formData" @submit.prevent="submit">
-      <div class="columns is-desktop">
+      <div class="columns">
         <div class="column">
           <div v-if="isRoleUser">
             <b-field label="Detail Pegawai">
@@ -21,52 +21,61 @@
               />
             </b-field>
           </div>
-
+        </div>
+        <div class="column">
           <div v-if="animated">
             <b-skeleton :animated="animated"></b-skeleton>
             <b-skeleton width="20%" :animated="animated"></b-skeleton>
             <b-skeleton width="40%" :animated="animated"></b-skeleton>
             <b-skeleton width="80%" :animated="animated"></b-skeleton>
           </div>
-          <div v-if="formData.jabatan_lama">
-            <b-field label="NIP">
-              <b-input
-                v-model="formData.nip"
-                custom-class="is-static"
-                readonly
-              />
-            </b-field>
-            <b-field label="SKPD Aktif">
-              <b-input
-                v-model="formData.karir_lama.skpd"
-                custom-class="is-static"
-                readonly
-              />
-            </b-field>
-            <b-field label="Unit Kerja Aktif">
-              <b-input
-                v-model="formData.karir_lama.unit_kerja"
-                custom-class="is-static"
-                readonly
-              />
-            </b-field>
-            <b-field label="Jabatan Aktif">
-              <b-input
-                v-model="formData.karir_lama.jabatan"
-                custom-class="is-static"
-                readonly
-              />
-            </b-field>
-            <b-field label="Golongan Aktif">
-              <b-input
-                v-model="formData.karir_lama.golongan"
-                custom-class="is-static"
-                readonly
-              />
-            </b-field>
+          <div v-if="infoPegawai">
+            <div v-if="formData.jabatan_lama">
+              <b-field label="NIP">
+                <b-input
+                  v-model="formData.nip"
+                  custom-class="is-static"
+                  readonly
+                />
+              </b-field>
+              <b-field label="SKPD Aktif">
+                <b-input
+                  v-model="formData.karir_lama.skpd"
+                  custom-class="is-static"
+                  readonly
+                />
+              </b-field>
+              <b-field label="Unit Kerja Aktif">
+                <b-input
+                  v-model="formData.karir_lama.unit_kerja"
+                  custom-class="is-static"
+                  readonly
+                />
+              </b-field>
+              <b-field label="Jabatan Aktif">
+                <b-input
+                  v-model="formData.karir_lama.jabatan"
+                  custom-class="is-static"
+                  readonly
+                />
+              </b-field>
+              <b-field label="Golongan Aktif">
+                <b-input
+                  v-model="formData.karir_lama.golongan"
+                  custom-class="is-static"
+                  readonly
+                />
+              </b-field>
+            </div>
           </div>
         </div>
         <div class="column">
+          <b-field label="Jenis Pengajuan">
+            <AcJenisJafung
+              v-model="formData.jenis_jafung"
+              @input="getJenisJafung"
+            />
+          </b-field>
           <b-field label="SKPD Baru Yang dilamar">
             <AcSkpd v-model="formData.skpd" @input="getSkpd" />
           </b-field>
@@ -86,18 +95,14 @@
               @input="getJabatanBaru"
             />
           </b-field>
-          <hr />
-          <b-field>
-            <b-button
-              type="is-primary"
-              :loading="isLoading"
-              native-type="submit"
-            >
-              Lanjut
-            </b-button>
-          </b-field>
         </div>
       </div>
+      <hr />
+      <b-field>
+        <b-button type="is-primary" :loading="isLoading" native-type="submit">
+          Lanjut
+        </b-button>
+      </b-field>
     </form>
   </section>
 </template>
@@ -107,8 +112,9 @@ import AcPegawai from '@/components/AutoComplete/Pegawai'
 import AcSkpd from '@/components/AutoComplete/Skpd'
 import AcUnitKerja from '@/components/AutoComplete/UnitKerja'
 import AcJabatan from '@/components/AutoComplete/Jabatan'
+import AcJenisJafung from '@/components/AutoComplete/JenisJafung'
 export default {
-  components: { AcPegawai, AcSkpd, AcUnitKerja, AcJabatan },
+  components: { AcPegawai, AcSkpd, AcUnitKerja, AcJabatan, AcJenisJafung },
   data() {
     return {
       isRoleUser: false,
@@ -116,6 +122,8 @@ export default {
         status: 'form',
         jabatan_lama: null,
         jabatan_baru: null,
+        jenis_jafung: null,
+        id_jenis_jafung: null,
         nip: '',
         pegawai: '',
         pangkat_golongan: '',
@@ -138,6 +146,7 @@ export default {
       idSkpd: null,
       idUnitKerja: null,
       animated: false,
+      infoPegawai: false,
       isLoading: false,
     }
   },
@@ -165,6 +174,11 @@ export default {
     }
   },
   methods: {
+    getJenisJafung(payload, payload2) {
+      if (payload2) {
+        this.formData.id_jenis_jafung = payload2.id
+      }
+    },
     getJabatanBaru(payload, payload2) {
       if (payload2) {
         this.formData.jabatan_baru = payload2
@@ -182,6 +196,7 @@ export default {
       }
     },
     getJabatan(payload, payload2) {
+      this.animated = true
       if (payload2 != null) {
         this.formData.id_pegawai = payload2.id
         this.formData.nip = payload2.nip
@@ -190,12 +205,12 @@ export default {
       }
     },
     getJabatanAktif(id) {
-      this.animated = true
       this.$axios
         .$get('/jabatan/aktif/' + id)
         .then((resp) => {
           if (resp.success) {
             this.animated = false
+            this.infoPegawai = true
             const data = resp.data
             this.formData.jabatan_lama = data
             this.formData.karir_lama.jabatan = data.jabatan.nama
@@ -205,6 +220,8 @@ export default {
           }
         })
         .catch((err) => {
+          this.animated = false
+          this.infoPegawai = true
           this.$buefy.toast.open({
             message: `Error: ${err.message}`,
             type: 'is-danger',

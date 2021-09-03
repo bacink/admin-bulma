@@ -11,12 +11,12 @@
           </b-select>
         </p>
         <b-input
+          v-model="search"
           placeholder="Search..."
           type="search"
           icon="magnify"
           icon-clickable
           expanded
-          v-model="search"
           @input="onSearch"
         ></b-input>
       </b-field>

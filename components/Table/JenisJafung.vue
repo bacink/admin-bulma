@@ -1,168 +1,137 @@
 <template>
-  <div>
-    <modal-box
-      :is-active="isModalActive"
-      :trash-object-name="trashObjectName"
-      @confirm="trashConfirm"
-      @cancel="trashCancel"
-    />
+  <section>
+    <div class="container">
+      <b-field>
+        <p class="control">
+          <b-select v-model="perPage">
+            <option value="5">5 per page</option>
+            <option value="10">10 per page</option>
+            <option value="15">15 per page</option>
+            <option value="20">20 per page</option>
+          </b-select>
+        </p>
+        <b-input
+          v-model="search"
+          placeholder="Search..."
+          type="search"
+          icon="magnify"
+          icon-clickable
+          expanded
+          @input="onSearch"
+        ></b-input>
+      </b-field>
+    </div>
     <b-table
-      :checked-rows.sync="checkedRows"
-      :loading="isLoading"
-      :paginated="paginated"
+      aria-next-label="Next page"
+      aria-previous-label="Previous page"
+      aria-page-label="Page"
+      aria-current-label="Current page"
+      :loading="loading"
+      :data="isEmpty ? [] : data"
+      :total="total"
       :per-page="perPage"
-      :striped="true"
-      :hoverable="true"
-      default-sort="name"
-      :data="clients"
+      :default-sort="[sortField, sortOrder]"
+      :default-sort-direction="defaultSortOrder"
+      :sort-icon="sortIcon"
+      :sort-icon-size="sortIconSize"
+      :narrowed="isNarrowed"
+      :striped="isStriped"
+      :mobile-cards="hasMobileCards"
+      paginated
+      backend-pagination
+      backend-sorting
+      @page-change="onPageChange"
+      @sort="onSort"
     >
-      <template slot-scope="props">
-        <b-table-column label="Index" field="index" sortable>
-          {{ props.index + 1 }}
-        </b-table-column>
-        <b-table-column label="Nama" field="nama" sortable>
-          {{ props.row.nama }}
-        </b-table-column>
-        <b-table-column custom-key="actions" class="is-actions-cell">
-          <div class="buttons is-right">
-            <b-tooltip label="Edit" position="is-top" type="is-dark">
-              <nuxt-link
-                :to="{ name: 'jenis-jafung-id', params: { id: props.row.id } }"
-                class="button is-small is-primary"
-              >
-                <b-icon icon="account-edit" size="is-small" />
-              </nuxt-link>
-            </b-tooltip>
-            <b-tooltip label="Delete" position="is-top" type="is-dark">
-              <button
-                class="button is-small is-danger"
-                type="button"
-                @click.prevent="trashModal(props.row)"
-              >
-                <b-icon icon="trash-can" size="is-small" />
-              </button>
-            </b-tooltip>
-          </div>
-        </b-table-column>
+      <b-table-column v-slot="props" label="#No">
+        {{ data.indexOf(props.row) + 1 }}
+      </b-table-column>
+      <b-table-column v-slot="props" field="nama" label="Jenis Jafung" sortable>
+        {{ props.row.nama }}
+      </b-table-column>
+
+      <template #empty>
+        <div class="has-text-centered">No records</div>
       </template>
-
-      <section slot="empty" class="section">
-        <div class="content has-text-grey has-text-centered">
-          <template v-if="isLoading">
-            <p>
-              <b-icon icon="dots-horizontal" size="is-large" />
-            </p>
-            <p>Fetching data...</p>
-          </template>
-          <template v-else>
-            <p>
-              <b-icon icon="emoticon-sad" size="is-large" />
-            </p>
-            <p>Nothing's here&hellip;</p>
-          </template>
-        </div>
-      </section>
     </b-table>
-  </div>
+  </section>
 </template>
-
 <script>
-import ModalBox from '@/components/ModalBox'
-
 export default {
-  name: 'ClientsTableSample',
-  components: { ModalBox },
-  props: {
-    dataUrl: {
-      type: String,
-      default: null,
-    },
-    checkable: {
-      type: Boolean,
-      default: false,
-    },
-  },
   data() {
     return {
-      isModalActive: false,
-      trashObject: null,
-      clients: [],
-      isLoading: false,
-      paginated: false,
+      data: [],
+      total: 0,
+      loading: false,
+      search: '',
+      sortField: 'nama',
+      sortOrder: 'asc',
+      sortIcon: 'arrow-up',
+      sortIconSize: 'is-small',
+      isNarrowed: true,
+      isStriped: true,
+      isEmpty: true,
+      hasMobileCards: true,
+      defaultSortOrder: 'asc',
+      page: 1,
       perPage: 10,
-      checkedRows: [],
     }
   },
-  computed: {
-    trashObjectName() {
-      if (this.trashObject) {
-        return this.trashObject.nama
-      }
-      return null
-    },
-  },
   mounted() {
-    this.getData()
+    this.loadAsyncData()
   },
   methods: {
-    getData() {
-      if (this.dataUrl) {
-        this.isLoading = true
-        this.$axios
-          .$get(this.dataUrl)
-          .then((r) => {
-            this.isLoading = false
-            if (r.data && r.data.data) {
-              if (r.data.data.length > this.perPage) {
-                this.paginated = true
-              }
-              this.clients = r.data.data
-            }
+    loadAsyncData() {
+      const params = [
+        `search=${this.search}`,
+        `order_by=${this.sortField}`,
+        `order_direction=${this.sortOrder}`,
+        `page=${this.page}`,
+        `take=${this.perPage}`,
+      ].join('&')
+
+      this.loading = true
+      this.$axios
+        .get(`/jenis_jafung/q?${params}`)
+        .then(({ data }) => {
+          // api.themoviedb.org manage max 1000 pages
+          this.data = []
+          this.total = data.total
+          this.page = data.current_page
+          this.perPage = data.per_page
+          data.data.forEach((item) => {
+            this.data.push(item)
           })
-          .catch((e) => {
-            this.isLoading = false
-            this.$buefy.toast.open({
-              message: `Error: ${e.message}`,
-              type: 'is-danger',
-            })
-          })
-      }
+          this.total > 0 ? (this.isEmpty = false) : (this.isEmpty = true)
+          this.loading = false
+        })
+        .catch((error) => {
+          this.data = []
+          this.total = 0
+          this.loading = false
+          this.isEmpty = true
+          throw error
+        })
     },
-    trashModal(trashObject) {
-      this.trashObject = trashObject
-      this.isModalActive = true
+
+    /*
+     * Handle page-change event
+     */
+    onPageChange(page) {
+      this.page = page
+      this.loadAsyncData()
     },
-    trashConfirm() {
-      this.isModalActive = false
-      this.handleDelete()
+    /*
+     * Handle sort event
+     */
+    onSort(field, order) {
+      this.sortField = field
+      this.sortOrder = order
+      this.loadAsyncData()
     },
-    trashCancel() {
-      this.isModalActive = false
-    },
-    handleDelete() {
-      if (this.trashObject) {
-        this.isLoading = true
-        const payload = this.trashObject
-        this.$axios
-          .$delete('jenis_jafung/' + payload.id)
-          .then((r) => {
-            this.$buefy.snackbar.open({
-              type: 'is-info',
-              message: r.message,
-              queue: false,
-              position: 'is-top',
-            })
-            this.isLoading = false
-            this.getData()
-          })
-          .catch((e) => {
-            this.isLoading = false
-            this.$buefy.toast.open({
-              message: `Error: ${e.message}`,
-              type: 'is-danger',
-            })
-          })
-      }
+    onSearch(value) {
+      this.search = value
+      this.loadAsyncData()
     },
   },
 }
