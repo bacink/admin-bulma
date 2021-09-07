@@ -1,0 +1,31 @@
+<tbody v-for="(item, index) in syaratPengajuan" :key="index">
+          <tr>
+            <td>{{ index + 1 }}</td>
+            <td>{{ item.nama }}</td>
+            <td>
+              <div v-if="dokumenPengajuan">
+                <div v-for="(dokumen, inde) in dokumenPengajuan" :key="inde">
+                  <div v-if="dokumen.id_syarat_pengajuan === item.id">
+                    <b-button
+                      icon-left="pdf-box"
+                      type="is-danger"
+                      @click="pdfModal(dokumen.id)"
+                    >
+                      View
+                    </b-button>
+                  </div>
+                </div>
+              </div>
+            </td>
+            <td>
+              <center>
+                <b-button
+                  icon-left="upload"
+                  label="Upload"
+                  type="is-info"
+                  @click="cardModal(item.id)"
+                />
+              </center>
+            </td>
+          </tr>
+        </tbody>

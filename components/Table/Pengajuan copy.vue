@@ -102,7 +102,7 @@
           <span class="tag is-warning"> Menunggu verifikasi skpd </span>
         </div>
         <div v-else>
-          <span class="tag is-primary">
+          <span class="tag is-info">
             {{ props.row.status }}
           </span>
         </div>
@@ -115,13 +115,24 @@
         <template v-slot="props">
           <div v-if="isSkpd">
             <div v-if="props.row.status === 'diverifikasi_skpd'">
-              <b-button
-                class="is-small is-primary"
-                icon-left="upload"
-                @click="cardModal(props.row.id)"
-              >
-                Upload Surat Pengantar
-              </b-button>
+              <div v-if="props.row.surat_pengantar !== null">
+                <b-button
+                  class="is-small is-warning"
+                  icon-left="send"
+                  @click="kirm(props.row.id)"
+                >
+                  Kirim Ke Verifikator
+                </b-button>
+              </div>
+              <div v-else>
+                <b-button
+                  class="is-small is-primary"
+                  icon-left="upload"
+                  @click="cardModal(props.row.id)"
+                >
+                  Upload Surat Pengantar
+                </b-button>
+              </div>
             </div>
             <div v-else-if="props.row.status === 'diajukan'">
               <b-button
@@ -169,6 +180,7 @@ export default {
   data() {
     return {
       data: [],
+      search: null,
       total: 0,
       loading: false,
       sortField: 'id_pegawai',
@@ -267,18 +279,9 @@ export default {
       this.sortOrder = order
       this.loadAsyncData()
     },
-    /*
-     * Type style in relation to the value
-     */
-    type(value) {
-      const number = parseFloat(value)
-      if (number < 6) {
-        return 'is-danger'
-      } else if (number >= 6 && number < 8) {
-        return 'is-warning'
-      } else if (number >= 8) {
-        return 'is-success'
-      }
+    onSearch(value) {
+      this.search = value
+      this.loadAsyncData()
     },
   },
 }

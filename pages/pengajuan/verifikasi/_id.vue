@@ -1,31 +1,57 @@
 <template>
   <div>
-    <section class="section is-medium">
-      <DokumenPengajuan :dokumen="data" />
+    <section class="section">
+      <b-card>
+        <DetailPengajuan :data="data" />
+        <hr />
+        <footer class="card-footer">
+          <a href="/pengajuan/table" class="card-footer-item">Back</a>
+          <a href="#" class="card-footer-item" @click="simpan">Simpan</a>
+        </footer>
+      </b-card>
     </section>
   </div>
 </template>
 
 <script>
-import DokumenPengajuan from '@/components/Dokumen/SyaratPengajuan'
+import DetailPengajuan from '@/components/Dokumen/DetailPengajuan'
 
 export default {
-  components: { DokumenPengajuan },
+  components: { DetailPengajuan },
   data() {
     return {
-      data: [],
+      data: null,
+      form: {
+        id_pengajuan: this.$route.params.id,
+        status: 'diverifikasi_skpd',
+      },
     }
   },
-  created() {
-    this.getPengajuan(this.$route.params.id)
-  },
   methods: {
-    getPengajuan(id) {
-      try {
-        this.$axios.$get(`/dokumen/${id}`).then((resp) => {
-          return (this.data = resp.data)
+    simpan() {
+      this.$axios
+        .$patch('/pengajuan', this.form)
+        .then((resp) => {
+          if (resp.success) {
+            setTimeout(() => {
+              this.isLoading = false
+
+              this.$buefy.snackbar.open({
+                message: 'User has been Updated',
+                queue: false,
+              })
+            }, 500)
+            this.$router.push({ name: 'pengajuan-table' })
+          }
         })
-      } catch (error) {}
+        .catch((err) => {
+          this.isLoading = false
+          this.$buefy.toast.open({
+            message: `Error: ${err.response.data.message}`,
+            type: 'is-danger',
+            queue: false,
+          })
+        })
     },
   },
 }

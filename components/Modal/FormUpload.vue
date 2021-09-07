@@ -85,6 +85,7 @@ export default {
             message: `Error: ${err.response.data.error.file}`,
             type: 'is-danger',
           })
+          this.isLoading = false
         })
     },
   },

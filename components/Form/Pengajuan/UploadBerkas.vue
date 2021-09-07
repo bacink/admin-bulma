@@ -115,16 +115,22 @@ export default {
       })
     },
     fetchSyaratPengajuan() {
+      this.isLoading = true
       this.$axios.$get(`/syarat_pengajuan/`).then((resp) => {
-        if (resp.success) {
+        if (resp) {
+          this.isLoading = false
+
           const data = resp.data
-          this.syaratPengajuan = data.data
+          this.syaratPengajuan = data
         }
       })
     },
     fetchdokumenPengajuan() {
+      this.isLoading = true
       this.$axios.$get(`/dokumen/${this.idPengajuan}`).then((resp) => {
-        if (resp.success) {
+        if (resp) {
+          this.isLoading = false
+
           const data = resp.data
           this.dokumenPengajuan = data
         }

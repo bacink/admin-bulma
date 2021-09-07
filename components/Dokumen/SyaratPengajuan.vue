@@ -44,7 +44,7 @@
               ref="pdf"
               style="border: 1px solid red"
               :src="`https://api.jafung.test/api/dokumen/pdf/${item.id}`"
-              :page="page"
+              :page="page.id"
               :rotate="rotate"
               @progress="loadedRatio = $event"
               @num-pages="numPages = $event"
@@ -52,6 +52,21 @@
             ></pdf-viewer>
           </div>
         </div>
+        <section>
+          <div class="columns is-centered">
+            <div class="column is-half">
+              <b-field label="Status Pengajuan">
+                <b-select placeholder="Pilih Status Pengajuan">
+                  <option value="diterima">Diterima</option>
+                  <option value="ditolak">Ditolak</option>
+                </b-select>
+              </b-field>
+              <b-field label="Message">
+                <b-input maxlength="200" type="textarea"></b-input>
+              </b-field>
+            </div>
+          </div>
+        </section>
       </b-card>
       <hr />
     </div>
@@ -71,7 +86,7 @@ export default {
   data() {
     return {
       numPages: 0,
-      page: 1,
+      page: {},
       loadedRatio: 0,
       rotate: 0,
       disabled_plus: false,
