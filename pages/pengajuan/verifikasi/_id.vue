@@ -14,8 +14,8 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import DetailPengajuan from '@/components/Dokumen/DetailPengajuan'
-
 export default {
   components: { DetailPengajuan },
   data() {
@@ -25,6 +25,20 @@ export default {
         id_pengajuan: this.$route.params.id,
         status: 'diverifikasi_skpd',
       },
+    }
+  },
+  computed: {
+    ...mapState(['role']),
+  },
+  mounted() {
+    const currentRole = this.role.toLowerCase()
+    switch (currentRole) {
+      case 'analis jabatan':
+        this.form.status = 'diverifikasi_analis'
+        break
+      default:
+        this.form.status = 'diverifikasi_skpd'
+        break
     }
   },
   methods: {
@@ -37,7 +51,7 @@ export default {
               this.isLoading = false
 
               this.$buefy.snackbar.open({
-                message: 'User has been Updated',
+                message: 'Pengajuan has been Updated',
                 queue: false,
               })
             }, 500)

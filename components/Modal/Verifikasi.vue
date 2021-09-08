@@ -160,7 +160,28 @@ export default {
       }
     },
   },
+  mounted() {
+    const CurrentRole = this.$auth.user.role.nama.toLowerCase()
+    console.log(CurrentRole)
+    if (CurrentRole !== 'user' || CurrentRole !== 'admin_skpd') {
+      this.fetchVerifikasi()
+    }
+  },
   methods: {
+    fetchVerifikasi() {
+      this.isLoading = true
+      this.$axios
+        .get(`/verifikasi/${this.idDokumen}`)
+        .then(({ data }) => {
+          this.formData.status = data.data.status
+          this.formData.keterangan = data.data.keterangan
+          this.isLoading = false
+        })
+        .catch((err) => {
+          this.isLoading = false
+          console.log(err)
+        })
+    },
     submit() {
       this.isLoading = true
       this.$axios

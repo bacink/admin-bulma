@@ -3,7 +3,7 @@
     <div class="container">
       <b-field>
         <p class="control">
-          <b-select v-model="perPage">
+          <b-select v-model="perPage" :disabled="!isPaginated">
             <option value="5">5 per page</option>
             <option value="10">10 per page</option>
             <option value="15">15 per page</option>
@@ -27,6 +27,8 @@
       aria-previous-label="Previous page"
       aria-page-label="Page"
       aria-current-label="Current page"
+      :current-page.sync="page"
+      :paginated="isPaginated"
       :loading="loading"
       :data="isEmpty ? [] : data"
       :total="total"
@@ -41,7 +43,6 @@
       :narrowed="isNarrowed"
       :striped="isStriped"
       :mobile-cards="hasMobileCards"
-      paginated
       backend-pagination
       backend-sorting
       detailed
@@ -144,6 +145,19 @@
               </b-button>
             </div>
           </div>
+          <div v-if="isAnalis || isBkpsdm">
+            <div v-if="props.row.status === 'dikirim_skpd'">
+              <b-button
+                icon-left="alert-circle-outline"
+                type="is-warning"
+                size="is-small"
+                tag="router-link"
+                :to="`/pengajuan/verifikasi/${props.row.id}`"
+              >
+                Verifikasi
+              </b-button>
+            </div>
+          </div>
         </template>
       </b-table-column>
       <template #empty>
@@ -180,10 +194,10 @@ export default {
   data() {
     return {
       data: [],
-      search: null,
+      search: '',
       total: 0,
       loading: false,
-      sortField: 'id_pegawai',
+      sortField: 'id',
       sortOrder: 'desc',
       sortIcon: 'arrow-up',
       sortIconSize: 'is-small',
@@ -201,35 +215,62 @@ export default {
       isSkpd: false,
       isBkpsdm: false,
       isAnalis: false,
+      isPengawas: false,
+      isAdmin1: false,
+      isAdmin2: false,
+      isJpt: false,
+      isPaginated: true,
       param: null,
     }
   },
   mounted() {
     const CurrentRole = this.$auth.user.role.nama.toLowerCase()
-    if (CurrentRole === 'user') {
-      this.isPegawai = true
-      this.param = 'user'
-    } else if (CurrentRole === 'admin bkpsdm') {
-      this.isBkpsdm = true
-      this.param = 'bkpsdm'
-    } else if (CurrentRole === 'admin skpd') {
-      this.isSkpd = true
-      this.param = 'skpd'
-    } else if (CurrentRole === 'analis jabatan') {
-      this.isAnalis = true
-      this.param = 'analis'
+    switch (CurrentRole) {
+      case 'admin skpd':
+        this.isSkpd = true
+        break
+      case 'admin bkpsdm':
+        this.isBkpsdm = true
+        break
+      case 'analis jabatan':
+        this.isAnalis = true
+        break
+      case 'pengawas':
+        this.isPengawas = true
+        break
+      case 'administrator 1':
+        this.isAdmin1 = true
+        break
+      case 'administrator 2':
+        this.isAdmin2 = true
+        break
+      case 'jpt':
+        this.isJpt = true
+        break
+      default:
+        this.isPegawai = true
+        break
     }
-
-    this.loadAsyncData(this.param)
+    this.loadAsyncData()
   },
   methods: {
     /*
      * Load async data
      */
-    loadAsyncData(parameter) {
+
+    loadAsyncData() {
+      const params = [
+        `search=${this.search}`,
+        `order_by=${this.sortField}`,
+        `order_direction=${this.sortOrder}`,
+        `page=${this.page}`,
+        `take=${this.perPage}`,
+      ].join('&')
+
       this.loading = true
+
       this.$axios
-        .get(`/pengajuan/${parameter}`)
+        .get(`/pengajuan/q?${params}`)
         .then(({ data }) => {
           // api.themoviedb.org manage max 1000 pages
           this.data = []
@@ -281,6 +322,10 @@ export default {
     },
     onSearch(value) {
       this.search = value
+      this.loadAsyncData()
+    },
+    pagination(value) {
+      this.perPage = value
       this.loadAsyncData()
     },
   },

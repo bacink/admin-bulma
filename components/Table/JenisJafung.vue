@@ -3,7 +3,7 @@
     <div class="container">
       <b-field>
         <p class="control">
-          <b-select v-model="perPage">
+          <b-select v-model="perPage" :disabled="!isPaginated">
             <option value="5">5 per page</option>
             <option value="10">10 per page</option>
             <option value="15">15 per page</option>
@@ -26,6 +26,8 @@
       aria-previous-label="Previous page"
       aria-page-label="Page"
       aria-current-label="Current page"
+      :current-page.sync="page"
+      :paginated="isPaginated"
       :loading="loading"
       :data="isEmpty ? [] : data"
       :total="total"
@@ -37,7 +39,6 @@
       :narrowed="isNarrowed"
       :striped="isStriped"
       :mobile-cards="hasMobileCards"
-      paginated
       backend-pagination
       backend-sorting
       @page-change="onPageChange"
@@ -74,7 +75,8 @@ export default {
       hasMobileCards: true,
       defaultSortOrder: 'asc',
       page: 1,
-      perPage: 10,
+      perPage: 20,
+      isPaginated: true,
     }
   },
   mounted() {
