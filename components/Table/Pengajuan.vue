@@ -68,11 +68,13 @@
       >
         {{ props.row.jabatan_lama.jabatan.nama }}
         <b-taglist>
-          <b-tag type="is-info">
-            {{ props.row.jabatan_lama.jabatan.unit_kerja.nama_lengkap }}
+          <b-tag type="is-info is-light">
+            <strong>Unit Kerja: </strong
+            >{{ props.row.jabatan_lama.jabatan.unit_kerja.nama_lengkap }}
           </b-tag>
-          <b-tag type="is-success">
-            {{ props.row.jabatan_lama.jabatan.skpd.nama }}
+          <b-tag type="is-success is-light">
+            <strong>SKPD: </strong
+            >{{ props.row.jabatan_lama.jabatan.skpd.nama }}
           </b-tag>
         </b-taglist>
       </b-table-column>
@@ -84,10 +86,12 @@
       >
         {{ props.row.jabatan_baru.nama_lengkap }}
         <b-taglist>
-          <b-tag type="is-info">
+          <b-tag type="is-info is-light">
+            <strong>Unit Kerja: </strong>
             {{ props.row.jabatan_baru.unit_kerja.nama }}
           </b-tag>
-          <b-tag type="is-success">
+          <b-tag type="is-success is-light">
+            <strong>SKPD: </strong>
             {{ props.row.jabatan_baru.skpd.nama }}
           </b-tag>
         </b-taglist>
@@ -100,10 +104,12 @@
         centered
       >
         <div v-if="props.row.status === 'diajukan'">
-          <span class="tag is-warning"> Menunggu verifikasi skpd </span>
+          <span class="tag is-warning is-light">
+            Menunggu verifikasi skpd
+          </span>
         </div>
         <div v-else>
-          <span class="tag is-info">
+          <span class="tag is-info is-light">
             {{ props.row.status }}
           </span>
         </div>
@@ -155,6 +161,17 @@
                 :to="`/pengajuan/verifikasi/${props.row.id}`"
               >
                 Verifikasi
+              </b-button>
+            </div>
+            <div v-if="props.row.status === 'diverifikasi_analis'">
+              <b-button
+                icon-left="file"
+                type="is-info"
+                size="is-small"
+                tag="router-link"
+                :to="`/print`"
+              >
+                Buat Draft
               </b-button>
             </div>
           </div>

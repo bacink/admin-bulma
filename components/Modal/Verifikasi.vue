@@ -162,7 +162,6 @@ export default {
   },
   mounted() {
     const CurrentRole = this.$auth.user.role.nama.toLowerCase()
-    console.log(CurrentRole)
     if (CurrentRole !== 'user' || CurrentRole !== 'admin_skpd') {
       this.fetchVerifikasi()
     }
@@ -178,8 +177,12 @@ export default {
           this.isLoading = false
         })
         .catch((err) => {
+          this.$buefy.toast.open({
+            message: `Error: ${err.response.data.message}`,
+            type: 'is-danger',
+            queue: false,
+          })
           this.isLoading = false
-          console.log(err)
         })
     },
     submit() {
