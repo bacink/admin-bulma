@@ -1,5 +1,5 @@
 <template>
-  <div>tersebut</div>
+  <div>Table</div>
 </template>
 <script>
 export default {}

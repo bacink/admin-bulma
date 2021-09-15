@@ -3,6 +3,7 @@
     <FormDraft
       :pengantar-kepala="pengantarKepala"
       :data-pengajuan="dataPengajuan"
+      :template-surat="templateSurat"
     />
   </section>
 </template>
@@ -14,6 +15,7 @@ export default {
     return {
       dataPengajuan: null,
       pengantarKepala: null,
+      templateSurat: [],
     }
   },
   mounted() {
@@ -27,6 +29,7 @@ export default {
         .then(({ data }) => {
           this.dataPengajuan = data
           this.getKepala(data.pegawai.skpd.id)
+          this.getTemplateSurat(data.jenis_jafung.id)
         })
         .catch((error) => {
           throw error
@@ -42,6 +45,20 @@ export default {
         .then(({ data }) => {
           const pengantarKepala = `${data.jabatan_kepala.nama} ${data.jabatan_kepala.spesifikasi}`
           this.pengantarKepala = pengantarKepala
+        })
+        .catch((error) => {
+          throw error
+        })
+        .finally(() => {
+          this.isloading = false
+        })
+    },
+    getTemplateSurat(id) {
+      this.isloading = true
+      this.$axios
+        .$get(`/template/surat/pengajuan/${id}`)
+        .then(({ data }) => {
+          this.templateSurat = data
         })
         .catch((error) => {
           throw error

@@ -38,15 +38,22 @@ const data = [
       role: 'admin bkpsdm',
       menu: [
         {
-          to: '/syarat-pengajuan/table',
+          to: '/syarat/pengajuan/table',
           label: 'Syarat Pengajuan',
           icon: 'puzzle',
           updateMark: false,
           role: 'admin bkpsdm',
         },
         {
-          to: '/jenis-jafung/table',
+          to: '/jenis/jafung/table',
           label: 'Jenis Jafung',
+          icon: 'puzzle',
+          updateMark: false,
+          role: 'admin bkpsdm',
+        },
+        {
+          to: '/template/surat/table',
+          label: 'Template Surat',
           icon: 'puzzle',
           updateMark: false,
           role: 'admin bkpsdm',

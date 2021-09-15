@@ -15,6 +15,10 @@
         >
           <form-template-surat
             :form="form"
+            :kop-dpn="kopDpn"
+            :kop-blk="kopBlk"
+            :id-jenis-jafung="idJenisJafung"
+            :jenis-jafung="jenisJafung"
             @clicked="onClickChild"
           ></form-template-surat
         ></b-card>
@@ -35,6 +39,10 @@ export default {
   data() {
     return {
       form: [],
+      kopDpn: '',
+      kopBlk: '',
+      idJenisJafung: 0,
+      jenisJafung: '',
     }
   },
   computed: {
@@ -74,11 +82,17 @@ export default {
     getData() {
       if (this.$route.params.id) {
         this.$axios
-          .$get('/template/surat/')
+          .$get(`/template/surat/${this.$route.params.id}`)
           .then((r) => {
-            r.data.length ? (this.form = r.data[0].mengingat) : (this.form = [])
+            this.form = r.data.mengingat
+            this.kopDpn = r.data.kop_depan
+            this.kopBlk = r.data.kop_belakang
+            this.idJenisJafung = r.data.id_jenis_jafung
+            this.jenisJafung = r.data.jenis_jafung.nama
           })
           .catch((e) => {
+            this.form = []
+
             this.$buefy.toast.open({
               message: `Error: ${e.message}`,
               type: 'is-danger',
@@ -108,6 +122,7 @@ export default {
               queue: false,
             })
           }
+          this.$router.push({ name: 'template-surat-table' })
         })
         .catch((err) => {
           this.isLoading = false

@@ -203,13 +203,7 @@ export default {
         })
         .catch((err) => {
           this.isLoading = false
-          if (err.response.status === 422) {
-            this.$buefy.toast.open({
-              message: `Error: ${err.response.data.keterangan}`,
-              type: 'is-danger',
-              queue: false,
-            })
-          }
+
           this.$buefy.toast.open({
             message: `Error: ${err.response.data.message}`,
             type: 'is-danger',

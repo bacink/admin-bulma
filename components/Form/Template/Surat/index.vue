@@ -3,16 +3,16 @@
     <form @submit.prevent="addNewTodo">
       <b-field grouped>
         <b-field label="Kop Depan" label-position="on-border" expanded>
-          <b-input v-model="kop_depan" placeholder="230/Kep."></b-input>
+          <b-input v-model="kopDpn" placeholder="230/Kep."></b-input>
         </b-field>
         <b-field label="Kop Belakang" label-position="on-border" expanded>
-          <b-input v-model="kop_belakang" placeholder="BKPSDM/2020"></b-input>
+          <b-input v-model="kopBlk" placeholder="BKPSDM/2020"></b-input>
         </b-field>
       </b-field>
       <b-field label="Jenis Jafung">
-        <JenisJafung v-model="AcJenisJafung" @input="getJenisJafung"
+        <JenisJafung v-model="jenisJafung" @input="getJenisJafung"
       /></b-field>
-      <input id="" v-model="id_jenis_jafung" />
+      <input id="" v-model="id_jenis_jafung" type="hidden" />
       <b-field label="Mengingat">
         <b-input
           id="new-todo"
@@ -68,6 +68,22 @@ export default {
     JenisJafung,
   },
   props: {
+    kopDpn: {
+      type: String,
+      default: null,
+    },
+    kopBlk: {
+      type: String,
+      default: null,
+    },
+    idJenisJafung: {
+      type: Number,
+      default: null,
+    },
+    jenisJafung: {
+      type: String,
+      default: null,
+    },
     form: {
       type: [Array, Object],
       default: () => ({
@@ -82,7 +98,6 @@ export default {
       isNotification: false,
       newTodoText: '',
       nextTodoId: 0,
-      AcJenisJafung: null,
       id_jenis_jafung: null,
       kop_depan: null,
       kop_belakang: null,

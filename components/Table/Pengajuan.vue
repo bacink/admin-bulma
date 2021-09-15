@@ -126,7 +126,7 @@
                 <b-button
                   class="is-small is-warning"
                   icon-left="send"
-                  @click="kirm(props.row.id)"
+                  @click="kirmVerifikator(props.row.id)"
                 >
                   Kirim Ke Verifikator
                 </b-button>
@@ -169,7 +169,7 @@
                 type="is-info"
                 size="is-small"
                 tag="router-link"
-                :to="`/print`"
+                :to="`/draft/${props.row.id}`"
               >
                 Buat Draft
               </b-button>
@@ -344,6 +344,35 @@ export default {
     pagination(value) {
       this.perPage = value
       this.loadAsyncData()
+    },
+    kirmVerifikator(value) {
+      this.isLoading = true
+      this.$axios
+        .patch('/pengajuan/update/status', {
+          id_pengajuan: value,
+          status: 'dikirim_skpd',
+        })
+        .then((resp) => {
+          if (resp.data.success) {
+            this.isLoading = false
+            this.$buefy.toast.open({
+              message: `Success: ${resp.data.message}`,
+              type: 'success',
+              queue: false,
+            })
+            this.isLoading = false
+            this.$parent.close()
+          }
+        })
+        .catch((err) => {
+          this.isLoading = false
+
+          this.$buefy.toast.open({
+            message: `Error: ${err.response.data.message}`,
+            type: 'is-danger',
+            queue: false,
+          })
+        })
     },
   },
 }
