@@ -26,9 +26,7 @@ export default {
       this.isloading = true
       this.$axios
         .$get(`/pengajuan/${this.$route.params.id}`)
-        .then(({ data }) => {
-          console.log(data)
-        })
+        .then(({ data }) => {})
         .catch((error) => {
           throw error
         })

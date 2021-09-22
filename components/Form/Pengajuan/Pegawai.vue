@@ -59,6 +59,20 @@
                   readonly
                 />
               </b-field>
+              <b-field label="Kelas Jabatan">
+                <b-input
+                  v-model="formData.karir_lama.kelas_jabatan"
+                  custom-class="is-static"
+                  readonly
+                />
+              </b-field>
+              <b-field label="tunjangan">
+                <b-input
+                  v-model="formData.karir_lama.tunjangan"
+                  custom-class="is-static"
+                  readonly
+                />
+              </b-field>
               <b-field label="Golongan Aktif">
                 <b-input
                   v-model="formData.karir_lama.golongan"
@@ -217,6 +231,10 @@ export default {
             this.formData.karir_lama.unit_kerja =
               data.jabatan.unit_kerja.nama_lengkap
             this.formData.karir_lama.skpd = data.jabatan.skpd.nama
+            this.formData.karir_lama.kelas_jabatan =
+              data.jabatan_sotk.kelas_jabatan.kelas
+            this.formData.karir_lama.tunjangan =
+              data.jabatan_sotk.kelas_jabatan.tunjangan
           }
         })
         .catch((err) => {

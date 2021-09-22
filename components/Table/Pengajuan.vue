@@ -124,12 +124,12 @@
             <div v-if="props.row.status === 'diverifikasi_skpd'">
               <div v-if="props.row.surat_pengantar !== null">
                 <b-button
-                  class="is-small is-warning"
+                  label="Kirim Ke Verifikator"
                   icon-left="send"
-                  @click="kirmVerifikator(props.row.id)"
-                >
-                  Kirim Ke Verifikator
-                </b-button>
+                  type="is-warning"
+                  size="is-small"
+                  @click="confirm(props.row.id)"
+                />
               </div>
               <div v-else>
                 <b-button
@@ -194,6 +194,11 @@
         </article>
       </template>
     </b-table>
+    <b-loading
+      v-model="isLoading"
+      :is-full-page="isFullPage"
+      :can-cancel="true"
+    ></b-loading>
   </section>
 </template>
 <script>
@@ -238,6 +243,8 @@ export default {
       isJpt: false,
       isPaginated: true,
       param: null,
+      isFullPage: true,
+      isLoading: false,
     }
   },
   mounted() {
@@ -285,6 +292,7 @@ export default {
       ].join('&')
 
       this.loading = true
+      this.isLoading = true
 
       this.$axios
         .get(`/pengajuan/q?${params}`)
@@ -301,11 +309,14 @@ export default {
           })
           this.total > 0 ? (this.isEmpty = false) : (this.isEmpty = true)
           this.loading = false
+          this.isLoading = false
         })
         .catch((error) => {
           this.data = []
           this.total = 0
           this.loading = false
+          this.isLoading = false
+
           this.isEmpty = true
           throw error
         })
@@ -345,6 +356,12 @@ export default {
       this.perPage = value
       this.loadAsyncData()
     },
+    confirm(value) {
+      this.$buefy.dialog.confirm({
+        message: 'Kirim Pengajuan?',
+        onConfirm: () => this.kirmVerifikator(value),
+      })
+    },
     kirmVerifikator(value) {
       this.isLoading = true
       this.$axios
@@ -354,14 +371,12 @@ export default {
         })
         .then((resp) => {
           if (resp.data.success) {
-            this.isLoading = false
+            this.loadAsyncData()
             this.$buefy.toast.open({
               message: `Success: ${resp.data.message}`,
               type: 'success',
               queue: false,
             })
-            this.isLoading = false
-            this.$parent.close()
           }
         })
         .catch((err) => {

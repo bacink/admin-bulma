@@ -16,9 +16,11 @@
     "lintfix": "eslint --fix --ext .js,.vue --ignore-path .gitignore ."
   },
   "dependencies": {
+    "@develoka/angka-terbilang-js": "^1.4.2",
     "@nuxtjs/auth": "^4.9.1",
     "@nuxtjs/axios": "^5.12.1",
     "@nuxtjs/pwa": "^3.0.0",
+    "@vue/composition-api": "^1.1.5",
     "buefy": "^0.9.8",
     "chart.js": "^2.9.3",
     "dayjs": "^1.8.33",
@@ -27,6 +29,7 @@
     "nuxt": "^2.14.3",
     "nuxt-buefy": "^0.3.31",
     "vue-chartjs": "^3.5.0",
+    "vue-currency-input": "^2.1.0",
     "vue-html-to-paper": "^1.4.3",
     "vue-pdf": "^4.3.0",
     "vue-renderer": "^1.0.2",
