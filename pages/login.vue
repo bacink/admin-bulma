@@ -2,7 +2,12 @@
   <section class="hero is-fullheight">
     <div class="hero-body has-text-centered">
       <div class="login">
-        <img src="/logoipsum.svg" width="325px" />
+        <img class="logo" src="/logo jafung.svg" />
+        <b-progress v-show="progress" size="is-medium" show-value
+          >trying to access</b-progress
+        >
+        <h1>SIUL JAFA</h1>
+        <hr />
         <form @submit.prevent="addUser">
           <div class="field">
             <div class="control">
@@ -35,11 +40,21 @@
           </div>
           <br />
           <button
-            class="button is-block is-fullwidth is-primary is-medium is-rounded"
+            class="button is-block is-fullwidth is-primary is-medium"
             type="submit"
           >
             Login
           </button>
+
+          <br />
+          <p class="subtitle is-5">Or login with</p>
+          <a
+            class="button is-block is-fullwidth is-danger is-medium"
+            href="https://sim-asn.bkpsdm.karawangkab.go.id/oauth/authorize?client_id=949304c6-ecd1-460a-a8fb-c5c4abf9e34e&redirect_uri=https://api.jafung.test/api/callback/sim-asn&response_type=code"
+          >
+            <img class="logo-sim-asn" src="/logo-sim-asn.png" />
+            <span class="has-text-white">SIM-ASN</span>
+          </a>
         </form>
         <br />
         <nav class="level">
@@ -67,6 +82,7 @@ export default {
   middleware: 'guest',
   data() {
     return {
+      progress: false,
       pass: {
         msg: '',
         type: '',
@@ -77,13 +93,27 @@ export default {
       },
     }
   },
+  created() {
+    if (this.$route.query.error) {
+      this.pass.msg = this.$route.query.error
+    }
+    if (this.$route.query.access_token) {
+      this.progress = true
+
+      this.$auth.setUserToken(this.$route.query.access_token).catch((error) => {
+        this.pass.msg = error.message || 'Error login'
+      })
+    }
+  },
   methods: {
     async addUser() {
       try {
+        this.progress = true
         await this.$auth.loginWith('local', {
           data: this.userForm,
         })
       } catch (err) {
+        this.progress = false
         if (err.response.status === 422) {
           this.pass.msg = err.response.data.password
           this.pass.type = 'is-danger'
@@ -97,3 +127,11 @@ export default {
   },
 }
 </script>
+<style scoped>
+.logo {
+  width: 100px;
+}
+.logo-sim-asn {
+  height: 20px;
+}
+</style>

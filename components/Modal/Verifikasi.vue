@@ -178,11 +178,12 @@ export default {
         })
         .catch((err) => {
           this.$buefy.toast.open({
-            message: `Error: ${err.response.data.message}`,
+            message: `Berkas belum diverifikasi`,
             type: 'is-danger',
             queue: false,
           })
           this.isLoading = false
+          throw err
         })
     },
     submit() {

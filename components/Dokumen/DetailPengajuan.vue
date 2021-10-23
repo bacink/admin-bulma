@@ -1,116 +1,161 @@
 <template>
-  <b-table
-    :data="isEmpty ? [] : data"
-    :bordered="isBordered"
-    :striped="isStriped"
-    :narrowed="isNarrowed"
-    :hoverable="isHoverable"
-    :loading="isLoading"
-    :focusable="isFocusable"
-    :mobile-cards="hasMobileCards"
-  >
-    <b-table-column v-slot="props" field="id" label="ID" width="40">
-      {{ props.row.id }}
-    </b-table-column>
-    <b-table-column
-      v-slot="props"
-      field="syarat_pengajuan.id"
-      label="Syarat Pengajuan"
-    >
-      {{ props.row.syarat_pengajuan.nama }}
-    </b-table-column>
-    <b-table-column
-      v-slot="props"
-      field="verifikasi.status"
-      label="Status Verifikasi"
-    >
-      <div v-if="props.row.verifikasi">
-        <div v-if="props.row.verifikasi.status === 'ms'">
-          <b-button
-            icon-left="check"
-            size="is-small"
-            type="is-success"
-            label="Memenuhi syarat"
-          ></b-button>
-        </div>
-        <div v-else>
-          <b-button
-            icon-left="close"
-            size="is-small"
-            type="is-danger"
-            label="Tidak memenuhi syarat"
-          ></b-button>
-        </div>
-      </div>
-    </b-table-column>
-    <b-table-column v-slot="props" label="Dokumen" width="40">
-      <b-button
-        icon-left="file"
-        label="Lihat Berkas"
-        type="is-info"
-        @click="verifikasiModal(props.row.id, props.row.id_pengajuan)"
-      />
-    </b-table-column>
-    <template #empty>
-      <div class="has-text-centered">No records</div>
-    </template>
-  </b-table>
+  <section>
+    <div class="content">
+      <table class="table is-fullwidth">
+        <thead>
+          <tr>
+            <th>No</th>
+            <th>Persyaratan Pengajuan</th>
+            <th>Status Verifikasi</th>
+            <th width="20">
+              <center>Lihat Dokumen</center>
+            </th>
+            <th width="20">
+              <center>Verifikasi</center>
+            </th>
+          </tr>
+        </thead>
+        <tbody v-for="(item, index) in syaratPengajuan" :key="item.id">
+          <tr>
+            <td>{{ index + 1 }}</td>
+            <td>{{ item.nama }}</td>
+            <td>
+              <StatusVerifikasi
+                :key="keyComponent"
+                :id-pengajuan="`${parseInt($route.params.id)}`"
+                :id-syarat-pengajuan="item.id"
+              />
+            </td>
+            <td>
+              <div v-if="item.is_upload === 'true'">
+                <btn-dokumen
+                  :id-pengajuan="`${parseInt($route.params.id)}`"
+                  :id-syarat-pengajuan="item.id"
+                ></btn-dokumen>
+              </div>
+              <div v-else>
+                <span v-if="idPegawai !== null">
+                  <btn-dokumen-simpeg
+                    :id-pegawai="idPegawai"
+                    :simpeg-dokumen="item.simpeg_dokumen"
+                  ></btn-dokumen-simpeg>
+                </span>
+              </div>
+            </td>
+            <td>
+              <b-button
+                label="Verifikasi"
+                type="is-dark"
+                size="is-small"
+                @click="prompt(idPengajuan, item.id)"
+              />
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
 </template>
 
 <script>
-import verifikasiModal from '@/components/Modal/Verifikasi.vue'
+import BtnDokumen from '@/components/Form/Pengajuan/BtnDokumen.vue'
+import BtnDokumenSimpeg from '@/components/Form/Pengajuan/BtnDokumenSimpeg.vue'
+import StatusVerifikasi from '../Form/Pengajuan/StatusVerifikasi.vue'
 
 export default {
+  components: { BtnDokumen, BtnDokumenSimpeg, StatusVerifikasi },
   data() {
     return {
-      data: [],
-      isBordered: true,
-      isStriped: true,
-      isNarrowed: true,
-      isHoverable: true,
-      isLoading: true,
-      isFocusable: true,
-      hasMobileCards: true,
-      isEmpty: true,
+      syaratPengajuan: null,
+      idPegawai: null,
+      idPengajuan: null,
+      idSyaratPengajuan: null,
+      keyComponent: 0,
     }
   },
+  created() {
+    this.loadPengajuan()
+  },
   mounted() {
-    this.loadAsyncData()
+    this.loadSyaratPengajuan()
   },
   methods: {
-    loadAsyncData() {
+    forceRerender() {
+      this.keyComponent += 1
+    },
+    prompt(idPengajuan, idSyaratPengajuan) {
+      this.idPengajuan = idPengajuan
+      this.idSyaratPengajuan = idSyaratPengajuan
+
+      this.$buefy.dialog.prompt({
+        message: `apakah dokumen memenuhi syarat ?`,
+        inputAttrs: {
+          placeholder: 'keterangan TMS',
+          maxlength: 300,
+        },
+        type: 'is-danger',
+        trapFocus: true,
+        confirmText: 'Tidak Memenuhi Syarat',
+        cancelText: 'Memenuhi Syarat',
+        onConfirm: (value) => this.simpanVerifikasi(value),
+        onCancel: (value) => this.simpanVerifikasi(value),
+      })
+    },
+    simpanVerifikasi(value) {
+      const formData = new FormData()
+      formData.append('id_pengajuan', this.idPengajuan)
+      formData.append('id_syarat_pengajuan', this.idSyaratPengajuan)
+
+      if (value === 'button') {
+        formData.append('status', 'ms')
+        return this.simpan(formData)
+      }
+
+      formData.append('status', 'tms')
+      formData.append('keterangan', value)
+      this.simpan(formData)
+    },
+    simpan(formData) {
       this.isLoading = true
       this.$axios
-        .get(`/dokumen/${this.$route.params.id}`)
-        .then(({ data }) => {
-          this.isEmpty = false
+        .post('/verifikasi', formData)
+        .then((resp) => {
+          if (resp.data.success) {
+            this.isLoading = false
+            this.$buefy.toast.open({
+              message: `Success: ${resp.data.message}`,
+              type: 'success',
+              queue: false,
+            })
+            this.isLoading = false
+            this.forceRerender()
+          }
+        })
+        .catch((err) => {
           this.isLoading = false
-          this.data = []
-          data.data.forEach((item) => {
-            this.data.push(item)
+
+          this.$buefy.toast.open({
+            message: `Error: ${err.response.data.message}`,
+            type: 'is-danger',
+            queue: false,
           })
         })
-        .catch((error) => {
-          this.data = []
-          this.total = 0
-          this.isLoading = false
-          this.isEmpty = true
-          throw error
-        })
     },
-    verifikasiModal(x, y) {
-      const modal = this.$buefy.modal.open({
-        parent: this,
-        component: verifikasiModal,
-        fullScreen: true,
-        hasModalCard: true,
-        props: {
-          idDokumen: x,
-          idPengajuan: y,
-        },
+    loadSyaratPengajuan() {
+      this.isLoading = true
+      this.$axios.$get(`/syarat_pengajuan/`).then((resp) => {
+        if (resp) {
+          this.isLoading = false
+          const data = resp.data
+          this.syaratPengajuan = data
+        }
       })
-      modal.$on('close', () => {
-        this.loadAsyncData()
+    },
+    loadPengajuan() {
+      this.isLoading = true
+      this.$axios.$get(`/pengajuan/${this.$route.params.id}`).then((resp) => {
+        this.idPegawai = resp.data.id_pegawai
+        this.idPengajuan = resp.data.id
       })
     },
   },

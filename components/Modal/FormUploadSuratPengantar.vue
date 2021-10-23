@@ -120,7 +120,7 @@ export default {
             message: `Success: ${r.data.message}`,
             type: 'is-success',
           })
-          this.$router.go() // Refreshes page
+          // this.$router.go() // Refreshes page
           this.isLoading = false
           this.$parent.close()
         })

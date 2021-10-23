@@ -92,7 +92,7 @@
                 label="Angka Kredit / Kelas Jabatan"
                 label-position="on-border"
               >
-                <b-input v-model="formData.karir_baru.ak_kredit"></b-input>
+                <b-input v-model="formData.karir_baru.kelas_jabatan"></b-input>
               </b-field>
 
               <b-field label="Tunjangan" label-position="on-border" expanded>
@@ -140,10 +140,26 @@
 
           <b-field grouped>
             <b-field label="Tanggal" label-position="on-border">
-              <b-input placeholder="Tanggal SK"></b-input>
+              <b-datepicker
+                v-model="dateSk"
+                :locale="locale"
+                placeholder="Type or select a date..."
+                icon="calendar-today"
+                editable
+                required
+              >
+              </b-datepicker>
             </b-field>
             <b-field label="TMT" label-position="on-border">
-              <b-input placeholder="TMT SK"></b-input>
+              <b-datepicker
+                v-model="dateTmt"
+                :locale="locale"
+                placeholder="Type or select a date..."
+                icon="calendar-today"
+                editable
+                required
+              >
+              </b-datepicker>
             </b-field>
           </b-field>
 
@@ -442,6 +458,9 @@ export default {
   },
   data() {
     return {
+      dateTmt: null,
+      dateSk: null,
+      locale: 'id-ID',
       formData: {
         pegawai: {
           nama: null,
@@ -450,8 +469,6 @@ export default {
           golongan: '',
           tempat_lahir: '',
           tanggal_lahir: '',
-          ak_kredit: '',
-          tunjangan: 12345,
         },
         karir_lama: {
           jabatan: '',
@@ -463,6 +480,8 @@ export default {
           jabatan: '',
           skpd: '',
           unit_kerja: '',
+          ak_kredit: '',
+          tunjangan: 200000,
         },
         skpd: {
           kepala: '',
@@ -488,7 +507,21 @@ export default {
   },
   computed: {
     terbilang() {
-      return angkaTerbilang(this.formData.karir_baru.ak_kredit)
+      return angkaTerbilang(this.formData.karir_baru.kelas_jabatan)
+    },
+    tanggalSk() {
+      const date = new Date(this.dateSk)
+      const tgl = date.getDate()
+      const bulan = date.getMonth() + 1
+      const tahun = date.getFullYear()
+      return tahun + '-' + bulan + '-' + tgl
+    },
+    tanggalTmt() {
+      const date = new Date(this.dateTmt)
+      const tgl = date.getDate()
+      const bulan = date.getMonth() + 1
+      const tahun = date.getFullYear()
+      return tahun + '-' + bulan + '-' + tgl
     },
   },
   created() {
@@ -552,6 +585,11 @@ export default {
           this.formData.karir_baru.skpd = data.jabatan_baru.skpd.nama
           this.formData.karir_baru.unit_kerja =
             data.jabatan_baru.unit_kerja.nama
+
+          this.formData.karir_baru.kelas_jabatan =
+            data.jabatan_baru.kelas_jabatan.kelas
+          this.formData.karir_baru.tunjangan =
+            data.jabatan_baru.kelas_jabatan.tunjangan
 
           this.getKepala(data.jabatan_lama.jabatan.skpd.id)
           this.getTemplateSurat(data.jenis_jafung.id)

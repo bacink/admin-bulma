@@ -17,29 +17,31 @@
             <td>{{ index + 1 }}</td>
             <td>{{ item.nama }}</td>
             <td>
-              <div v-if="dokumenPengajuan">
-                <div v-for="(dokumen, inde) in dokumenPengajuan" :key="inde">
-                  <div v-if="dokumen.id_syarat_pengajuan === item.id">
-                    <b-button
-                      icon-left="pdf-box"
-                      type="is-danger"
-                      @click="pdfModal(dokumen.id)"
-                    >
-                      View
-                    </b-button>
-                  </div>
-                </div>
-              </div>
+              <span v-if="item.is_upload === 'false'">
+                <BtnDokumenSimpeg
+                  :id-pegawai="idPegawai"
+                  :simpeg-dokumen="item.simpeg_dokumen"
+                />
+              </span>
+              <span v-else>
+                <BtnDokumen
+                  :key="componentKey"
+                  :id-syarat-pengajuan="item.id"
+                  :id-pengajuan="idPengajuan"
+                />
+              </span>
             </td>
             <td>
-              <center>
-                <b-button
-                  icon-left="upload"
-                  label="Upload"
-                  type="is-info"
-                  @click="cardModal(item.id)"
-                />
-              </center>
+              <span v-if="item.is_upload === 'true'">
+                <center>
+                  <b-button
+                    icon-left="upload"
+                    label="Upload"
+                    type="is-info"
+                    @click="cardModal(item.id)"
+                  />
+                </center>
+              </span>
             </td>
           </tr>
         </tbody>
@@ -68,14 +70,25 @@
 </template>
 <script>
 import ModalForm from '@/components/Modal/FormUpload.vue'
-import ModalPdf from '@/components/Modal/FilePdf.vue'
+import BtnDokumen from '@/components/Form/Pengajuan/BtnDokumen'
+import BtnDokumenSimpeg from '@/components/Form/Pengajuan/BtnDokumenSimpeg'
 
 export default {
+  components: {
+    BtnDokumen,
+    BtnDokumenSimpeg,
+  },
+  props: {
+    idPegawai: {
+      type: String,
+      default: null,
+    },
+  },
   data() {
     return {
+      componentKey: 0,
       isLoading: false,
       syaratPengajuan: null,
-      dokumenPengajuan: null,
       idPengajuan: parseInt(this.$route.params.id),
       isComponentModalActive: false,
       isFullPage: true,
@@ -84,9 +97,11 @@ export default {
   computed: {},
   mounted() {
     this.fetchSyaratPengajuan()
-    this.fetchdokumenPengajuan()
   },
   methods: {
+    forceRerender() {
+      this.componentKey += 1
+    },
     cardModal(x) {
       const modal = this.$buefy.modal.open({
         parent: this,
@@ -100,41 +115,47 @@ export default {
         },
       })
       modal.$on('close', () => {
-        this.fetchdokumenPengajuan()
+        this.fetchSyaratPengajuan()
+        this.forceRerender()
       })
     },
-    pdfModal(x) {
-      this.$buefy.modal.open({
-        parent: this,
-        component: ModalPdf,
-        fullScreen: true,
-        hasModalCard: true,
-        props: {
-          idDokumen: x,
-        },
-      })
-    },
+
     fetchSyaratPengajuan() {
       this.isLoading = true
       this.$axios.$get(`/syarat_pengajuan/`).then((resp) => {
         if (resp) {
           this.isLoading = false
-
           const data = resp.data
           this.syaratPengajuan = data
         }
       })
     },
-    fetchdokumenPengajuan() {
+    updateStatus(idPengajuan, Status) {
       this.isLoading = true
-      this.$axios.$get(`/dokumen/${this.idPengajuan}`).then((resp) => {
-        if (resp) {
+      this.$axios
+        .patch('/pengajuan/update/status', {
+          id_pengajuan: idPengajuan,
+          status: Status,
+        })
+        .then((resp) => {
+          if (resp.data.success) {
+            this.$buefy.toast.open({
+              message: `Success: ${resp.data.message}`,
+              type: 'success',
+              queue: false,
+            })
+            this.$router.push(`/pengajuan/table`)
+          }
+        })
+        .catch((err) => {
           this.isLoading = false
 
-          const data = resp.data
-          this.dokumenPengajuan = data
-        }
-      })
+          this.$buefy.toast.open({
+            message: `Error: ${err.response.data.message}`,
+            type: 'is-danger',
+            queue: false,
+          })
+        })
     },
     submit() {
       this.isLoading = true
@@ -151,7 +172,7 @@ export default {
               type: 'success',
               queue: false,
             })
-            this.$router.push(`/pengajuan/table`)
+            this.updateStatus(this.idPengajuan, 'diajukan')
           }
         })
         .catch((err) => {

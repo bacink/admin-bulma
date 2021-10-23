@@ -27,6 +27,7 @@
       aria-previous-label="Previous page"
       aria-page-label="Page"
       aria-current-label="Current page"
+      :sticky-header="stickyHeader"
       :current-page.sync="page"
       :paginated="isPaginated"
       :loading="loading"
@@ -120,61 +121,108 @@
           <b-icon icon="cogs"></b-icon>
         </template>
         <template v-slot="props">
-          <div v-if="isSkpd">
-            <div v-if="props.row.status === 'diverifikasi_skpd'">
-              <div v-if="props.row.surat_pengantar !== null">
-                <b-button
-                  label="Kirim Ke Verifikator"
-                  icon-left="send"
-                  type="is-warning"
-                  size="is-small"
-                  @click="confirm(props.row.id)"
-                />
-              </div>
-              <div v-else>
-                <b-button
-                  class="is-small is-primary"
-                  icon-left="upload"
-                  @click="cardModal(props.row.id)"
-                >
-                  Upload Surat Pengantar
-                </b-button>
-              </div>
-            </div>
-            <div v-else-if="props.row.status === 'diajukan'">
+          <b-field>
+            <p class="control">
               <b-button
                 tag="router-link"
-                :to="`/pengajuan/verifikasi/${props.row.id}`"
-                type="is-info"
-              >
-                Verifikasi
-              </b-button>
-            </div>
-          </div>
-          <div v-if="isAnalis || isBkpsdm">
-            <div v-if="props.row.status === 'dikirim_skpd'">
-              <b-button
-                icon-left="alert-circle-outline"
-                type="is-warning"
+                :to="`/tracking/${props.row.id}`"
+                type="is-success"
                 size="is-small"
-                tag="router-link"
-                :to="`/pengajuan/verifikasi/${props.row.id}`"
+                icon-left="eye"
               >
-                Verifikasi
+                Tracking
               </b-button>
-            </div>
-            <div v-if="props.row.status === 'diverifikasi_analis'">
-              <b-button
-                icon-left="file"
-                type="is-info"
-                size="is-small"
-                tag="router-link"
-                :to="`/draft/${props.row.id}`"
-              >
-                Buat Draft
-              </b-button>
-            </div>
-          </div>
+            </p>
+            <template v-if="isSkpd">
+              <template v-if="props.row.status === 'diverifikasi_skpd'">
+                <template v-if="props.row.surat_pengantar !== null">
+                  <p class="control">
+                    <b-button
+                      label="Kirim Ke Verifikator"
+                      icon-left="send"
+                      type="is-warning"
+                      size="is-small"
+                      @click="confirm(props.row.id)"
+                    />
+                  </p>
+                  <p class="control">
+                    <b-button
+                      tag="router-link"
+                      :to="`/pengajuan/verifikasi/${props.row.id}`"
+                      type="is-success"
+                      size="is-small"
+                    >
+                      Edit Verifikasi
+                    </b-button>
+                  </p>
+                </template>
+                <template v-else>
+                  <p class="control">
+                    <b-button
+                      class="is-small is-primary"
+                      icon-left="upload"
+                      @click="cardModal(props.row.id)"
+                    >
+                      Upload Surat Pengantar
+                    </b-button>
+                  </p>
+                </template>
+              </template>
+              <template v-else-if="props.row.status === 'diajukan'">
+                <p class="control">
+                  <b-button
+                    tag="router-link"
+                    :to="`/pengajuan/verifikasi/${props.row.id}`"
+                    type="is-info"
+                    size="is-small"
+                    icon-left="pencil"
+                  >
+                    Verifikasi
+                  </b-button>
+                </p>
+              </template>
+            </template>
+            <template v-if="isAnalis || isBkpsdm">
+              <template v-if="props.row.status === 'dikirim_skpd'">
+                <p class="control">
+                  <b-button
+                    icon-left="alert-circle-outline"
+                    type="is-warning"
+                    size="is-small"
+                    tag="router-link"
+                    :to="`/pengajuan/verifikasi/${props.row.id}`"
+                  >
+                    Verifikasi
+                  </b-button>
+                </p>
+              </template>
+              <template v-if="props.row.status === 'diverifikasi_analis'">
+                <p class="control">
+                  <b-button
+                    icon-left="file"
+                    type="is-info"
+                    size="is-small"
+                    tag="router-link"
+                    :to="`/draft/${props.row.id}`"
+                  >
+                    Buat Draft
+                  </b-button>
+                </p>
+              </template>
+            </template>
+            <template v-if="isPengawas">
+              <template v-if="props.row.status === 'draft_analis_jabatan'">
+                <p class="control">
+                  <b-button
+                    label="Paraf"
+                    type="is-dark"
+                    size="is-small"
+                    @click="paraf(props.row.id)"
+                  />
+                </p>
+              </template>
+            </template>
+          </b-field>
         </template>
       </b-table-column>
       <template #empty>
@@ -230,6 +278,7 @@ export default {
       defaultSortOrder: 'desc',
       defaultOpenedDetails: [1],
       showDetailIcon: true,
+      stickyHeader: true,
       useTransition: 'fade',
       page: 1,
       perPage: 20,
@@ -249,6 +298,7 @@ export default {
   },
   mounted() {
     const CurrentRole = this.$auth.user.role.nama.toLowerCase()
+
     switch (CurrentRole) {
       case 'admin skpd':
         this.isSkpd = true
@@ -278,9 +328,76 @@ export default {
     this.loadAsyncData()
   },
   methods: {
-    /*
-     * Load async data
-     */
+    updateStatus(idPengajuan, Status) {
+      this.isLoading = true
+      this.$axios
+        .patch('/pengajuan/update/status', {
+          id_pengajuan: idPengajuan,
+          status: Status,
+        })
+        .then((resp) => {
+          if (resp.data.success) {
+            this.loadAsyncData()
+            this.$buefy.toast.open({
+              message: `Success: ${resp.data.message}`,
+              type: 'success',
+              queue: false,
+            })
+          }
+        })
+        .catch((err) => {
+          this.isLoading = false
+
+          this.$buefy.toast.open({
+            message: `Error: ${err.response.data.message}`,
+            type: 'is-danger',
+            queue: false,
+          })
+        })
+    },
+    confirmTolak(id, status) {
+      this.$buefy.dialog.confirm({
+        title: 'Deleting account',
+        message: 'Anda yakin <b>Menolak Draft</b> ini tidak bisa dibatalkan.',
+        confirmText: 'Tolak Draft',
+        type: 'is-danger',
+        hasIcon: true,
+        onConfirm: () => {
+          this.$buefy.toast.open(`Paraf sedang di proses`)
+          setTimeout(() => {
+            this.updateStatus(id, status)
+          }, 2000)
+        },
+      })
+    },
+    parafOk(id, status) {
+      this.$buefy.toast.open(`Paraf sedang di proses`)
+      setTimeout(() => {
+        this.updateStatus(id, status)
+      }, 2000)
+    },
+
+    paraf(idPengajuan) {
+      let role = this.$auth.user.role.nama.toLowerCase()
+      role = role.replace(/\s+/g, '_')
+
+      this.$buefy.dialog.confirm({
+        title: 'Paraf Draft',
+        message:
+          'Pastikan anda sudah melihat <b>draft</b> terlebih dahulu ? Karena ini tidak bisa dibatalkan.',
+        confirmText: 'Paraf',
+        type: 'is-info',
+        hasIcon: true,
+        cancelText: 'Tolak',
+        canCancel: true,
+        onConfirm: () => {
+          this.parafOk(idPengajuan, 'paraf_' + role)
+        },
+        onCancel: () => {
+          this.confirmTolak(idPengajuan, 'ditolak_' + role)
+        },
+      })
+    },
 
     loadAsyncData() {
       const params = [
@@ -322,7 +439,7 @@ export default {
         })
     },
     cardModal(x) {
-      this.$buefy.modal.open({
+      const modal = this.$buefy.modal.open({
         parent: this,
         component: ModalForm,
         hasModalCard: true,
@@ -331,6 +448,9 @@ export default {
         props: {
           idPengajuan: x,
         },
+      })
+      modal.$on('close', () => {
+        this.loadAsyncData()
       })
     },
     /*

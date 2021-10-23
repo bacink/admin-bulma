@@ -22,7 +22,10 @@
                 <FormPengajuanPegawai class="tile is-child" />
               </div>
               <div v-else-if="activeStep === 2">
-                <FormPengajuanUploadBerkas class="tile is-child" />
+                <FormPengajuanUploadBerkas
+                  :id-pegawai="id_pegawai"
+                  class="tile is-child"
+                />
               </div>
             </section>
           </card-component>
@@ -85,6 +88,7 @@ export default {
           const data = resp.data
           if (data.status === 'form') {
             this.activeStep = 2
+            this.id_pegawai = data.id_pegawai
           }
         }
       })

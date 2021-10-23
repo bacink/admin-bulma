@@ -29,7 +29,7 @@ const data = [
       label: 'Pengajuan',
       icon: 'table',
       updateMark: false,
-      role: 'admin bkpsdm,admin skpd,user,analis jabatan',
+      role: 'admin bkpsdm,admin skpd,user,analis jabatan,pengawas',
     },
     {
       label: 'Pengaturan',

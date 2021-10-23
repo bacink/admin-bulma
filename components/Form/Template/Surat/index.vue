@@ -1,30 +1,25 @@
 <template>
   <div class="content">
-    <form @submit.prevent="addNewTodo">
+    <form @submit.prevent="addNewMengingat">
       <b-field grouped>
         <b-field label="Kop Depan" label-position="on-border" expanded>
-          <b-input v-model="kopDpn" placeholder="230/Kep."></b-input>
+          <b-input v-model="kop_depan" placeholder="230/Kep."></b-input>
         </b-field>
         <b-field label="Kop Belakang" label-position="on-border" expanded>
-          <b-input v-model="kopBlk" placeholder="BKPSDM/2020"></b-input>
+          <b-input v-model="kop_belakang" placeholder="BKPSDM/2020"></b-input>
         </b-field>
       </b-field>
       <b-field label="Jenis Jafung">
         <JenisJafung v-model="jenisJafung" @input="getJenisJafung"
       /></b-field>
       <input id="" v-model="id_jenis_jafung" type="hidden" />
-      <b-field label="Mengingat">
-        <b-input
-          id="new-todo"
-          v-model="newTodoText"
-          placeholder="Type here"
-          expanded
-        />
+      <b-field grouped label="Mengingat" label-position="on-border">
+        <b-input v-model="newMengingatText" type="textarea" expanded></b-input>
         <p class="control">
           <b-button
             type="is-success"
             icon-right="plus"
-            @click="addNewTodo"
+            @click="addNewMengingat"
           ></b-button>
         </p>
       </b-field>
@@ -36,46 +31,53 @@
       >
         Siliahkan isi terlebih dahulu
       </b-notification>
+
+      <draggable
+        :list="mengingat"
+        :disabled="!enabled"
+        class="list-group"
+        ghost-class="ghost"
+        @start="dragging = true"
+        @end="dragging = false"
+      >
+        <div v-for="(element, index) in mengingat" :key="element.id">
+          <p class="one m-2 p-2">
+            {{ index + 1 }}. {{ element.text }}
+            <b-button
+              label="Delete"
+              size="is-small"
+              type="is-danger"
+              icon-left="close"
+              class="is-pulled-right"
+              @click="mengingat.splice(index, 1)"
+            />
+          </p>
+        </div>
+        <p>geser untuk merubah posisi</p>
+      </draggable>
+      <hr />
+      <b-button
+        label="Simpan"
+        type="is-success"
+        icon-left="content-save"
+        @click="onClickButton"
+      ></b-button>
     </form>
-    <ol type="1">
-      <li v-for="(todo, index) in form" :key="index">
-        {{ todo.text }}
-        <b-button
-          icon-left="minus"
-          type="is-danger"
-          size="is-small"
-          @click="form.splice(index, 1)"
-        ></b-button>
-      </li>
-    </ol>
-    <hr />
-    <b-button
-      label="Simpan"
-      type="is-success"
-      icon-left="content-save"
-      @click="onClickButton"
-    ></b-button>
   </div>
 </template>
 
 <script>
 import JenisJafung from '@/components/AutoComplete/JenisJafung'
 // import HeroBar from '@/components/HeroBar'
+import draggable from 'vuedraggable'
 
 export default {
   name: 'TemplateSuratForm',
   components: {
     JenisJafung,
+    draggable,
   },
   props: {
-    kopDpn: {
-      type: String,
-      default: null,
-    },
-    kopBlk: {
-      type: String,
-      default: null,
-    },
     idJenisJafung: {
       type: Number,
       default: null,
@@ -84,25 +86,23 @@ export default {
       type: String,
       default: null,
     },
-    form: {
-      type: [Array, Object],
-      default: () => ({
-        id: 0,
-        text: 'test',
-      }),
-    },
   },
   data() {
     return {
+      enabled: true,
+      dragging: false,
+
       isLoading: false,
       isNotification: false,
-      newTodoText: '',
-      nextTodoId: 0,
       id_jenis_jafung: null,
       kop_depan: null,
       kop_belakang: null,
+      newMengingatId: 1,
+      newMengingatText: '',
+      mengingat: [],
     }
   },
+  computed: {},
 
   methods: {
     getJenisJafung(payload, payload2) {
@@ -110,30 +110,28 @@ export default {
         this.id_jenis_jafung = payload2.id
       }
     },
-    addNewTodo() {
-      if (this.newTodoText === '') {
-        this.isNotification = true
+    addNewMengingat() {
+      if (this.newMengingatText === '') {
       } else {
-        this.appendTodo()
-      }
-    },
-    appendTodo() {
-      if (this.form) {
-        this.nextTodoId = this.form.length
-      } else {
-        this.nextTodoId = 0
-      }
+        if (this.mengingat) {
+          this.newMengingatId = this.mengingat.length
+        } else {
+          this.newMengingatId = 1
+        }
 
-      this.form.push({
-        id: this.nextTodoId++,
-        text: this.newTodoText,
-      })
-      this.newTodoText = ''
+        this.mengingat.push({
+          id: this.newMengingatId++,
+          nomor: this.newMengingatId++,
+          text: this.newMengingatText,
+        })
+        this.newMengingatText = ''
+      }
     },
+
     onClickButton(event) {
       this.$emit(
         'clicked',
-        this.form,
+        this.mengingat,
         this.id_jenis_jafung,
         this.kop_depan,
         this.kop_belakang
@@ -142,3 +140,16 @@ export default {
   },
 }
 </script>
+<style scoped>
+.buttons {
+  margin-top: 35px;
+}
+.ghost {
+  opacity: 0.5;
+  background: #c8ebfb;
+}
+p.one {
+  border: 2px solid grey;
+  border-radius: 5px;
+}
+</style>
