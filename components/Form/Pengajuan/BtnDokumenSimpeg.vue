@@ -17,7 +17,7 @@
       <b-button
         disabled
         tag="a"
-        href="https://buefy.org"
+        href="#"
         target="_blank"
         icon-left="pdf-box"
         type="is-danger"
@@ -31,7 +31,7 @@
     <b-button
       disabled
       tag="a"
-      href="https://buefy.org"
+      href="#"
       target="_blank"
       icon-left="pdf-box"
       type="is-danger"
@@ -64,11 +64,14 @@ export default {
   },
   methods: {
     fetchData() {
+      this.isLoading = true
       this.$axios
         .$get(`/simpeg/dokumen/${this.simpegDokumen}/${this.idPegawai}`)
         .then((resp) => {
           if (resp) {
-            this.isLoading = false
+            setInterval(() => {
+              this.isLoading = false
+            }, 3 * 1000)
             const data = resp.data
             this.dokumen = data
           }

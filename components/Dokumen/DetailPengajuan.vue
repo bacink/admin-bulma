@@ -15,6 +15,7 @@
             </th>
           </tr>
         </thead>
+
         <tbody v-for="(item, index) in syaratPengajuan" :key="item.id">
           <tr>
             <td>{{ index + 1 }}</td>
@@ -43,12 +44,22 @@
               </div>
             </td>
             <td>
-              <b-button
-                label="Verifikasi"
-                type="is-dark"
-                size="is-small"
-                @click="prompt(idPengajuan, item.id)"
-              />
+              <div v-if="item.is_upload === 'true'">
+                <b-button
+                  label="Verifikasi"
+                  type="is-dark"
+                  size="is-small"
+                  @click="prompt(idPengajuan, item.id)"
+                />
+              </div>
+              <div v-if="item.simpeg_dokumen">
+                <b-button
+                  label="Verifikasi"
+                  type="is-dark"
+                  size="is-small"
+                  @click="prompt(idPengajuan, item.id)"
+                />
+              </div>
             </td>
           </tr>
         </tbody>
@@ -63,7 +74,11 @@ import BtnDokumenSimpeg from '@/components/Form/Pengajuan/BtnDokumenSimpeg.vue'
 import StatusVerifikasi from '../Form/Pengajuan/StatusVerifikasi.vue'
 
 export default {
-  components: { BtnDokumen, BtnDokumenSimpeg, StatusVerifikasi },
+  components: {
+    BtnDokumen,
+    BtnDokumenSimpeg,
+    StatusVerifikasi,
+  },
   data() {
     return {
       syaratPengajuan: null,
@@ -71,6 +86,7 @@ export default {
       idPengajuan: null,
       idSyaratPengajuan: null,
       keyComponent: 0,
+      isLoading: true,
     }
   },
   created() {
@@ -156,6 +172,7 @@ export default {
       this.$axios.$get(`/pengajuan/${this.$route.params.id}`).then((resp) => {
         this.idPegawai = resp.data.id_pegawai
         this.idPengajuan = resp.data.id
+        this.isLoading = false
       })
     },
   },

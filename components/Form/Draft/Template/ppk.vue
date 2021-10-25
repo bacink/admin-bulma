@@ -303,9 +303,9 @@ export default {
       },
     },
     mengingat: {
-      type: [Object, Array],
+      type: [Array],
       default() {
-        return {}
+        return []
       },
     },
     pengajuan: {
@@ -350,7 +350,7 @@ export default {
           a: null,
           b: null,
         },
-        mengingat: {},
+        mengingat: this.mengingat,
         memperhatikan: null,
         penandatangan: {
           nama: 'bupati',
@@ -370,37 +370,11 @@ export default {
     }
   },
   watch: {
-    pengajuan(newValue) {
-      this.formData.pegawai.nama = this.pengajuan.pegawai.nama_lengkap
-      this.formData.pegawai.nip = this.pengajuan.pegawai.nip
-      this.formData.pegawai.ttl = `${this.pengajuan.pegawai.tempat_lahir}, ${this.pengajuan.pegawai.tanggal_lahir}`
-      this.formData.pegawai.pangkat_gol = `${this.pengajuan.golongan.referensi.pangkat}, ${this.pengajuan.golongan.referensi.golongan}`
-      this.formData.pegawai.pendidikan = `${this.pengajuan.pegawai.pendidikan.tingkat.singkatan}, ${this.pengajuan.pegawai.pendidikan.jurusan}`
-      this.formData.pegawai.jabatan_lama =
-        this.pengajuan.jabatan_lama.jabatan.nama
-      this.formData.pegawai.unit_kerja =
-        this.pengajuan.jabatan_lama.jabatan.unit_kerja.nama
-      this.formData.tentang = `${this.pengajuan.jenis_jafung.nama} dalam jabatan fungsional ${this.pengajuan.jabatan_baru.nama}`
-      this.formData.menimbang.a = `bahwa Pegawai Negeri Sipil a.n ${this.pengajuan.pegawai.nama_lengkap}, telah memenuhi syarat untuk diangkat dalam Jabatan Fungsional ${this.pengajuan.jabatan_baru.nama_lengkap} dan telah sesuai dengan Peraturan Menteri Negara Pendayagunaan Aparatur Negara dan Reformasi Birokrasi Nomor 16 Tahun 2009 tentang Jabatan Fungsional ${this.pengajuan.jabatan_baru.nama} dan Angka Kreditnya;`
-      this.formData.menimbang.b = `bahwa untuk maksud tersebut, perlu ditetapkan dengan Keputusan Bupati Karawang;`
-      this.formData.mengingat = this.mengingat
-      this.formData.kode = this.pengajuan.jenis_jafung.kode
-      this.formData.id_pengajuan = this.pengajuan.id
-    },
     kopDepan(newValue) {
       this.formData.kop_depan = newValue
     },
     kopBelakang(newValue) {
       this.formData.kop_belakang = newValue
-    },
-    kepalaSkpd(newValue) {
-      this.formData.memperhatikan = `Surat ${newValue} Kabupaten Karawang Nomor ${this.suratPengantar.nomor} tanggal ${this.suratPengantar.tanggal_indo} perihal Usulan Pengangkatan Jabatan Fungsional ${this.pengajuan.jabatan_baru.nama}.`
-      this.nomor = this.formData.tembusan.length + 1
-
-      this.formData.tembusan.push({
-        nomor: this.nomor,
-        text: newValue + 'Kab. Karawang;',
-      })
     },
     'penandatangan.nama'(newValue) {
       this.formData.penandatangan.nama = newValue
@@ -411,6 +385,38 @@ export default {
     'penandatangan.pangkat'(newValue) {
       this.formData.penandatangan.pangkat = newValue
     },
+  },
+  mounted() {
+    this.formData.menimbang.a = `bahwa Pegawai Negeri Sipil a.n ${this.pengajuan.pegawai.nama_lengkap}, telah memenuhi syarat untuk diangkat dalam Jabatan Fungsional ${this.pengajuan.jabatan_baru.nama_lengkap} dan telah sesuai dengan Peraturan Menteri Negara Pendayagunaan Aparatur Negara dan Reformasi Birokrasi Nomor 16 Tahun 2009 tentang Jabatan Fungsional ${this.pengajuan.jabatan_baru.nama} dan Angka Kreditnya;`
+    this.formData.menimbang.b = `bahwa untuk maksud tersebut, perlu ditetapkan dengan Keputusan Bupati Karawang;`
+
+    this.formData.memperhatikan = `Surat ${this.kepalaSkpd} Kabupaten Karawang Nomor ${this.suratPengantar.nomor} tanggal ${this.suratPengantar.tanggal_indo} perihal Usulan Pengangkatan Jabatan Fungsional ${this.pengajuan.jabatan_baru.nama}.`
+
+    this.nomor = this.formData.tembusan.length + 1
+
+    this.formData.tembusan.push({
+      nomor: this.nomor,
+      text: this.kepalaSkpd + 'Kab. Karawang;',
+    })
+
+    if (this.pengajuan) {
+      this.formData.tentang = `${this.pengajuan.jenis_jafung.nama} dalam jabatan fungsional ${this.pengajuan.jabatan_baru.nama}`
+      this.formData.menimbang.a = `bahwa Pegawai Negeri Sipil a.n ${this.pengajuan.pegawai.nama_lengkap}, telah memenuhi syarat untuk diangkat dalam Jabatan Fungsional ${this.pengajuan.jabatan_baru.nama_lengkap} dan telah sesuai dengan Peraturan Menteri Negara Pendayagunaan Aparatur Negara dan Reformasi Birokrasi Nomor 16 Tahun 2009 tentang Jabatan Fungsional ${this.pengajuan.jabatan_baru.nama} dan Angka Kreditnya;`
+      this.formData.menimbang.b = `bahwa untuk maksud tersebut, perlu ditetapkan dengan Keputusan Bupati Karawang;`
+      this.formData.mengingat = this.mengingat
+      this.formData.kode = this.pengajuan.jenis_jafung.kode
+      this.formData.id_pengajuan = this.pengajuan.id
+
+      this.formData.pegawai.nama = this.pengajuan.pegawai.nama_lengkap
+      this.formData.pegawai.nip = this.pengajuan.pegawai.nip
+      this.formData.pegawai.ttl = `${this.pengajuan.pegawai.tempat_lahir}, ${this.pengajuan.pegawai.tanggal_lahir}`
+      this.formData.pegawai.pangkat_gol = `${this.pengajuan.golongan.referensi.pangkat}, ${this.pengajuan.golongan.referensi.golongan}`
+      this.formData.pegawai.pendidikan = `${this.pengajuan.pegawai.pendidikan.tingkat.singkatan}, ${this.pengajuan.pegawai.pendidikan.jurusan}`
+      this.formData.pegawai.jabatan_lama =
+        this.pengajuan.jabatan_lama.jabatan.nama
+      this.formData.pegawai.unit_kerja =
+        this.pengajuan.jabatan_lama.jabatan.unit_kerja.nama
+    }
   },
   created() {
     setInterval(() => {

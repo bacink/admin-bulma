@@ -17,13 +17,13 @@
     <b-button
       disabled
       tag="a"
-      href="https://buefy.org"
+      href="#"
       target="_blank"
       icon-left="pdf-box"
       type="is-danger"
       size="is-small"
     >
-      Silahkan Upload
+      Surat Pengantar Belum diupload
     </b-button>
   </div>
 </template>
@@ -31,10 +31,6 @@
 <script>
 export default {
   props: {
-    idSyaratPengajuan: {
-      type: [Number, String],
-      default: null,
-    },
     idPengajuan: {
       type: [Number, String],
       default: null,
@@ -53,9 +49,7 @@ export default {
     fetchData() {
       this.isLoading = true
       this.$axios
-        .$get(
-          `/dokumen/pengajuan/pdf/${this.idPengajuan}/${this.idSyaratPengajuan}`
-        )
+        .$get(`/surat/pengantar/pengajuan/pdf/${this.idPengajuan}`)
         .then((resp) => {
           setInterval(() => {
             this.isLoading = false

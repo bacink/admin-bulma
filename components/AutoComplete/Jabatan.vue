@@ -8,7 +8,6 @@
         :data="data"
         :loading="isFetching"
         :keep-first="true"
-        :open-on-focus="true"
         placeholder="Cari Jabatan"
         field="nama_lengkap"
         icon="magnify"

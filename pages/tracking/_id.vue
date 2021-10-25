@@ -1,40 +1,45 @@
 <template>
   <section>
-    <div class="timeline is-centered">
-      <header class="timeline-header">
-        <span class="tag is-medium is-primary">Start</span>
-      </header>
+    <b-card title="Progres Usulan Jafung">
+      <div class="timeline is-centered">
+        <header class="timeline-header">
+          <span class="tag is-medium is-primary">Start</span>
+        </header>
 
-      <div
-        v-for="item in tracking.data"
-        :key="item.id"
-        class="timeline-item is-primary"
-      >
-        <div class="timeline-marker is-primary"></div>
-        <div class="timeline-content">
-          <div class="box">
-            <p class="heading">
-              {{ item.tanggal }}
-            </p>
-            <div class="block">
-              <p>
-                <b-icon
-                  icon="android-messages"
-                  size="is-small"
-                  type="is-success"
-                >
-                </b-icon>
-                {{ item.deskripsi }}
+        <div
+          v-for="item in tracking.data"
+          :key="item.id"
+          class="timeline-item is-warning"
+        >
+          <div class="timeline-marker is-primary"></div>
+
+          <div class="timeline-content">
+            <div class="box">
+              <p class="heading">
+                {{ item.tanggal }}
               </p>
-              <p>
-                <b-icon icon="clock" size="is-small" type="is-dark"> </b-icon>
-                {{ item.tanggal_selisih }}
-              </p>
+              <div class="block">
+                <p>
+                  <b-icon
+                    icon="account-circle"
+                    size="is-small"
+                    type="is-primary"
+                  >
+                  </b-icon>
+                  {{ item.aktor.toUpperCase() }}
+                </p>
+                <div class="control">
+                  <b-taglist attached>
+                    <b-tag type="is-dark">{{ item.deskripsi }}</b-tag>
+                    <b-tag type="is-info">{{ item.tanggal_selisih }}</b-tag>
+                  </b-taglist>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </b-card>
   </section>
 </template>
 <script>
@@ -52,7 +57,6 @@ export default {
       this.$axios
         .get(`tracking/pengajuan/${id}`)
         .then((resp) => {
-          console.log(resp)
           this.tracking = resp.data
           if (resp.data.success) {
             this.$buefy.toast.open({

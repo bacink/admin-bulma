@@ -126,7 +126,7 @@
               <b-button
                 tag="router-link"
                 :to="`/tracking/${props.row.id}`"
-                type="is-success"
+                type="is-dark"
                 size="is-small"
                 icon-left="eye"
               >
@@ -181,9 +181,17 @@
                   </b-button>
                 </p>
               </template>
+              <template v-else-if="props.row.status === 'dikirim_skpd'">
+                <p class="control">
+                  <btn-surat-pengantar :id-pengajuan="props.row.id" />
+                </p>
+              </template>
             </template>
             <template v-if="isAnalis || isBkpsdm">
               <template v-if="props.row.status === 'dikirim_skpd'">
+                <p class="control">
+                  <btn-surat-pengantar :id-pengajuan="props.row.id" />
+                </p>
                 <p class="control">
                   <b-button
                     icon-left="alert-circle-outline"
@@ -213,14 +221,69 @@
             <template v-if="isPengawas">
               <template v-if="props.row.status === 'draft_analis_jabatan'">
                 <p class="control">
+                  <btn-draft :id-pengajuan="props.row.id"></btn-draft>
+                </p>
+
+                <p class="control">
                   <b-button
                     label="Paraf"
-                    type="is-dark"
+                    type="is-danger"
                     size="is-small"
+                    icon-left="pencil"
+                    outlined
                     @click="paraf(props.row.id)"
                   />
                 </p>
               </template>
+            </template>
+
+            <template v-if="isAdmin1">
+              <template v-if="props.row.status === 'paraf_pengawas'">
+                <p class="control">
+                  <btn-draft :id-pengajuan="props.row.id"></btn-draft>
+                </p>
+                <p class="control">
+                  <b-button
+                    label="Paraf"
+                    type="is-danger"
+                    size="is-small"
+                    icon-left="pencil"
+                    outlined
+                    @click="paraf(props.row.id)"
+                  /></p
+              ></template>
+            </template>
+            <template v-if="isAdmin2">
+              <template v-if="props.row.status === 'paraf_administrator_1'">
+                <p class="control">
+                  <btn-draft :id-pengajuan="props.row.id"></btn-draft>
+                </p>
+                <p class="control">
+                  <b-button
+                    label="Paraf"
+                    type="is-danger"
+                    size="is-small"
+                    icon-left="pencil"
+                    outlined
+                    @click="paraf(props.row.id)"
+                  /></p
+              ></template>
+            </template>
+            <template v-if="isJpt">
+              <template v-if="props.row.status === 'paraf_administrator_2'">
+                <p class="control">
+                  <btn-draft :id-pengajuan="props.row.id"></btn-draft>
+                </p>
+                <p class="control">
+                  <b-button
+                    label="Paraf"
+                    type="is-danger"
+                    size="is-small"
+                    icon-left="pencil"
+                    outlined
+                    @click="paraf(props.row.id)"
+                  /></p
+              ></template>
             </template>
           </b-field>
         </template>
@@ -251,8 +314,11 @@
 </template>
 <script>
 import ModalForm from '@/components/Modal/FormUploadSuratPengantar.vue'
+import BtnSuratPengantar from '@/components/Form/Pengajuan/BtnSuratPengantar.vue'
+import BtnDraft from '~/components/Form/Pengajuan/BtnDraft.vue'
 
 export default {
+  components: { BtnSuratPengantar, BtnDraft },
   filters: {
     /**
      * Filter to truncate string, accepts a length parameter
@@ -478,7 +544,7 @@ export default {
     },
     confirm(value) {
       this.$buefy.dialog.confirm({
-        message: 'Kirim Pengajuan?',
+        message: 'Kirim Pengajuan Ke Verifiktor?',
         onConfirm: () => this.kirmVerifikator(value),
       })
     },

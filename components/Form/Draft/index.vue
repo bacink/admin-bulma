@@ -24,7 +24,7 @@ export default {
   data() {
     return {
       kode: null,
-      mengingat: {},
+      mengingat: [],
       pengajuan: {},
       kepalaSkpd: null,
       suratPengantar: {},
@@ -47,7 +47,6 @@ export default {
     },
   },
   mounted() {
-    this.getTemplateSurat()
     this.getPengajuan()
   },
   methods: {
@@ -79,10 +78,10 @@ export default {
           this.isLoading = false
         })
     },
-    getTemplateSurat() {
+    getTemplateSurat(id) {
       this.isLoading = true
       this.$axios
-        .$get(`/template/surat/pengajuan/${this.$route.params.id}`)
+        .$get(`/template/surat/pengajuan/${id}`)
         .then(({ data }) => {
           this.kode = data.jenis_jafung.kode
           this.mengingat = data.mengingat
@@ -90,6 +89,7 @@ export default {
           this.kopBelakang = data.kop_belakang
         })
         .catch((error) => {
+          this.$route.push({ name: 'pengajuan-table' })
           throw error
         })
         .finally(() => {
@@ -103,6 +103,8 @@ export default {
           this.pengajuan = data
           this.kepalaSkpd = `${data.jabatan_lama.jabatan_sotk.skpd.jabatan_kepala.nama} ${data.jabatan_lama.jabatan_sotk.skpd.jabatan_kepala.spesifikasi}`
           this.suratPengantar = data.surat_pengantar
+
+          this.getTemplateSurat(data.jenis_jafung.id)
         })
         .catch((error) => {
           throw error
