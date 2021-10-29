@@ -436,7 +436,7 @@ export default {
             }, 3 * 1000)
             this.$buefy.toast.open({
               message: `Success: ${resp.message}`,
-              type: 'success',
+              type: 'is-success',
               queue: false,
             })
             this.$router.push({ name: 'pengajuan-table' })

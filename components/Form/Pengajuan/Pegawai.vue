@@ -273,7 +273,7 @@ export default {
             this.isLoading = false
             this.$buefy.toast.open({
               message: `Success: ${resp.message}`,
-              type: 'success',
+              type: 'is-success',
               queue: false,
             })
             const idPengajuan = resp.data.id

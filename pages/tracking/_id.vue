@@ -5,7 +5,6 @@
         <header class="timeline-header">
           <span class="tag is-medium is-primary">Start</span>
         </header>
-
         <div
           v-for="item in tracking.data"
           :key="item.id"
@@ -38,6 +37,9 @@
             </div>
           </div>
         </div>
+        <div v-show="finish" class="timeline-header">
+          <span class="tag is-medium is-primary">Finish</span>
+        </div>
       </div>
     </b-card>
   </section>
@@ -47,6 +49,7 @@ export default {
   data() {
     return {
       tracking: [],
+      finish: false,
     }
   },
   mounted() {
@@ -58,6 +61,13 @@ export default {
         .get(`tracking/pengajuan/${id}`)
         .then((resp) => {
           this.tracking = resp.data
+
+          this.tracking.data.filter((element) => {
+            if (element.deskripsi === 'cetak_sk') {
+              return (this.finish = true)
+            }
+          })
+
           if (resp.data.success) {
             this.$buefy.toast.open({
               message: `Success: ${resp.data.message}`,

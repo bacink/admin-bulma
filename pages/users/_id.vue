@@ -30,6 +30,7 @@
             </b-field>
             <b-field label="Role" message="Role" horizontal>
               <SelectRole v-model.number="form.id_role" />
+              <input v-model="form.id_role" type="hidden" value="1" />
             </b-field>
             <b-field label="Email" message="Email" horizontal>
               <b-input
@@ -64,7 +65,6 @@
                 type="password"
               />
             </b-field>
-            <input v-model="form.id_role" type="hidden" value="1" />
             <b-field
               label="Password Confirmation"
               message="Password Confirmation"
@@ -97,7 +97,7 @@
 
 <script>
 import dayjs from 'dayjs'
-import find from 'lodash/find'
+// import find from 'lodash/find'
 import HeroBar from '@/components/HeroBar'
 import Tiles from '@/components/Tiles'
 import CardComponent from '@/components/CardComponent'
@@ -149,6 +149,9 @@ export default {
       }
     },
   },
+  mounted() {
+    this.getData()
+  },
   methods: {
     getClearFormObject() {
       return {
@@ -161,12 +164,9 @@ export default {
     getData() {
       if (this.$route.params.id) {
         this.$axios
-          .$get('/user/')
+          .$get(`/user/${this.$route.params.id}`)
           .then((r) => {
-            const item = find(
-              r.data,
-              (item) => item.id === parseInt(this.$route.params.id)
-            )
+            const item = r.data
             if (item) {
               this.isProfileExists = true
               this.form = item

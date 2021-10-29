@@ -4,28 +4,22 @@
       <section class="section is-main-section">
         <b-card
           class="has-table has-mobile-sort-spaced is-primary"
-          title="Data Syarat Pengajuan"
-          header-icon="plus-box"
-          @header-icon-click="addData"
+          title="Data Surat Keputusan"
         >
-          <template-surat />
+          <SuratKeputusan />
         </b-card>
       </section>
     </div>
   </section>
 </template>
 <script>
-import TemplateSurat from '~/components/Table/TemplateSurat.vue'
+import SuratKeputusan from '~/components/Table/SuratKeputusan.vue'
 
 export default {
-  components: { TemplateSurat },
+  components: { SuratKeputusan },
   data() {
     return {}
   },
-  methods: {
-    addData() {
-      this.$router.push({ name: 'template-surat-id' })
-    },
-  },
+  methods: {},
 }
 </script>

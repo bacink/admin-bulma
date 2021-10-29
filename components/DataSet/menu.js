@@ -17,13 +17,13 @@ const data = [
     role: 'admin bkpsdm,admin skpd',
   },
   [
-    {
-      to: '/tables',
-      label: 'Tables',
-      icon: 'table',
-      updateMark: false,
-      role: 'admin bkpsdm',
-    },
+    /*  {
+       to: '/tables',
+       label: 'Tables',
+       icon: 'table',
+       updateMark: false,
+       role: 'admin bkpsdm',
+     }, */
     {
       to: '/pengajuan/table',
       label: 'Pengajuan',
@@ -32,38 +32,45 @@ const data = [
       role: 'admin bkpsdm,admin skpd,user,analis jabatan,pengawas,administrator 1,administrator 2,jpt',
     },
     {
+      to: '/surat/keputusan/table',
+      label: 'Surat Keputusan',
+      icon: 'table',
+      updateMark: false,
+      role: 'admin bkpsdm,admin skpd,analis jabatan',
+    },
+    {
       label: 'Pengaturan',
       subLabel: 'Setting',
       icon: 'settings',
-      role: 'admin bkpsdm',
+      role: 'admin bkpsdm,analis jabatan',
       menu: [
         {
           to: '/syarat/pengajuan/table',
           label: 'Syarat Pengajuan',
           icon: 'puzzle',
           updateMark: false,
-          role: 'admin bkpsdm',
+          role: 'admin bkpsdm,analis jabatan',
         },
         {
           to: '/jenis/jafung/table',
           label: 'Jenis Jafung',
           icon: 'puzzle',
           updateMark: false,
-          role: 'admin bkpsdm',
+          role: 'admin bkpsdm,analis jabatan',
         },
         {
           to: '/template/surat/table',
           label: 'Template Surat',
           icon: 'puzzle',
           updateMark: false,
-          role: 'admin bkpsdm',
+          role: 'admin bkpsdm,analis jabatan',
         },
         {
           to: '/users/table',
           label: 'Users',
           icon: 'account-multiple',
           updateMark: false,
-          role: 'admin bkpsdm',
+          role: 'admin bkpsdm,analis jabatan',
         },
       ],
     },

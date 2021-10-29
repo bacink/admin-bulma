@@ -12,7 +12,7 @@
       <b-field label="Jenis Jafung">
         <JenisJafung v-model="jenisJafung" @input="getJenisJafung"
       /></b-field>
-      <input id="" v-model="id_jenis_jafung" type="hidden" />
+      <input v-model="id_jenis_jafung" type="hidden" />
       <b-field grouped label="Mengingat" label-position="on-border">
         <b-input v-model="newMengingatText" type="textarea" expanded></b-input>
         <p class="control">
@@ -78,6 +78,12 @@ export default {
     draggable,
   },
   props: {
+    form: {
+      type: Array,
+      default() {
+        return []
+      },
+    },
     idJenisJafung: {
       type: Number,
       default: null,
@@ -86,12 +92,19 @@ export default {
       type: String,
       default: null,
     },
+    kopDpn: {
+      type: String,
+      default: null,
+    },
+    kopBlk: {
+      type: String,
+      default: null,
+    },
   },
   data() {
     return {
       enabled: true,
       dragging: false,
-
       isLoading: false,
       isNotification: false,
       id_jenis_jafung: null,
@@ -102,8 +115,20 @@ export default {
       mengingat: [],
     }
   },
-  computed: {},
-
+  watch: {
+    kopDpn(newValue) {
+      this.kop_depan = newValue
+    },
+    kopBlk(newValue) {
+      this.kop_belakang = newValue
+    },
+    form(newValue) {
+      this.mengingat = newValue
+    },
+    idJenisJafung(newValue) {
+      this.id_jenis_jafung = newValue
+    },
+  },
   methods: {
     getJenisJafung(payload, payload2) {
       if (payload2) {

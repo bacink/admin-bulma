@@ -43,6 +43,7 @@ export default {
       kopBlk: '',
       idJenisJafung: 0,
       jenisJafung: '',
+      isProfileExists: false,
     }
   },
   computed: {
@@ -89,6 +90,7 @@ export default {
             this.kopBlk = r.data.kop_belakang
             this.idJenisJafung = r.data.id_jenis_jafung
             this.jenisJafung = r.data.jenis_jafung.nama
+            this.isProfileExists = true
           })
           .catch((e) => {
             this.form = []
@@ -103,9 +105,21 @@ export default {
     },
     onClickChild(mengingat, idJenisJafung, KopDpn, KopBlk) {
       if (mengingat.length === 0) {
-        return alert('kosong')
+        this.$buefy.toast.open({
+          message: `Error: Field Mengingat tidak boleh kosong`,
+          type: 'is-danger',
+          queue: false,
+        })
       }
       this.isLoading = true
+
+      if (this.isProfileExists) {
+        this.updateData(mengingat, idJenisJafung, KopDpn, KopBlk)
+      } else {
+        this.saveData(mengingat, idJenisJafung, KopDpn, KopBlk)
+      }
+    },
+    saveData(mengingat, idJenisJafung, KopDpn, KopBlk) {
       this.$axios
         .$post('/template/surat', {
           kop_depan: KopDpn,
@@ -118,7 +132,36 @@ export default {
             this.isLoading = false
             this.$buefy.toast.open({
               message: `Success: ${resp.message}`,
-              type: 'success',
+              type: 'is-success',
+              queue: false,
+            })
+          }
+          this.$router.push({ name: 'template-surat-table' })
+        })
+        .catch((err) => {
+          this.isLoading = false
+          this.$buefy.toast.open({
+            message: `Error: ${err.message}`,
+            type: 'is-danger',
+            queue: false,
+          })
+        })
+    },
+    updateData(mengingat, idJenisJafung, KopDpn, KopBlk) {
+      this.$axios
+        .$patch('/template/surat', {
+          id: this.$route.params.id,
+          kop_depan: KopDpn,
+          kop_belakang: KopBlk,
+          id_jenis_jafung: idJenisJafung,
+          mengingat,
+        })
+        .then((resp) => {
+          if (resp.success) {
+            this.isLoading = false
+            this.$buefy.toast.open({
+              message: `Success: ${resp.message}`,
+              type: 'is-success',
               queue: false,
             })
           }

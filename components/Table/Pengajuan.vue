@@ -217,6 +217,19 @@
                   </b-button>
                 </p>
               </template>
+              <template v-if="props.row.status === 'paraf_jpt'">
+                <p class="control">
+                  <b-button
+                    icon-left="printer"
+                    type="is-info"
+                    size="is-small"
+                    tag="router-link"
+                    :to="`/sk/${props.row.id}`"
+                  >
+                    Cetak Surat Keputusan
+                  </b-button>
+                </p>
+              </template>
             </template>
             <template v-if="isPengawas">
               <template v-if="props.row.status === 'draft_analis_jabatan'">
@@ -480,7 +493,6 @@ export default {
       this.$axios
         .get(`/pengajuan/q?${params}`)
         .then(({ data }) => {
-          // api.themoviedb.org manage max 1000 pages
           this.data = []
           let currentTotal = data.meta.total
           if (data.meta.total / this.perPage > 1000) {

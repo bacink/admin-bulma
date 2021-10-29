@@ -7,7 +7,7 @@
     icon-left="eye"
     tag="a"
     target="_blank"
-    :href="`${$axios.defaults.baseURL}/print-pdf/${idPengajuan}`"
+    :href="`${$axios.defaults.baseURL}/print-draft/${idPengajuan}`"
   />
 </template>
 
