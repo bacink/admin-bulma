@@ -52,6 +52,22 @@
           </b-datepicker>
         </b-field>
       </b-field>
+
+      <b-field grouped>
+        <b-field label="Angka Kredit">
+          <b-numberinput
+            v-model="formData.angka_kredit"
+            step="000.001"
+            aria-minus-label="Decrement by 0.01"
+            aria-plus-label="Increment by 0.01"
+            required
+          >
+          </b-numberinput>
+        </b-field>
+        <b-field label="tunjangan">
+          <currency-input v-model="formData.tunjangan" :options="options" />
+        </b-field>
+      </b-field>
       <b-field grouped>
         <b-field>
           <b-button
@@ -83,7 +99,9 @@
   </section>
 </template>
 <script>
+import CurrencyInput from '@/components/CurrencyInput.vue'
 export default {
+  components: { CurrencyInput },
   props: {
     data: {
       type: Object,
@@ -94,6 +112,20 @@ export default {
   },
   data() {
     return {
+      options: {
+        locale: 'id-ID',
+        currency: 'IDR',
+        currencyDisplay: 'symbol',
+        valueRange: undefined,
+        precision: 0,
+        hideCurrencySymbolOnFocus: true,
+        hideGroupingSeparatorOnFocus: true,
+        hideNegligibleDecimalDigitsOnFocus: true,
+        autoDecimalDigits: false,
+        exportValueAsInteger: true,
+        autoSign: true,
+        useGrouping: true,
+      },
       labelPosition: 'on-border',
       tanggal_penetapan: null,
       tmt: null,
@@ -152,12 +184,12 @@ export default {
         })
         .then((resp) => {
           if (resp.data.success) {
-            this.loadAsyncData()
             this.$buefy.toast.open({
               message: `Success: ${resp.data.message}`,
               type: 'success',
               queue: false,
             })
+            this.$router.push({ name: 'pengajuan-table' })
           }
         })
         .catch((err) => {
@@ -172,13 +204,14 @@ export default {
     },
     simpan() {
       this.isLoading = true
+
       this.$axios
         .post('/surat/keputusan', this.formData)
         .then((resp) => {
-          if (resp.data.success) {
+          if (resp.success) {
             this.isLoading = false
             this.$buefy.toast.open({
-              message: `Success: ${resp.data.message}`,
+              message: `Success: ${resp.message}`,
               type: 'is-success',
               queue: false,
             })

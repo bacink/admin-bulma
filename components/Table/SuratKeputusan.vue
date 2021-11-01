@@ -54,13 +54,15 @@
       "
       @sort="onSort"
     >
-      <b-table-column v-slot="props" field="nip" label="Nomor SK" sortable>
-        {{ props.row.nomor_sk }}
-      </b-table-column>
       <b-table-column v-slot="props" field="nama" label="Nama" sortable>
         {{ props.row.pegawai.nama }}
       </b-table-column>
-
+      <b-table-column v-slot="props" field="nip" label="Nomor SK" sortable>
+        {{ props.row.tanggal_sk_indo }}
+      </b-table-column>
+      <b-table-column v-slot="props" field="nip" label="Nomor SK" sortable>
+        {{ props.row.tmt_indo }}
+      </b-table-column>
       <b-table-column field="opsi" label="opsi" sortable centered>
         <template v-slot:header="">
           <b-icon icon="cogs"></b-icon>

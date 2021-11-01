@@ -11,6 +11,7 @@ const routerBase =
     : {}
 
 export default {
+
   static: {
     prefix: false
   },
@@ -121,6 +122,21 @@ export default {
   auth: {
     strategies: {
       local: {
+        scheme: 'refresh',
+        token: {
+          property: 'access_token',
+          maxAge: 1800,
+          global: true,
+          // type: 'Bearer'
+        },
+        refreshToken: {
+          property: 'refresh_token',
+          data: 'refresh_token',
+          maxAge: 60 * 60 * 24 * 30
+        },
+        user: {
+          property: 'data'
+        },
         endpoints: {
           login: {
             url: 'auth/login',
@@ -130,7 +146,9 @@ export default {
           user: { url: 'auth/user-profile', method: 'get', propertyName: 'data' },
           logout: { url: 'auth/logout', method: 'post' },
         },
-      },
+        // autoLogout: false
+      }
+
     },
     redirect: {
       login: '/login',

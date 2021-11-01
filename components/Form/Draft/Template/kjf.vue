@@ -88,15 +88,35 @@
               </td>
             </template>
           </tr>
-          <tr>
-            <td>Memperhatikan</td>
-            <td align="center">:</td>
-            <td colspan="4">
-              <b-input
-                v-model="formData.memperhatikan"
-                type="textarea"
-              ></b-input>
-            </td>
+          <tr
+            v-for="(item, index) in formData.memperhatikan"
+            :key="index + 'b'"
+            has-background-info
+          >
+            <template v-if="index === 0">
+              <td>Memperhatikan</td>
+              <td width="2%" align="center">:</td>
+              <td width="2%" align="center">{{ item.nomor }}</td>
+              <td colspan="3">
+                <b-input
+                  :value="item.text"
+                  type="textarea"
+                  @input="gantiMemperhatikan(index, $event)"
+                ></b-input>
+              </td>
+            </template>
+            <template v-else>
+              <td></td>
+              <td></td>
+              <td width="2%" align="center">{{ item.nomor }}</td>
+              <td colspan="3">
+                <b-input
+                  :value="item.text"
+                  type="textarea"
+                  @input="gantiMemperhatikan(index, $event)"
+                ></b-input>
+              </td>
+            </template>
           </tr>
           <tr>
             <td colspan="6" style="padding: -90px !important">
@@ -188,17 +208,27 @@
             <td>KEDUA</td>
             <td width="2%" align="center">:</td>
             <td colspan="4">
-              Apabila dikemudian hari ternyata terdapat kekeliruan dalam
-              keputusan ini, akan diadakan perbaikan dan perhitungan kembali
-              sebagaimana mestinya.
+              {{ formData.kedua }}
+            </td>
+          </tr>
+          <tr>
+            <td>KETIGA</td>
+            <td width="2%" align="center">:</td>
+            <td colspan="4">
+              Apabila dikemudian hari terdapat kekeliruan dalam keputusan ini,
+              akan diadakan perbaikan dan perhitungan kembali sebagaimana
+              mestinya. Asli Keputusan ini disampaikan kepada Pegawai Negeri
+              Sipil yang bersangkutan untuk diketahui dan diindahkan sebagaimana
+              mestinya.
             </td>
           </tr>
           <tr>
             <td></td>
             <td></td>
             <td colspan="4">
-              Keputusan ini disampaikan kepada Pegawai Negeri Sipil yang
-              bersangkutan untuk diketahui dan diindahkan sebagaimana mestinya.
+              <b>Asli</b> Keputusan ini disampaikan kepada Pegawai Negeri Sipil
+              yang bersangkutan untuk diketahui dan diindahkan sebagaimana
+              mestinya.
             </td>
           </tr>
           <tr>
@@ -329,6 +359,7 @@ export default {
     return {
       loading: true,
       nomor: 0,
+      nomorMemperhatikan: 0,
       formData: {
         status: 'draft_analis_jabatan',
         id_pengajuan: null,
@@ -351,16 +382,17 @@ export default {
           b: null,
         },
         mengingat: this.mengingat,
-        memperhatikan: null,
+        memperhatikan: [],
         penandatangan: {
           nama: 'bupati',
           nip: '000',
           pangkat: 'bupati',
         },
         kesatu: {
-          a: 'Terhitung mulai tanggal , mengangkat Pegawai Negeri Sipil :',
-          b: 'dalam jabatan fungsional dengan angka kredit 000, dan diberikan tunjangan tenaga kependidikan sebesar Rp.000.000,- perbulan.',
+          a: 'Terhitung mulai tanggal TANGGAL Pegawai Negeri Sipil :',
+          b: 'dari jabatan fungsional JABATAN LAMA ke dalam jabatan fungsional JABATAN BARU dengan angka kredit 000,000 (kosong kosong kosong koma kosong kosong kosong).',
         },
+        kedua: null,
         tembusan: [
           { nomor: 1, text: 'Kepala Kantor Regional III BKN;' },
           { nomor: 2, text: 'Inspektur Kab. Karawang;' },
@@ -387,22 +419,38 @@ export default {
     },
   },
   mounted() {
-    this.formData.menimbang.a = `bahwa Pegawai Negeri Sipil a.n ${this.pengajuan.pegawai.nama_lengkap}, telah memenuhi syarat untuk diangkat dalam Jabatan Fungsional ${this.pengajuan.jabatan_baru.nama_lengkap} dan telah sesuai dengan Peraturan Menteri Negara Pendayagunaan Aparatur Negara dan Reformasi Birokrasi Nomor 16 Tahun 2009 tentang Jabatan Fungsional ${this.pengajuan.jabatan_baru.nama} dan Angka Kreditnya;`
-    this.formData.menimbang.b = `bahwa untuk maksud tersebut, perlu ditetapkan dengan Keputusan Bupati Karawang;`
-
-    this.formData.memperhatikan = `Surat ${this.kepalaSkpd} Kabupaten Karawang Nomor ${this.suratPengantar.nomor} tanggal ${this.suratPengantar.tanggal_indo} perihal Usulan Pengangkatan Jabatan Fungsional ${this.pengajuan.jabatan_baru.nama}.`
+    this.formData.menimbang.a = `bahwa sebagai pelaksanaan dari Peraturan Menteri Negara pendayagunaan Aparatur Negara dan Reformasi Birokrasi Republik Indonesia Nomor 25 Tahun 2014 dan Peraturan Bersama Menteri Kesehatan dan Kepala Badan Kepegawaian Negara Nomor 5 Tahun 2015, perlu untuk mengangkat Pegawai Negeri Sipil a.n ${this.pengajuan.pegawai.nama_lengkap} NIP. ${this.pengajuan.pegawai.nip} dalam jabatan fungsional ${this.pengajuan.jabatan_baru.nama_lengkap}`
+    this.formData.menimbang.b = `bahwa untuk maksud tersebut pada huruf a, perlu ditetapkan dengan Keputusan Bupati Karawang.`
 
     this.nomor = this.formData.tembusan.length + 1
-
-    this.formData.tembusan.push({
-      nomor: this.nomor,
-      text: this.kepalaSkpd + 'Kab. Karawang;',
-    })
+    this.nomorMemperhatikan = this.formData.memperhatikan.length
+    this.formData.kedua =
+      'Kepada pemegang jabatan sebagaimana dimaksud diktum KESATU diberikan tunjangan Fungsional sebesar Rp. TUNJANGAN/bulan;'
+    this.formData.tembusan.push(
+      {
+        nomor: this.nomor,
+        text: this.kepalaSkpd + 'Kab. Karawang;',
+      },
+      {
+        nomor: this.nomor,
+        text: 'Pejabat penilai angka kredit.',
+      }
+    )
+    this.formData.memperhatikan.push(
+      {
+        nomor: (this.nomorMemperhatikan += 1),
+        text: `Surat ${this.kepalaSkpd} Kabupaten Karawang Nomor ${this.suratPengantar.nomor} tanggal ${this.suratPengantar.tanggal_indo} perihal Usulan Kenaikan Jabatan Fungsional ${this.pengajuan.jabatan_baru.nama}.`,
+      },
+      {
+        nomor: (this.nomorMemperhatikan += 1),
+        text: `Sertifikat Kompetensi Nomor SILAHKAN ISI  a.n ${this.pengajuan.pegawai.nama_lengkap} tanggal SILAHKAN ISI dengan kualifikasi/kompetensi Jenjang ${this.pengajuan.jabatan_baru.nama_lengkap}`,
+      }
+    )
 
     if (this.pengajuan) {
       this.formData.tentang = `${this.pengajuan.jenis_jafung.nama} dalam jabatan fungsional ${this.pengajuan.jabatan_baru.nama}`
-      this.formData.menimbang.a = `bahwa Pegawai Negeri Sipil a.n ${this.pengajuan.pegawai.nama_lengkap}, telah memenuhi syarat untuk diangkat dalam Jabatan Fungsional ${this.pengajuan.jabatan_baru.nama_lengkap} dan telah sesuai dengan Peraturan Menteri Negara Pendayagunaan Aparatur Negara dan Reformasi Birokrasi Nomor 16 Tahun 2009 tentang Jabatan Fungsional ${this.pengajuan.jabatan_baru.nama} dan Angka Kreditnya;`
-      this.formData.menimbang.b = `bahwa untuk maksud tersebut, perlu ditetapkan dengan Keputusan Bupati Karawang;`
+      this.formData.menimbang.a = `bahwa sebagai pelaksanaan dari Peraturan Menteri Negara pendayagunaan Aparatur Negara dan Reformasi Birokrasi Republik Indonesia Nomor 25 Tahun 2014 dan Peraturan Bersama Menteri Kesehatan dan Kepala Badan Kepegawaian Negara Nomor 5 Tahun 2015, perlu untuk mengangkat Pegawai Negeri Sipil a.n ${this.pengajuan.pegawai.nama_lengkap} NIP. ${this.pengajuan.pegawai.nip} dalam jabatan fungsional ${this.pengajuan.jabatan_baru.nama_lengkap}`
+      this.formData.menimbang.b = `bahwa untuk maksud tersebut pada huruf a, perlu ditetapkan dengan Keputusan Bupati Karawang.`
       this.formData.mengingat = this.mengingat
       this.formData.kode = this.pengajuan.jenis_jafung.kode
       this.formData.id_pengajuan = this.pengajuan.id
@@ -447,13 +495,20 @@ export default {
             this.loading = false
           }, 3 * 1000)
           this.$buefy.toast.open({
-            message: `Error: ${err.message}`,
+            message: `Error: ${Object.values(err.response.data)}`,
             type: 'is-danger',
             queue: false,
           })
         })
     },
     gantiMengingat(index, newValue) {
+      this.mengingat.filter(function (item, arrayIndex) {
+        if (arrayIndex === index) {
+          item.text = newValue
+        }
+      })
+    },
+    gantiMemperhatikan(index, newValue) {
       this.mengingat.filter(function (item, arrayIndex) {
         if (arrayIndex === index) {
           item.text = newValue

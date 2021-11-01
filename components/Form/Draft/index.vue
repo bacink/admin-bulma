@@ -14,6 +14,17 @@
               :kop-belakang="kopBelakang"
             ></draft-ppk>
           </div>
+          <div v-if="kode === 'kjf'">
+            <draft-kjf
+              :mengingat="mengingat"
+              :pengajuan="pengajuan"
+              :kepala-skpd="kepalaSkpd"
+              :surat-pengantar="suratPengantar"
+              :penandatangan="penandatangan"
+              :kop-depan="kopDepan"
+              :kop-belakang="kopBelakang"
+            ></draft-kjf>
+          </div>
         </b-card>
       </div>
     </div>
@@ -39,10 +50,15 @@ export default {
   },
   watch: {
     kode(newValue) {
-      if (newValue === 'ppk') {
-        this.getKepalaBkpsdm()
-      } else {
-        this.getBupati()
+      switch (newValue) {
+        case 'ppk':
+          this.getKepalaBkpsdm()
+          break
+        case 'kjf':
+          this.getKepalaBkpsdm()
+          break
+        default:
+          this.getBupati()
       }
     },
   },

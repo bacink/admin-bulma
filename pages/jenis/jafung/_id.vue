@@ -13,17 +13,28 @@
           icon="account-edit"
           class="tile is-child"
         >
+          <div class="block"></div>
           <form @submit.prevent="submit">
             <b-field label="ID" horizontal>
               <b-input v-model="form.id" custom-class="is-static" readonly />
             </b-field>
             <hr />
-            <b-field label="Nama" message="Jenis Jafung NAma" horizontal>
+            <b-field label="Kode" horizontal>
+              <b-input
+                v-model="form.kode"
+                placeholder="Contoh: ppk"
+                required
+                maxlength="10"
+                minlength="3"
+              />
+            </b-field>
+            <b-field label="Nama" horizontal>
               <b-input
                 v-model="form.nama"
-                placeholder="e.g. John Doe"
+                placeholder="Contoh: Pengangkatan pertama kali"
                 required
                 maxlength="200"
+                minlength="5"
                 type="textarea"
               />
             </b-field>
@@ -60,6 +71,8 @@ export default {
   },
   data() {
     return {
+      isError: false,
+      error: [],
       id: null,
       isLoading: false,
       form: this.getClearFormObject(),
@@ -75,11 +88,12 @@ export default {
         return 'FORM INPUT JENIS JAFUNG'
       }
     },
+
     heroRouterLinkTo() {
       if (this.isProfileExists) {
-        return '/jenis-jafung/'
+        return '/jenis/jafung/'
       } else {
-        return '/jenis-jafung/table'
+        return '/jenis/jafung/table'
       }
     },
     heroRouterLinkLabel() {
@@ -115,9 +129,10 @@ export default {
           .$get('/jenis_jafung/')
           .then((r) => {
             const item = find(
-              r.data.data,
+              r.data,
               (item) => item.id === parseInt(this.$route.params.id)
             )
+
             if (item) {
               this.isProfileExists = true
               this.form = item
@@ -126,7 +141,7 @@ export default {
                 'MMM D, YYYY'
               )
             } else {
-              this.$router.push({ name: 'jenis-jafung-new' })
+              this.$router.push({ name: 'jenis-jafung-id' })
             }
           })
           .catch((e) => {
@@ -143,15 +158,27 @@ export default {
     },
     submit() {
       this.isLoading = true
-
-      setTimeout(() => {
-        this.isLoading = false
-
-        this.$buefy.snackbar.open({
-          message: 'Demo only',
-          queue: false,
+      this.$axios
+        .$post('/jenis_jafung/', this.form)
+        .then((resp) => {
+          setTimeout(() => {
+            this.isLoading = false
+            this.$buefy.snackbar.open({
+              message: `${resp.message}`,
+              queue: false,
+            })
+          }, 500)
+          this.$router.push({ name: 'jenis-jafung-table' })
         })
-      }, 500)
+        .catch((e) => {
+          this.isLoading = false
+          const error = e.response.data
+          this.$buefy.toast.open({
+            message: `Error: ${Object.values(error)}`,
+            type: 'is-danger',
+            queue: false,
+          })
+        })
     },
   },
   head() {

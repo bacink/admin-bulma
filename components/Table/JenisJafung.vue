@@ -50,7 +50,27 @@
       <b-table-column v-slot="props" field="nama" label="Jenis Jafung" sortable>
         {{ props.row.nama }}
       </b-table-column>
-
+      <b-table-column
+        v-slot="props"
+        field="opsi"
+        label="opsi"
+        sortable
+        centered
+      >
+        <b-field>
+          <p class="control">
+            <b-button
+              tag="router-link"
+              :to="`/jenis/jafung/${props.row.id}`"
+              type="is-warning"
+              size="is-small"
+              icon-left="pencil"
+            >
+              Edit
+            </b-button>
+          </p></b-field
+        >
+      </b-table-column>
       <template #empty>
         <div class="has-text-centered">No records</div>
       </template>
