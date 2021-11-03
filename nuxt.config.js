@@ -87,8 +87,7 @@ export default {
   components: [
     {
       path: '~/components/Form/Draft/Template', prefix: 'draft'
-    },
-    { path: '~/components/Form/Paraf', prefix: 'paraf' },
+    }
   ],
   /*
    ** Nuxt.js dev-modules
