@@ -17,13 +17,13 @@ const data = [
     role: 'admin bkpsdm,admin skpd',
   },
   [
-    /*  {
-       to: '/tables',
-       label: 'Tables',
-       icon: 'table',
-       updateMark: false,
-       role: 'admin bkpsdm',
-     }, */
+    {
+      to: '/pegawai/table',
+      label: 'Pegawai JFU',
+      icon: 'account',
+      updateMark: false,
+      role: 'admin bkpsdm,analis jabatan',
+    },
     {
       to: '/pengajuan/table',
       label: 'Pengajuan',
