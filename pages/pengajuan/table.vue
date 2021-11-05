@@ -1,17 +1,13 @@
 <template>
   <section class="section is-main-section">
-    <div>
-      <section class="section is-main-section">
-        <b-card
-          class="has-table has-mobile-sort-spaced is-primary"
-          title="Data Pengajuan"
-          header-icon="plus-box"
-          @header-icon-click="addData"
-        >
-          <PengajuanTable />
-        </b-card>
-      </section>
-    </div>
+    <b-card
+      class="has-table has-mobile-sort-spaced is-primary"
+      title="Data Pengajuan"
+      header-icon="plus-box"
+      @header-icon-click="addData"
+    >
+      <PengajuanTable />
+    </b-card>
   </section>
 </template>
 <script>

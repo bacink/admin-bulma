@@ -40,21 +40,30 @@
         @start="dragging = true"
         @end="dragging = false"
       >
-        <div v-for="(element, index) in mengingat" :key="element.id">
-          <p class="one m-2 p-2">
-            {{ index + 1 }}. {{ element.text }}
-            <b-button
-              label="Delete"
-              size="is-small"
-              type="is-danger"
-              icon-left="close"
-              class="is-pulled-right"
-              @click="mengingat.splice(index, 1)"
-            />
-          </p>
-        </div>
-        <p>geser untuk merubah posisi</p>
+        <ul v-for="(element, index) in mengingat" :key="element.id">
+          <li class="box mb-1 has-background-white">
+            <div class="card">
+              <header class="card-header">
+                <p class="card-header-title">
+                  {{ index + 1 }}. {{ element.text }}
+                </p>
+                <span class="card-header-icon" aria-label="more options">
+                  <b-button
+                    size="is-small"
+                    icon-right="delete"
+                    type="is-danger"
+                    @click="mengingat.splice(index, 1)"
+                  ></b-button>
+                </span>
+              </header>
+            </div>
+          </li>
+        </ul>
+        <p class="has-text-weight-semibold has-text-danger">
+          geser untuk merubah posisi
+        </p>
       </draggable>
+
       <hr />
       <b-button
         label="Simpan"
@@ -79,7 +88,7 @@ export default {
   },
   props: {
     form: {
-      type: Array,
+      type: [Array, Object],
       default() {
         return []
       },
@@ -152,7 +161,6 @@ export default {
         this.newMengingatText = ''
       }
     },
-
     onClickButton(event) {
       this.$emit(
         'clicked',

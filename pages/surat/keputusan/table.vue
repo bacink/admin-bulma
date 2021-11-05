@@ -1,15 +1,11 @@
 <template>
   <section class="section is-main-section">
-    <div>
-      <section class="section is-main-section">
-        <b-card
-          class="has-table has-mobile-sort-spaced is-primary"
-          title="Data Surat Keputusan"
-        >
-          <SuratKeputusan />
-        </b-card>
-      </section>
-    </div>
+    <b-card
+      class="has-table has-mobile-sort-spaced is-primary"
+      title="Data Surat Keputusan"
+    >
+      <SuratKeputusan />
+    </b-card>
   </section>
 </template>
 <script>

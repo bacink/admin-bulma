@@ -1,17 +1,13 @@
 <template>
   <section class="section is-main-section">
-    <div>
-      <section class="section is-main-section">
-        <b-card
-          class="has-table has-mobile-sort-spaced is-primary"
-          title="Data Jenis Jafung"
-          header-icon="plus-box"
-          @header-icon-click="addData"
-        >
-          <JenisJafung />
-        </b-card>
-      </section>
-    </div>
+    <b-card
+      class="has-table has-mobile-sort-spaced is-primary"
+      title="Data Jenis Jafung"
+      header-icon="plus-box"
+      @header-icon-click="addData"
+    >
+      <JenisJafung />
+    </b-card>
   </section>
 </template>
 <script>

@@ -1,6 +1,6 @@
 <template>
   <section>
-    <div class="container">
+    <b-field grouped>
       <b-field>
         <p class="control">
           <b-select v-model="perPage">
@@ -20,7 +20,7 @@
           @input="onSearch"
         ></b-input>
       </b-field>
-    </div>
+    </b-field>
     <b-table
       aria-next-label="Next page"
       aria-previous-label="Previous page"

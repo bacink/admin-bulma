@@ -2,9 +2,14 @@
   <div>
     <hero-bar>
       {{ heroTitle }}
-      <nuxt-link slot="right" :to="heroRouterLinkTo" class="button">
-        {{ heroRouterLinkLabel }}
-      </nuxt-link>
+      <b-button
+        :label="formCardTitle"
+        :icon-left="icon"
+        tag="router-link"
+        :to="heroRouterLinkTo"
+        type="is-warning"
+        slot="right"
+      ></b-button>
     </hero-bar>
     <section class="section is-main-section">
       <tiles>
@@ -97,7 +102,6 @@
 
 <script>
 import dayjs from 'dayjs'
-// import find from 'lodash/find'
 import HeroBar from '@/components/HeroBar'
 import Tiles from '@/components/Tiles'
 import CardComponent from '@/components/CardComponent'
@@ -114,6 +118,7 @@ export default {
     return {
       id: null,
       isLoading: false,
+      formCardTitle: 'Users',
       form: this.getClearFormObject(),
       createdReadable: null,
       isProfileExists: false,
@@ -122,9 +127,9 @@ export default {
   computed: {
     heroTitle() {
       if (this.isProfileExists) {
-        return 'FORM EDIT USERS'
+        return 'Edit ' + this.formCardTitle
       } else {
-        return 'FORM INPUT USERS'
+        return this.formCardTitle
       }
     },
     heroRouterLinkTo() {
@@ -134,18 +139,11 @@ export default {
         return '/users/table'
       }
     },
-    heroRouterLinkLabel() {
+    icon() {
       if (this.isProfileExists) {
-        return 'New Users'
+        return 'plus'
       } else {
-        return 'Data Users'
-      }
-    },
-    formCardTitle() {
-      if (this.isProfileExists) {
-        return 'Edit Users'
-      } else {
-        return 'New Users'
+        return 'table'
       }
     },
   },
@@ -246,7 +244,7 @@ export default {
   },
   head() {
     return {
-      title: 'Users',
+      title: this.formCardTitle,
     }
   },
 }

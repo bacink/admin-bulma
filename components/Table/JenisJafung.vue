@@ -1,6 +1,6 @@
 <template>
   <section>
-    <div class="container">
+    <b-field grouped>
       <b-field>
         <p class="control">
           <b-select v-model="perPage" :disabled="!isPaginated">
@@ -18,9 +18,8 @@
           icon-clickable
           expanded
           @input="onSearch"
-        ></b-input>
-      </b-field>
-    </div>
+        ></b-input> </b-field
+    ></b-field>
     <b-table
       aria-next-label="Next page"
       aria-previous-label="Previous page"
@@ -46,6 +45,9 @@
     >
       <b-table-column v-slot="props" label="#No">
         {{ data.indexOf(props.row) + 1 }}
+      </b-table-column>
+      <b-table-column v-slot="props" label="Kode">
+        {{ props.row.kode }}
       </b-table-column>
       <b-table-column v-slot="props" field="nama" label="Jenis Jafung" sortable>
         {{ props.row.nama }}

@@ -1,6 +1,6 @@
 <template>
   <section>
-    <div class="container">
+    <b-field grouped>
       <b-field>
         <p class="control">
           <b-select v-model="perPage">
@@ -20,7 +20,7 @@
           @input="onSearch"
         ></b-input>
       </b-field>
-    </div>
+    </b-field>
     <b-table
       aria-next-label="Next page"
       aria-previous-label="Previous page"
@@ -58,7 +58,19 @@
       >
         {{ props.row.nama }}
       </b-table-column>
-
+      <b-table-column v-slot="props" field="opsi" label="Opsi">
+        <b-field>
+          <p class="control">
+            <b-button
+              icon-left="pencil"
+              tag="router-link"
+              type="is-warning"
+              :to="`/syarat/pengajuan/${props.row.id}`"
+            >
+            </b-button>
+          </p>
+        </b-field>
+      </b-table-column>
       <template #empty>
         <div class="has-text-centered">No records</div>
       </template>

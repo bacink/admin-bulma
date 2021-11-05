@@ -12,21 +12,23 @@
       ></b-button>
     </hero-bar>
     <section class="section is-main-section">
-      <b-card :title="formCardTitle"> <FormJenisJafung :form="form" /></b-card>
+      <b-card :title="formCardTitle">
+        <FormSyaratPengajuan :form="form"
+      /></b-card>
     </section>
   </div>
 </template>
 
 <script>
 import HeroBar from '@/components/HeroBar'
-import FormJenisJafung from '@/components/Form/Jenis/Jafung'
+import FormSyaratPengajuan from '@/components/Form/Syarat/Pengajuan'
 
 export default {
-  components: { HeroBar, FormJenisJafung },
+  components: { HeroBar, FormSyaratPengajuan },
   data() {
     return {
       isProfileExists: false,
-      formCardTitle: 'Jenis Jafung',
+      formCardTitle: 'Syarat Pengajuan',
       form: this.getClearFormObject(),
     }
   },
@@ -44,9 +46,9 @@ export default {
     },
     heroRouterLinkTo() {
       if (this.isProfileExists) {
-        return '/jenis/jafung/'
+        return '/syarat/pengajuan/'
       } else {
-        return '/jenis/jafung/table'
+        return '/syarat/pengajuan/table'
       }
     },
     icon() {
@@ -62,13 +64,12 @@ export default {
       return {
         id: null,
         nama: null,
-        kode: null,
       }
     },
     getData() {
       if (this.$route.params.id) {
         this.$axios
-          .$get(`/jenis_jafung/${this.$route.params.id}`)
+          .$get(`/syarat_pengajuan/${this.$route.params.id}`)
           .then((r) => {
             const item = r.data
             if (item) {

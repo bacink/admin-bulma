@@ -2,9 +2,14 @@
   <div>
     <hero-bar>
       {{ heroTitle }}
-      <nuxt-link slot="right" :to="heroRouterLinkTo" class="button">
-        {{ heroRouterLinkLabel }}
-      </nuxt-link>
+      <b-button
+        :label="formCardTitle"
+        :icon-left="icon"
+        tag="router-link"
+        :to="heroRouterLinkTo"
+        type="is-warning"
+        slot="right"
+      ></b-button>
     </hero-bar>
     <section class="section is-main-section">
       <tiles>
@@ -38,7 +43,10 @@ export default {
   },
   data() {
     return {
-      form: [],
+      isProfileExists: false,
+      formCardTitle: 'Template Surat',
+      form: this.getClearFormObject(),
+      // form: [],
       kopDpn: '',
       kopBlk: '',
       idJenisJafung: 0,
@@ -49,9 +57,9 @@ export default {
   computed: {
     heroTitle() {
       if (this.isProfileExists) {
-        return 'FORM EDIT TEMPLATE SURAT'
+        return 'Edit ' + this.formCardTitle
       } else {
-        return 'FORM INPUT TEMPLATE SURAT'
+        return this.formCardTitle
       }
     },
     heroRouterLinkTo() {
@@ -61,18 +69,11 @@ export default {
         return '/template/surat/table'
       }
     },
-    heroRouterLinkLabel() {
+    icon() {
       if (this.isProfileExists) {
-        return 'New template surat'
+        return 'plus'
       } else {
-        return 'Data template surat'
-      }
-    },
-    formCardTitle() {
-      if (this.isProfileExists) {
-        return 'Edit Template Surat'
-      } else {
-        return 'New Template Surat'
+        return 'table'
       }
     },
   },
@@ -80,6 +81,12 @@ export default {
     this.getData()
   },
   methods: {
+    getClearFormObject() {
+      return {
+        id: null,
+        nama: null,
+      }
+    },
     getData() {
       if (this.$route.params.id) {
         this.$axios
@@ -93,8 +100,7 @@ export default {
             this.isProfileExists = true
           })
           .catch((e) => {
-            this.form = []
-
+            this.getClearFormObject()
             this.$buefy.toast.open({
               message: `Error: ${e.message}`,
               type: 'is-danger',
@@ -141,7 +147,7 @@ export default {
         .catch((err) => {
           this.isLoading = false
           this.$buefy.toast.open({
-            message: `Error: ${err.message}`,
+            message: `Error: ${Object.values(err.response.data)}`,
             type: 'is-danger',
             queue: false,
           })
@@ -170,7 +176,7 @@ export default {
         .catch((err) => {
           this.isLoading = false
           this.$buefy.toast.open({
-            message: `Error: ${err.message}`,
+            message: `Error: ${Object.values(err.response.data)}`,
             type: 'is-danger',
             queue: false,
           })
@@ -179,7 +185,7 @@ export default {
   },
   head() {
     return {
-      title: 'TEMPLATE SURAT',
+      title: 'Template Surat',
     }
   },
 }
