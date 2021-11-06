@@ -83,18 +83,20 @@ export default {
   },
   methods: {
     cekStep(id) {
-      this.$axios.$get(`/pengajuan/cekStep/${id}`).then((resp) => {
-        if (resp.success) {
-          const data = resp.data
-          if (data.status === 'form') {
-            this.activeStep = 2
-            this.id_pegawai = data.id_pegawai
+      this.$axios
+        .$get(`/pengajuan/cekStep/${id}`)
+        .then((resp) => {
+          if (resp.success) {
+            const data = resp.data
+            if (data.status === 'form') {
+              this.activeStep = 2
+              this.id_pegawai = data.id_pegawai
+            }
           }
-        }
-      })
-      /*  .catch((err) => {
-          console.error(err)
-        }) */
+        })
+        .catch((err) => {
+          throw err
+        })
     },
   },
 }

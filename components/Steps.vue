@@ -20,7 +20,7 @@
         :icon="item.icon"
         :clickable="isStepsClickable"
         :type="item.type"
-        :value="item.value"
+        :value="parseInt(item.value)"
       >
         <slot :content="item">
           <div v-for="content in contentItems" :key="content"></div>

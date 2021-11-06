@@ -1,114 +1,131 @@
 <template>
   <section>
     <form name="formData" @submit.prevent="submit">
+      <div class="block">
+        <b-field position="is-centered">
+          <template v-if="isRoleUser">
+            <b-input
+              v-model="formData.pegawai"
+              custom-class="is-static"
+              readonly
+              expanded
+            />
+          </template>
+
+          <template v-else>
+            <AcPegawai
+              v-model="formData.pegawai"
+              :required="true"
+              @input="getJabatan"
+              expanded
+            />
+          </template>
+        </b-field>
+      </div>
       <div class="columns">
-        <div class="column">
-          <div v-if="isRoleUser">
-            <b-field label="Detail Pegawai">
-              <b-input
-                v-model="formData.pegawai"
-                custom-class="is-static"
-                readonly
-              />
-            </b-field>
-          </div>
-          <div v-else>
-            <b-field label="Cari Pegawai">
-              <AcPegawai
-                v-model="formData.pegawai"
-                :required="true"
-                @input="getJabatan"
-              />
-            </b-field>
-          </div>
-        </div>
-        <div class="column">
-          <div v-if="animated">
-            <b-skeleton :animated="animated"></b-skeleton>
-            <b-skeleton width="20%" :animated="animated"></b-skeleton>
-            <b-skeleton width="40%" :animated="animated"></b-skeleton>
-            <b-skeleton width="80%" :animated="animated"></b-skeleton>
-          </div>
-          <div v-if="infoPegawai">
-            <div v-if="formData.jabatan_lama">
-              <b-field label="NIP">
-                <b-input
-                  v-model="formData.nip"
-                  custom-class="is-static"
-                  readonly
-                />
-              </b-field>
-              <b-field label="SKPD Aktif">
-                <b-input
-                  v-model="formData.karir_lama.skpd"
-                  custom-class="is-static"
-                  readonly
-                />
-              </b-field>
-              <b-field label="Unit Kerja Aktif">
-                <b-input
-                  v-model="formData.karir_lama.unit_kerja"
-                  custom-class="is-static"
-                  readonly
-                />
-              </b-field>
-              <b-field label="Jabatan Aktif">
-                <b-input
-                  v-model="formData.karir_lama.jabatan"
-                  custom-class="is-static"
-                  readonly
-                />
-              </b-field>
-              <b-field label="Kelas Jabatan">
-                <b-input
-                  v-model="formData.karir_lama.kelas_jabatan"
-                  custom-class="is-static"
-                  readonly
-                />
-              </b-field>
-              <b-field label="tunjangan">
-                <b-input
-                  v-model="formData.karir_lama.tunjangan"
-                  custom-class="is-static"
-                  readonly
-                />
-              </b-field>
-              <b-field label="Golongan Aktif">
-                <b-input
-                  v-model="formData.karir_lama.golongan"
-                  custom-class="is-static"
-                  readonly
-                />
-              </b-field>
+        <div class="column box">
+          <div class="columns box">
+            <div class="column is-two-thirds">
+              <div v-if="animated">
+                <b-skeleton :animated="animated"></b-skeleton>
+                <b-skeleton width="20%" :animated="animated"></b-skeleton>
+                <b-skeleton width="40%" :animated="animated"></b-skeleton>
+                <b-skeleton width="80%" :animated="animated"></b-skeleton>
+              </div>
+              <div v-if="infoPegawai">
+                <div v-if="formData.jabatan_lama">
+                  <b-field label="NIP" horizontal>
+                    <b-input
+                      v-model="formData.nip"
+                      custom-class="is-static"
+                      readonly
+                    />
+                  </b-field>
+                  <b-field label="SKPD Aktif" horizontal>
+                    <b-input
+                      v-model="formData.karir_lama.skpd"
+                      custom-class="is-static"
+                      readonly
+                    />
+                  </b-field>
+                  <b-field label="Unit Kerja Aktif" horizontal>
+                    <b-input
+                      v-model="formData.karir_lama.unit_kerja"
+                      custom-class="is-static"
+                      readonly
+                    />
+                  </b-field>
+                  <b-field label="Jabatan Aktif" horizontal>
+                    <b-input
+                      v-model="formData.karir_lama.jabatan"
+                      custom-class="is-static"
+                      readonly
+                    />
+                  </b-field>
+                  <b-field
+                    label="Kelas Jabatan"
+                    horizontal
+                    :type="formError.kelas_jabatan ? 'is-danger' : ''"
+                    :message="formError.kelas_jabatan ? 'Perbaiki di SOTK' : ''"
+                  >
+                    <b-input
+                      v-model="formData.karir_lama.kelas_jabatan"
+                      custom-class="is-static"
+                      readonly
+                    />
+                  </b-field>
+                  <b-field
+                    label="tunjangan"
+                    horizontal
+                    :type="formError.tunjangan ? 'is-danger' : ''"
+                    :message="formError.tunjangan ? 'Perbaiki di SOTK' : ''"
+                  >
+                    <b-input
+                      v-model="formData.karir_lama.tunjangan"
+                      custom-class="is-static"
+                      readonly
+                    />
+                  </b-field>
+                  <b-field label="Golongan Aktif" horizontal>
+                    <b-input
+                      v-model="formData.karir_lama.golongan"
+                      custom-class="is-static"
+                      readonly
+                    />
+                  </b-field>
+                </div>
+              </div>
+            </div>
+            <div v-if="infoPegawai">
+              <div class="column">
+                <b-field label="Jenis Pengajuan">
+                  <AcJenisJafung
+                    v-model="formData.jenis_jafung"
+                    @input="getJenisJafung"
+                  />
+                </b-field>
+                <b-field label="SKPD Baru Yang dilamar">
+                  <AcSkpd v-model="formData.skpd" @input="getSkpd" />
+                </b-field>
+                <b-field label="Unit Kerja Baru Yang dilamar">
+                  <AcUnitKerja
+                    v-model="formData.unit_kerja"
+                    :id-skpd="idSkpd"
+                    :required="true"
+                    @input="getUnitKerja"
+                  />
+                </b-field>
+                <b-field label="Jabatan Baru Yang dilamar">
+                  <AcJabatan
+                    v-model="formData.karir_baru.jabatan"
+                    :id-skpd="idSkpd"
+                    :id-unit-kerja="idUnitKerja"
+                    @input="getJabatanBaru"
+                  />
+                </b-field>
+              </div>
             </div>
           </div>
-        </div>
-        <div class="column">
-          <b-field label="Jenis Pengajuan">
-            <AcJenisJafung
-              v-model="formData.jenis_jafung"
-              @input="getJenisJafung"
-            />
-          </b-field>
-          <b-field label="SKPD Baru Yang dilamar">
-            <AcSkpd v-model="formData.skpd" @input="getSkpd" />
-          </b-field>
-          <b-field label="Unit Kerja Baru Yang dilamar">
-            <AcUnitKerja
-              v-model="formData.unit_kerja"
-              :id-skpd="idSkpd"
-              :required="true"
-              @input="getUnitKerja"
-            />
-          </b-field>
-          <b-field label="Jabatan Baru Yang dilamar">
-            <AcJabatan
-              v-model="formData.karir_baru.jabatan"
-              :id-skpd="idSkpd"
-              :id-unit-kerja="idUnitKerja"
-              @input="getJabatanBaru"
-            />
-          </b-field>
         </div>
       </div>
       <hr />
@@ -131,32 +148,13 @@ export default {
   components: { AcPegawai, AcSkpd, AcUnitKerja, AcJabatan, AcJenisJafung },
   data() {
     return {
-      isRoleUser: false,
-      formData: {
-        status: 'form',
-        jabatan_lama: null,
-        jabatan_baru: null,
-        jenis_jafung: null,
-        id_jenis_jafung: null,
-        nip: '',
-        pegawai: '',
-        pangkat_golongan: '',
-        pendidikan: '',
-        karir_lama: {
-          jabatan: null,
-          golongan: null,
-          skpd: null,
-        },
-        karir_baru: {
-          jabatan: '',
-        },
-        unit_kerja_lama: {
-          id: '',
-          unit_kerja: '',
-        },
-        unit_kerja_baru: { id: '', unit_kerja: '' },
-        skpd: null,
+      formError: {
+        kelas_jabatan: false,
+        tunjangan: false,
+        golongan: false,
       },
+      isRoleUser: false,
+      formData: this.getClearFormObject(),
       idSkpd: null,
       idUnitKerja: null,
       animated: false,
@@ -188,6 +186,35 @@ export default {
     }
   },
   methods: {
+    getClearFormObject() {
+      return {
+        status: 'form',
+        jabatan_lama: null,
+        jabatan_baru: null,
+        jenis_jafung: null,
+        id_jenis_jafung: null,
+        nip: '',
+        pegawai: '',
+        pangkat_golongan: '',
+        pendidikan: '',
+        karir_lama: {
+          jabatan: null,
+          golongan: null,
+          skpd: null,
+          kelas_jabatan: null,
+          tunjangan: null,
+        },
+        karir_baru: {
+          jabatan: '',
+        },
+        unit_kerja_lama: {
+          id: '',
+          unit_kerja: '',
+        },
+        unit_kerja_baru: { id: '', unit_kerja: '' },
+        skpd: null,
+      }
+    },
     getJenisJafung(payload, payload2) {
       if (payload2) {
         this.formData.id_jenis_jafung = payload2.id
@@ -210,15 +237,16 @@ export default {
       }
     },
     getJabatan(payload, payload2) {
-      this.animated = true
       if (payload2 != null) {
         this.formData.id_pegawai = payload2.id
         this.formData.nip = payload2.nip
+
         this.getJabatanAktif(payload2.id)
         this.getGolonganAktif(payload2.id)
       }
     },
     getJabatanAktif(id) {
+      this.animated = true
       this.$axios
         .$get('/jabatan/aktif/' + id)
         .then((resp) => {
@@ -227,24 +255,34 @@ export default {
             this.infoPegawai = true
             const data = resp.data
             this.formData.jabatan_lama = data
+
             this.formData.karir_lama.jabatan = data.jabatan.nama
+
             this.formData.karir_lama.unit_kerja =
-              data.jabatan.unit_kerja.nama_lengkap
-            this.formData.karir_lama.skpd = data.jabatan.skpd.nama
-            this.formData.karir_lama.kelas_jabatan =
-              data.jabatan_sotk.kelas_jabatan.kelas
-            this.formData.karir_lama.tunjangan =
-              data.jabatan_sotk.kelas_jabatan.tunjangan
+              data.jabatan_sotk.unit_kerja.nama
+
+            this.formData.karir_lama.skpd = data.jabatan_sotk.skpd.nama
+
+            if (data.jabatan_sotk.kelas_jabatan) {
+              this.formData.karir_lama.kelas_jabatan =
+                data.jabatan_sotk.kelas_jabatan.kelas
+            } else {
+              this.formData.karir_lama.kelas_jabatan = null
+              this.formError.kelas_jabatan = true
+            }
+            if (data.jabatan_sotk.kelas_jabatan) {
+              this.formData.karir_lama.tunjangan =
+                data.jabatan_sotk.kelas_jabatan.tunjangan
+            } else {
+              this.formData.karir_lama.tunjangan = null
+              this.formError.tunjangan = true
+            }
           }
         })
         .catch((err) => {
           this.animated = false
-          this.infoPegawai = true
-          this.$buefy.toast.open({
-            message: `Error: ${err.message}`,
-            type: 'is-danger',
-            queue: false,
-          })
+          // this.infoPegawai = false
+          throw err
         })
     },
     getGolonganAktif(id) {
@@ -257,11 +295,7 @@ export default {
           }
         })
         .catch((err) => {
-          this.$buefy.toast.open({
-            message: `Error: ${err.message}`,
-            type: 'is-danger',
-            queue: false,
-          })
+          throw err
         })
     },
     submit() {

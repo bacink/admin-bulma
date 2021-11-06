@@ -13,6 +13,7 @@
         @typing="getAsyncData"
         @select="(option) => (selected = option)"
         @input="$emit('input', $event, selected)"
+        :expanded="expanded"
       >
         <template slot-scope="props">
           <div class="media">
@@ -47,6 +48,7 @@ export default {
   },
   data() {
     return {
+      expanded: true,
       data: [],
       isFetching: false,
       selected: null,

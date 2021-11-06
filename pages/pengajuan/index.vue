@@ -7,9 +7,7 @@
       :step-type="stepType"
     >
       <template slot-scope="{ content }">
-        <h3 class="title has-text-centered">
-          {{ content.title }}
-        </h3>
+        <h3 class="title has-text-centered">{{ content.title }}</h3>
         <div>
           <card-component
             :title="`Form ` + content.title"

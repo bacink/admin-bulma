@@ -20,7 +20,7 @@ export default {
   },
   methods: {
     addData() {
-      this.$router.push('pengajuan/')
+      this.$router.push({ name: 'pengajuan' })
     },
   },
 }
