@@ -114,13 +114,15 @@ export default {
         })
       } catch (err) {
         this.progress = false
-        if (err.response.status === 422) {
-          this.pass.msg = err.response.data.password
-          this.pass.type = 'is-danger'
-          this.errors = 'could not sign you with those credentials.'
-        } else if (err.response.status === 401) {
-          this.pass.msg = 'Incorrect Username or password'
-          this.pass.type = 'is-danger'
+        if (err.response) {
+          if (err.response.status === 422) {
+            this.pass.msg = err.response.data.password
+            this.pass.type = 'is-danger'
+            this.errors = 'could not sign you with those credentials.'
+          } else if (err.response.status === 401) {
+            this.pass.msg = 'Incorrect Username or password'
+            this.pass.type = 'is-danger'
+          }
         }
       }
     },

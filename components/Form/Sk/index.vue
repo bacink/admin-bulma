@@ -186,7 +186,7 @@ export default {
           if (resp.data.success) {
             this.$buefy.toast.open({
               message: `Success: ${resp.data.message}`,
-              type: 'success',
+              type: 'is-success',
               queue: false,
             })
             this.$router.push({ name: 'pengajuan-table' })
@@ -208,13 +208,15 @@ export default {
       this.$axios
         .post('/surat/keputusan', this.formData)
         .then((resp) => {
-          if (resp.success) {
+          console.log(resp)
+          if (resp.data.success) {
             this.isLoading = false
             this.$buefy.toast.open({
               message: `Success: ${resp.message}`,
               type: 'is-success',
               queue: false,
             })
+            this.error = null
             this.updateStatus(this.formData.id_pengajuan, 'cetak_sk')
           }
         })

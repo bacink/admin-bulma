@@ -54,11 +54,12 @@
       "
       @sort="onSort"
     >
-      <b-table-column v-slot="props" field="nip" label="NIP" sortable>
-        {{ props.row.pegawai.nip }}
-      </b-table-column>
       <b-table-column v-slot="props" field="nama" label="Nama" sortable>
-        {{ props.row.pegawai.nama_lengkap }}
+        <p>
+          <b>{{ props.row.pegawai.nama_lengkap }}</b
+          ><br />
+          {{ props.row.pegawai.nip }}
+        </p>
       </b-table-column>
       <b-table-column
         v-slot="props"
@@ -70,7 +71,11 @@
         <b-taglist>
           <b-tag type="is-info is-light">
             <strong>Unit Kerja: </strong
-            >{{ props.row.jabatan_lama.jabatan.unit_kerja.nama_lengkap }}
+            >{{
+              props.row.jabatan_lama.jabatan.unit_kerja
+                ? props.row.jabatan_lama.jabatan.unit_kerja.nama_lengkap
+                : null
+            }}
           </b-tag>
           <b-tag type="is-success is-light">
             <strong>SKPD: </strong
@@ -186,6 +191,21 @@
                 </p>
               </template>
             </template>
+            <template v-if="isAnalis || isBkpsdm || isSkpd || isPegawai">
+              <template v-if="props.row.status === 'form'">
+                <p class="control">
+                  <b-button
+                    icon-left="pencil"
+                    type="is-warning"
+                    size="is-small"
+                    tag="router-link"
+                    :to="`/pengajuan/${props.row.id}`"
+                  >
+                    Edit
+                  </b-button>
+                </p>
+              </template>
+            </template>
             <template v-if="isAnalis || isBkpsdm">
               <template v-if="props.row.status === 'dikirim_skpd'">
                 <p class="control">
@@ -216,7 +236,7 @@
                   </b-button>
                 </p>
               </template>
-              <template v-if="props.row.status === 'paraf_jpt'">
+              <template v-if="props.row.status === 'paraf_administrator_2'">
                 <p class="control">
                   <b-button
                     icon-left="printer"
@@ -230,27 +250,8 @@
                 </p>
               </template>
             </template>
-            <template v-if="isPengawas">
-              <template v-if="props.row.status === 'draft_analis_jabatan'">
-                <p class="control">
-                  <btn-draft :id-pengajuan="props.row.id"></btn-draft>
-                </p>
-
-                <p class="control">
-                  <b-button
-                    label="Paraf"
-                    type="is-danger"
-                    size="is-small"
-                    icon-left="pencil"
-                    outlined
-                    @click="paraf(props.row.id)"
-                  />
-                </p>
-              </template>
-            </template>
-
             <template v-if="isAdmin1">
-              <template v-if="props.row.status === 'paraf_pengawas'">
+              <template v-if="props.row.status === 'draft_analis_jabatan'">
                 <p class="control">
                   <btn-draft :id-pengajuan="props.row.id"></btn-draft>
                 </p>
@@ -267,22 +268,6 @@
             </template>
             <template v-if="isAdmin2">
               <template v-if="props.row.status === 'paraf_administrator_1'">
-                <p class="control">
-                  <btn-draft :id-pengajuan="props.row.id"></btn-draft>
-                </p>
-                <p class="control">
-                  <b-button
-                    label="Paraf"
-                    type="is-danger"
-                    size="is-small"
-                    icon-left="pencil"
-                    outlined
-                    @click="paraf(props.row.id)"
-                  /></p
-              ></template>
-            </template>
-            <template v-if="isJpt">
-              <template v-if="props.row.status === 'paraf_administrator_2'">
                 <p class="control">
                   <btn-draft :id-pengajuan="props.row.id"></btn-draft>
                 </p>
@@ -418,7 +403,7 @@ export default {
             this.loadAsyncData()
             this.$buefy.toast.open({
               message: `Success: ${resp.data.message}`,
-              type: 'success',
+              type: 'is-success',
               queue: false,
             })
           }
@@ -571,7 +556,7 @@ export default {
             this.loadAsyncData()
             this.$buefy.toast.open({
               message: `Success: ${resp.data.message}`,
-              type: 'success',
+              type: 'is-success',
               queue: false,
             })
           }

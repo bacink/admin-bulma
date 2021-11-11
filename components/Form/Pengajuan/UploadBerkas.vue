@@ -141,7 +141,7 @@ export default {
           if (resp.data.success) {
             this.$buefy.toast.open({
               message: `Success: ${resp.data.message}`,
-              type: 'success',
+              type: 'is-success',
               queue: false,
             })
             this.$router.push(`/pengajuan/table`)
@@ -169,7 +169,7 @@ export default {
             this.isLoading = false
             this.$buefy.toast.open({
               message: `Success: ${resp.data.message}`,
-              type: 'success',
+              type: 'is-success',
               queue: false,
             })
             this.updateStatus(this.idPengajuan, 'diajukan')

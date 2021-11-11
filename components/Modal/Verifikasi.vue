@@ -195,7 +195,7 @@ export default {
             this.isLoading = false
             this.$buefy.toast.open({
               message: `Success: ${resp.data.message}`,
-              type: 'success',
+              type: 'is-success',
               queue: false,
             })
             this.isLoading = false

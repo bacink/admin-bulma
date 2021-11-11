@@ -447,6 +447,12 @@ export default {
       }
     )
 
+    if (this.penandatangan) {
+      this.formData.penandatangan.nama = this.penandatangan.nama
+      this.formData.penandatangan.nip = this.penandatangan.nip
+      this.formData.penandatangan.pangkat = this.penandatangan.pangkat
+    }
+
     if (this.pengajuan) {
       this.formData.tentang = `${this.pengajuan.jenis_jafung.nama} dalam jabatan fungsional ${this.pengajuan.jabatan_baru.nama}`
       this.formData.menimbang.a = `bahwa sebagai pelaksanaan dari Peraturan Menteri Negara pendayagunaan Aparatur Negara dan Reformasi Birokrasi Republik Indonesia Nomor 25 Tahun 2014 dan Peraturan Bersama Menteri Kesehatan dan Kepala Badan Kepegawaian Negara Nomor 5 Tahun 2015, perlu untuk mengangkat Pegawai Negeri Sipil a.n ${this.pengajuan.pegawai.nama_lengkap} NIP. ${this.pengajuan.pegawai.nip} dalam jabatan fungsional ${this.pengajuan.jabatan_baru.nama_lengkap}`
@@ -455,11 +461,11 @@ export default {
       this.formData.kode = this.pengajuan.jenis_jafung.kode
       this.formData.id_pengajuan = this.pengajuan.id
 
-      this.formData.pegawai.nama = this.pengajuan.pegawai.nama_lengkap
+      this.formData.pegawai.nama = this.pengajuan.pegawai.nama
+      this.formData.pegawai.pangkat_gol = this.pengajuan.pegawai.golongan
+      this.formData.pegawai.pendidikan = this.pengajuan.pegawai.pendidikan
       this.formData.pegawai.nip = this.pengajuan.pegawai.nip
-      this.formData.pegawai.ttl = `${this.pengajuan.pegawai.tempat_lahir}, ${this.pengajuan.pegawai.tanggal_lahir}`
-      this.formData.pegawai.pangkat_gol = `${this.pengajuan.golongan.referensi.pangkat}, ${this.pengajuan.golongan.referensi.golongan}`
-      this.formData.pegawai.pendidikan = `${this.pengajuan.pegawai.pendidikan.tingkat.singkatan}, ${this.pengajuan.pegawai.pendidikan.jurusan}`
+      this.formData.pegawai.ttl = this.pengajuan.pegawai.ttl
       this.formData.pegawai.jabatan_lama =
         this.pengajuan.jabatan_lama.jabatan.nama
       this.formData.pegawai.unit_kerja =

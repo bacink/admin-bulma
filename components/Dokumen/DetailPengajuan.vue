@@ -140,7 +140,7 @@ export default {
             this.isLoading = false
             this.$buefy.toast.open({
               message: `Success: ${resp.data.message}`,
-              type: 'success',
+              type: 'is-success',
               queue: false,
             })
             this.isLoading = false
@@ -149,12 +149,19 @@ export default {
         })
         .catch((err) => {
           this.isLoading = false
-
-          this.$buefy.toast.open({
-            message: `Error: ${err.response.data.message}`,
-            type: 'is-danger',
-            queue: false,
-          })
+          if (err.response.status === 422) {
+            this.$buefy.toast.open({
+              message: `Verifikasi belum disimpan`,
+              type: 'is-danger',
+              queue: false,
+            })
+          } else {
+            this.$buefy.toast.open({
+              message: `Error: ${Object.values(err.response.data)}`,
+              type: 'is-danger',
+              queue: false,
+            })
+          }
         })
     },
     loadSyaratPengajuan() {

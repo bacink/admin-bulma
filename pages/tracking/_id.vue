@@ -71,7 +71,7 @@ export default {
           if (resp.data.success) {
             this.$buefy.toast.open({
               message: `Success: ${resp.data.message}`,
-              type: 'success',
+              type: 'is-success',
               queue: false,
             })
           }
