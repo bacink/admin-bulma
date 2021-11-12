@@ -19,6 +19,9 @@
           expanded
           @input="onSearch"
         ></b-input>
+        <p class="control">
+          <jenis-jafung v-model="jenisJafungId"></jenis-jafung>
+        </p>
       </b-field>
     </b-field>
     <b-table
@@ -49,17 +52,24 @@
       detail-key="id"
       @page-change="onPageChange"
       @details-open="
-        (row) =>
-          $buefy.toast.open(`Detail Pegawai: ${row.pegawai.nama_lengkap}`)
+        (row) => $buefy.toast.open(`Detail Pegawai: ${row.pegawai.nama}`)
       "
       @sort="onSort"
     >
       <b-table-column v-slot="props" field="nama" label="Nama" sortable>
         <p>
-          <b>{{ props.row.pegawai.nama_lengkap }}</b
+          <b>{{ props.row.pegawai.nama }}</b
           ><br />
           {{ props.row.pegawai.nip }}
         </p>
+      </b-table-column>
+      <b-table-column
+        v-slot="props"
+        field="jenis_jafung"
+        label="Jenis Jafung"
+        sortable
+      >
+        <p class="is-capitalized">{{ props.row.jenis_jafung.nama }}</p>
       </b-table-column>
       <b-table-column
         v-slot="props"
@@ -294,8 +304,7 @@
             <div class="content">
               <strong> Detail Pegawai </strong>
               <ul>
-                <li>Pangkat: {{ props.row.golongan.referensi.pangkat }}</li>
-                <li>Golongan: {{ props.row.golongan.referensi.golongan }}</li>
+                <li>Pangkat/Golongan: {{ props.row.pegawai.golongan }}</li>
               </ul>
             </div>
           </div>
@@ -312,10 +321,11 @@
 <script>
 import ModalForm from '@/components/Modal/FormUploadSuratPengantar.vue'
 import BtnSuratPengantar from '@/components/Form/Pengajuan/BtnSuratPengantar.vue'
-import BtnDraft from '~/components/Form/Pengajuan/BtnDraft.vue'
+import BtnDraft from '@/components/Form/Pengajuan/BtnDraft.vue'
+import JenisJafung from '@/components/SelectOption/JenisJafung.vue'
 
 export default {
-  components: { BtnSuratPengantar, BtnDraft },
+  components: { BtnSuratPengantar, BtnDraft, JenisJafung },
   filters: {
     /**
      * Filter to truncate string, accepts a length parameter
@@ -332,7 +342,7 @@ export default {
       loading: false,
       sortField: 'id',
       sortOrder: 'desc',
-      sortIcon: 'arrow-up',
+      sortIcon: 'chevron-up',
       sortIconSize: 'is-small',
       isNarrowed: true,
       isStriped: true,
@@ -357,6 +367,7 @@ export default {
       param: null,
       isFullPage: true,
       isLoading: false,
+      jenisJafungId: '',
     }
   },
   mounted() {
@@ -389,6 +400,11 @@ export default {
         break
     }
     this.loadAsyncData()
+  },
+  watch: {
+    jenisJafungId() {
+      this.loadAsyncData()
+    },
   },
   methods: {
     updateStatus(idPengajuan, Status) {
@@ -467,6 +483,7 @@ export default {
         `search=${this.search}`,
         `order_by=${this.sortField}`,
         `order_direction=${this.sortOrder}`,
+        `jenis_jafung=${this.jenisJafungId}`,
         `page=${this.page}`,
         `take=${this.perPage}`,
       ].join('&')

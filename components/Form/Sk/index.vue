@@ -212,7 +212,7 @@ export default {
           if (resp.data.success) {
             this.isLoading = false
             this.$buefy.toast.open({
-              message: `Success: ${resp.message}`,
+              message: `Success: ${resp.data.data.message}`,
               type: 'is-success',
               queue: false,
             })
