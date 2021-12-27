@@ -3,12 +3,12 @@
     <hero-bar>
       {{ heroTitle }}
       <b-button
+        slot="right"
         :label="formCardTitle"
         :icon-left="icon"
         tag="router-link"
         :to="heroRouterLinkTo"
         type="is-warning"
-        slot="right"
       ></b-button>
     </hero-bar>
     <section class="section is-main-section">
@@ -51,7 +51,6 @@ export default {
       kopBlk: '',
       idJenisJafung: 0,
       jenisJafung: '',
-      isProfileExists: false,
     }
   },
   computed: {

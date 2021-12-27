@@ -65,6 +65,7 @@ const data = [
           updateMark: false,
           role: 'admin bkpsdm,analis jabatan',
         },
+
         {
           to: '/users/table',
           label: 'Users',

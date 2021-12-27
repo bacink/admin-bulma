@@ -85,7 +85,7 @@ export default {
       total: 0,
       loading: false,
       search: '',
-      sortField: 'urutan',
+      sortField: 'nama',
       sortOrder: 'asc',
       sortIcon: 'arrow-up',
       sortIconSize: 'is-small',

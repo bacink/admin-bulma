@@ -15,9 +15,9 @@
         <tbody v-for="(item, index) in syaratPengajuan" :key="index">
           <tr>
             <td>{{ index + 1 }}</td>
-            <td>{{ item.nama }}</td>
+            <td>{{ item.syarat_pengajuan.nama }}</td>
             <td>
-              <span v-if="item.is_upload === 'false'">
+              <span v-if="item.syarat_pengajuan.is_upload === 'false'">
                 <BtnDokumenSimpeg
                   :id-pegawai="idPegawai"
                   :simpeg-dokumen="item.simpeg_dokumen"
@@ -26,19 +26,19 @@
               <span v-else>
                 <BtnDokumen
                   :key="componentKey"
-                  :id-syarat-pengajuan="item.id"
+                  :id-syarat-pengajuan="item.syarat_pengajuan.id"
                   :id-pengajuan="idPengajuan"
                 />
               </span>
             </td>
             <td>
-              <span v-if="item.is_upload === 'true'">
+              <span v-if="item.syarat_pengajuan.is_upload === 'true'">
                 <center>
                   <b-button
                     icon-left="upload"
                     label="Upload"
                     type="is-info"
-                    @click="cardModal(item.id)"
+                    @click="cardModal(item.syarat_pengajuan.id)"
                   />
                 </center>
               </span>
@@ -83,6 +83,10 @@ export default {
       type: String,
       default: null,
     },
+    jenisJafungId: {
+      type: Number,
+      default: null,
+    },
   },
   data() {
     return {
@@ -96,7 +100,7 @@ export default {
   },
   computed: {},
   mounted() {
-    this.fetchSyaratPengajuan()
+    this.fetchSyaratPengajuan(this.jenisJafungId)
   },
   methods: {
     forceRerender() {
@@ -115,14 +119,14 @@ export default {
         },
       })
       modal.$on('close', () => {
-        this.fetchSyaratPengajuan()
+        this.fetchSyaratPengajuan(this.jenisJafungId)
         this.forceRerender()
       })
     },
 
-    fetchSyaratPengajuan() {
+    fetchSyaratPengajuan(id) {
       this.isLoading = true
-      this.$axios.$get(`/syarat_pengajuan/`).then((resp) => {
+      this.$axios.$get(`/syarat_jafung/${id}`).then((resp) => {
         if (resp) {
           this.isLoading = false
           const data = resp.data

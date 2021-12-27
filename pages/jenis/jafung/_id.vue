@@ -3,16 +3,17 @@
     <hero-bar>
       {{ heroTitle }}
       <b-button
+        slot="right"
         :label="formCardTitle"
         :icon-left="icon"
         tag="router-link"
         :to="heroRouterLinkTo"
         type="is-warning"
-        slot="right"
       ></b-button>
     </hero-bar>
     <section class="section is-main-section">
       <b-card :title="formCardTitle"> <FormJenisJafung :form="form" /></b-card>
+      <b-card :title="formCardTitle"> <FormSyaratJafung /></b-card>
     </section>
   </div>
 </template>
@@ -20,19 +21,16 @@
 <script>
 import HeroBar from '@/components/HeroBar'
 import FormJenisJafung from '@/components/Form/Jenis/Jafung'
+import FormSyaratJafung from '@/components/Form/Syarat/Jafung'
 
 export default {
-  components: { HeroBar, FormJenisJafung },
+  components: { HeroBar, FormJenisJafung, FormSyaratJafung },
   data() {
     return {
       isProfileExists: false,
       formCardTitle: 'Jenis Jafung',
       form: this.getClearFormObject(),
     }
-  },
-  mounted() {},
-  created() {
-    this.getData()
   },
   computed: {
     heroTitle() {
@@ -56,6 +54,10 @@ export default {
         return 'table'
       }
     },
+  },
+  mounted() {},
+  created() {
+    this.getData()
   },
   methods: {
     getClearFormObject() {

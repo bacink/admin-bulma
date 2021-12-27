@@ -30,6 +30,8 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
+
 export default {
   name: 'AsideMenuItem',
   components: {
@@ -47,6 +49,7 @@ export default {
     }
   },
   computed: {
+    ...mapState(['role']),
     componentIs() {
       return this.item.to ? 'nuxt-link' : 'a'
     },
@@ -73,7 +76,7 @@ export default {
     },
     allowed(role) {
       if (role) {
-        return role.split(',').includes(this.$auth.user.role.nama.toLowerCase())
+        return role.split(',').includes(this.role.toLowerCase())
       }
       return true
     },

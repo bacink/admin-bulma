@@ -15,15 +15,15 @@
           <template v-else>
             <AcPegawai
               v-model="formData.pegawai.nama"
-              @input="getJabatan"
               expanded
+              @input="getJabatan"
             />
           </template>
         </b-field>
       </div>
 
       <div class="columns">
-        <div class="column box" v-if="infoPegawai">
+        <div v-if="infoPegawai" class="column box">
           <b-card title="Informasi Pegawai">
             <div v-if="animated">
               <b-skeleton :animated="animated"></b-skeleton>
@@ -146,7 +146,7 @@
           </b-card>
         </div>
 
-        <div class="column box" v-if="infoPegawai">
+        <div v-if="infoPegawai" class="column box">
           <b-card title="Form Pengajuan">
             <div>
               <b-field label="Jenis Pengajuan">
@@ -190,6 +190,8 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
+
 import dayjs from 'dayjs'
 import AcPegawai from '@/components/AutoComplete/Pegawai'
 import AcSkpd from '@/components/AutoComplete/Skpd'
@@ -222,9 +224,12 @@ export default {
       this.formData.karir_baru.jabatan = null
     },
   },
+  computed: {
+    ...mapState(['role', 'user']),
+  },
   created() {
-    const role = this.$auth.user.role.nama.toLowerCase()
-    const user = this.$auth.user
+    const role = this.role.toLowerCase()
+    const user = this.user
     if (role === 'user') {
       this.isRoleUser = true
     }
@@ -242,7 +247,6 @@ export default {
     getClearFormObject() {
       return {
         status: 'form',
-
         id_jenis_jafung: null,
         id_pegawai: null,
         id_skpd: null,

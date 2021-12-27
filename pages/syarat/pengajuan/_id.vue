@@ -3,12 +3,12 @@
     <hero-bar>
       {{ heroTitle }}
       <b-button
+        slot="right"
         :label="formCardTitle"
         :icon-left="icon"
         tag="router-link"
         :to="heroRouterLinkTo"
         type="is-warning"
-        slot="right"
       ></b-button>
     </hero-bar>
     <section class="section is-main-section">
@@ -32,10 +32,6 @@ export default {
       form: this.getClearFormObject(),
     }
   },
-  mounted() {},
-  created() {
-    this.getData()
-  },
   computed: {
     heroTitle() {
       if (this.isProfileExists) {
@@ -58,6 +54,10 @@ export default {
         return 'table'
       }
     },
+  },
+  mounted() {},
+  created() {
+    this.getData()
   },
   methods: {
     getClearFormObject() {

@@ -10,10 +10,10 @@
         field="nama_lengkap"
         icon="magnify"
         clearable
+        :expanded="expanded"
         @typing="getAsyncData"
         @select="(option) => (selected = option)"
         @input="$emit('input', $event, selected)"
-        :expanded="expanded"
       >
         <template slot-scope="props">
           <div class="media">

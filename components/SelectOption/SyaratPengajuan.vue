@@ -33,7 +33,7 @@ export default {
     loadData() {
       this.isLoading = true
       this.$axios
-        .$get(`/jenis_jafung`)
+        .$get(`/syarat_pengajuan`)
         .then(({ data }) => {
           this.data = data
         })

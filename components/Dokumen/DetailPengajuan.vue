@@ -65,6 +65,11 @@
         </tbody>
       </table>
     </div>
+    <b-loading
+      v-model="isLoading"
+      :is-full-page="isFullPage"
+      :can-cancel="true"
+    ></b-loading>
   </section>
 </template>
 
@@ -87,6 +92,7 @@ export default {
       idSyaratPengajuan: null,
       keyComponent: 0,
       isLoading: true,
+      isFullPage: true,
     }
   },
   created() {

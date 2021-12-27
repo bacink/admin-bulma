@@ -111,6 +111,7 @@
 </template>
 <script>
 import pdfViewer from 'vue-pdf'
+import { mapState } from 'vuex'
 
 export default {
   components: {
@@ -160,8 +161,12 @@ export default {
       }
     },
   },
+  computed: {
+    ...mapState(['role']),
+  },
+
   mounted() {
-    const CurrentRole = this.$auth.user.role.nama.toLowerCase()
+    const CurrentRole = this.role.toLowerCase()
     if (CurrentRole !== 'user' || CurrentRole !== 'admin_skpd') {
       this.fetchVerifikasi()
     }

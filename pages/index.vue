@@ -8,57 +8,7 @@
       </div>
     </hero-bar>
     <section class="section is-main-section">
-      <tiles>
-        <card-widget
-          class="tile is-child"
-          type="is-primary"
-          icon="account-multiple"
-          :number="512"
-          label="Clients"
-        />
-        <card-widget
-          class="tile is-child"
-          type="is-info"
-          icon="cart-outline"
-          :number="7770"
-          prefix="$"
-          label="Sales"
-        />
-        <card-widget
-          class="tile is-child"
-          type="is-success"
-          icon="chart-timeline-variant"
-          :number="256"
-          suffix="%"
-          label="Performance"
-        />
-      </tiles>
-      <tiles>
-        <card-widget
-          class="tile is-child"
-          type="is-primary"
-          icon="account-multiple"
-          :number="512"
-          label="Clients"
-        />
-        <card-widget
-          class="tile is-child"
-          type="is-info"
-          icon="cart-outline"
-          :number="7770"
-          prefix="$"
-          label="Sales"
-        />
-        <card-widget
-          class="tile is-child"
-          type="is-success"
-          icon="chart-timeline-variant"
-          :number="256"
-          suffix="%"
-          label="Performance"
-        />
-      </tiles>
-
+      <WidgetJumlahPengajuan />
       <card-component
         title="Performance"
         icon="finance"
@@ -83,17 +33,16 @@
 // @ is an alias to /src
 import * as chartConfig from '@/components/Charts/chart.config'
 import HeroBar from '@/components/HeroBar'
-import Tiles from '@/components/Tiles'
-import CardWidget from '@/components/CardWidget'
+import WidgetJumlahPengajuan from '@/components/Widget/JumlahPengajuan'
 import CardComponent from '@/components/CardComponent'
 import LineChart from '@/components/Charts/LineChart'
 export default {
   name: 'Home',
   components: {
+    WidgetJumlahPengajuan,
     LineChart,
     CardComponent,
-    CardWidget,
-    Tiles,
+
     HeroBar,
   },
   data() {

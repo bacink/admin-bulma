@@ -15,15 +15,16 @@
             header-icon="pencil"
           >
             <section class="section is-main-section">
-              <div v-if="activeStep === 0">
+              {{ typeof activeStep }}
+
+              <div v-if="activeStep === '0'">
                 <FormPengajuanPegawai class="tile is-child" />
               </div>
-              <div v-if="activeStep === 1">
-                <FormPengajuanPegawai class="tile is-child" />
-              </div>
-              <div v-else-if="activeStep === 2">
+
+              <div v-else-if="activeStep === '1'">
                 <FormPengajuanUploadBerkas
                   :id-pegawai="id_pegawai"
+                  :jenis-jafung-id="jenisJafungId"
                   class="tile is-child"
                 />
               </div>
@@ -49,7 +50,8 @@ export default {
   },
   data() {
     return {
-      activeStep: 0,
+      activeStep: '0',
+      jenisJafungId: null,
       stepType: 'is-warning',
       stepItems: [
         {
@@ -57,21 +59,21 @@ export default {
           icon: 'account-key',
           title: 'Identitas Pegawai',
           type: 'is-success',
-          value: '1',
+          value: '0',
         },
         {
           label: 'Upload Berkas Persyaratan',
           icon: 'upload',
           title: 'Upload Berkas',
           type: 'is-primary',
-          value: '2',
+          value: '1',
         },
         {
           label: 'Selesai',
           icon: 'certificate',
           title: 'Selesai',
           type: 'is-success',
-          value: '3',
+          value: '2',
         },
       ],
     }
@@ -89,9 +91,11 @@ export default {
           if (resp.success) {
             const data = resp.data
             if (data.status === 'form') {
-              this.activeStep = 2
+              this.activeStep = '1'
               this.id_pegawai = data.id_pegawai
             }
+
+            this.jenisJafungId = data.id_jenis_jafung
           }
         })
         .catch((err) => {

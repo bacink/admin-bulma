@@ -2,8 +2,8 @@
   <form @submit.prevent="simpan">
     <b-field label="Nomor Urut">
       <b-numberinput
-        min="1"
         v-model="formData.urutan"
+        min="1"
         controls-position="compact"
       ></b-numberinput>
     </b-field>
@@ -20,8 +20,8 @@
     </b-field>
     <template v-if="!formData.is_upload">
       <b-field label="Pilih Jenis Dokumen Dari SIM_ASN">
-        <b-select placeholder="Pilih Dokumen" v-model="formData.simpeg_dokumen">
-          <option v-for="option in data" :value="option" :key="option">
+        <b-select v-model="formData.simpeg_dokumen" placeholder="Pilih Dokumen">
+          <option v-for="option in data" :key="option" :value="option">
             {{ option.toUpperCase() }}
           </option>
         </b-select>
@@ -71,8 +71,6 @@ export default {
     'formData.is_upload'(newValue) {
       if (newValue === true) {
         this.formData.simpeg_dokumen = null
-      } else {
-        this.formData.simpeg_dokumen = this.formData.simpeg_dokumen
       }
     },
     form(newValue) {

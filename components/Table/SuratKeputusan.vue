@@ -56,6 +56,14 @@
       <b-table-column v-slot="props" field="nama" label="Nama" sortable>
         {{ props.row.pegawai.nama }}
       </b-table-column>
+      <b-table-column
+        v-slot="props"
+        field="pengajuan"
+        label="Jenis Pengajuan"
+        sortable
+      >
+        {{ props.row.pengajuan.jenis_jafung.nama }}
+      </b-table-column>
       <b-table-column v-slot="props" field="nomor_sk" label="Nomor SK" sortable>
         {{ props.row.nomor_sk }}
       </b-table-column>
@@ -138,6 +146,8 @@
   </section>
 </template>
 <script>
+import { mapState } from 'vuex'
+
 export default {
   filters: {
     /**
@@ -182,8 +192,11 @@ export default {
       isLoading: false,
     }
   },
+  computed: {
+    ...mapState(['role']),
+  },
   mounted() {
-    const CurrentRole = this.$auth.user.role.nama.toLowerCase()
+    const CurrentRole = this.role.toLowerCase()
 
     switch (CurrentRole) {
       case 'admin skpd':

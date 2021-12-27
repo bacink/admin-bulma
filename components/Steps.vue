@@ -20,7 +20,7 @@
         :icon="item.icon"
         :clickable="isStepsClickable"
         :type="item.type"
-        :value="parseInt(item.value)"
+        :value="item.value"
       >
         <slot :content="item">
           <div v-for="content in contentItems" :key="content"></div>
@@ -62,8 +62,8 @@ export default {
       default: () => [],
     },
     activeStep: {
-      type: Number,
-      default: 0,
+      type: String,
+      default: '0',
     },
     prevIcon: {
       type: String,

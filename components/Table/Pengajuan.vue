@@ -319,6 +319,8 @@
   </section>
 </template>
 <script>
+import { mapState } from 'vuex'
+
 import ModalForm from '@/components/Modal/FormUploadSuratPengantar.vue'
 import BtnSuratPengantar from '@/components/Form/Pengajuan/BtnSuratPengantar.vue'
 import BtnDraft from '@/components/Form/Pengajuan/BtnDraft.vue'
@@ -370,8 +372,16 @@ export default {
       jenisJafungId: '',
     }
   },
+  computed: {
+    ...mapState(['role']),
+  },
+  watch: {
+    jenisJafungId() {
+      this.loadAsyncData()
+    },
+  },
   mounted() {
-    const CurrentRole = this.$auth.user.role.nama.toLowerCase()
+    const CurrentRole = this.role.toLowerCase()
 
     switch (CurrentRole) {
       case 'admin skpd':
@@ -400,11 +410,6 @@ export default {
         break
     }
     this.loadAsyncData()
-  },
-  watch: {
-    jenisJafungId() {
-      this.loadAsyncData()
-    },
   },
   methods: {
     updateStatus(idPengajuan, Status) {
@@ -457,7 +462,7 @@ export default {
     },
 
     paraf(idPengajuan) {
-      let role = this.$auth.user.role.nama.toLowerCase()
+      let role = this.role.toLowerCase()
       role = role.replace(/\s+/g, '_')
 
       this.$buefy.dialog.confirm({

@@ -38,7 +38,7 @@ export default {
     },
   },
   computed: {
-    ...mapState(['isAsideVisible']),
+    ...mapState(['isAsideVisible', 'role']),
   },
   methods: {
     menuClick(item) {
@@ -46,7 +46,7 @@ export default {
     },
     allowed(role) {
       if (role) {
-        return role.split(',').includes(this.$auth.user.role.nama.toLowerCase())
+        return role.split(',').includes(this.role.toLowerCase())
       }
       return true
     },
