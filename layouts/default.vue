@@ -15,6 +15,7 @@ import AsideMenu from '@/components/AsideMenu'
 import FooterBar from '@/components/FooterBar'
 import menu from '@/components/DataSet/menu'
 import TitleBar from '@/components/TitleBar'
+import { mapState } from 'vuex'
 
 export default {
   name: 'App',
@@ -25,12 +26,13 @@ export default {
     TitleBar,
   },
   computed: {
+    ...mapState(['role']),
     menu() {
       return menu
     },
     titleStack() {
       const text = this.$route.name.split('-').join(' ')
-      return ['Admin', text]
+      return [this.role, text]
     },
   },
   created() {

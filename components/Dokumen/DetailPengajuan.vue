@@ -6,7 +6,12 @@
           <tr>
             <th>No</th>
             <th>Persyaratan Pengajuan</th>
-            <th>Status Verifikasi</th>
+            <template v-if="role.toLowerCase() === 'admin skpd'">
+              <th>Status Verifikasi</th>
+            </template>
+            <template v-else>
+              <th>Status Verifikasi Sebelumnya</th>
+            </template>
             <th width="20">
               <center>Lihat Dokumen</center>
             </th>
@@ -76,8 +81,8 @@
 <script>
 import BtnDokumen from '@/components/Form/Pengajuan/BtnDokumen.vue'
 import BtnDokumenSimpeg from '@/components/Form/Pengajuan/BtnDokumenSimpeg.vue'
+import { mapState } from 'vuex'
 import StatusVerifikasi from '../Form/Pengajuan/StatusVerifikasi.vue'
-
 export default {
   components: {
     BtnDokumen,
@@ -100,6 +105,9 @@ export default {
   },
   mounted() {
     this.loadSyaratPengajuan()
+  },
+  computed: {
+    ...mapState(['role']),
   },
   methods: {
     forceRerender() {

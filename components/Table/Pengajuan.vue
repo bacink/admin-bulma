@@ -215,6 +215,24 @@
                   </b-button>
                 </p>
               </template>
+              <template
+                v-else-if="
+                  props.row.status === 'ditolak_skpd' ||
+                  props.row.status === 'ditolak_analis'
+                "
+              >
+                <p class="control">
+                  <b-button
+                    icon-left="pencil"
+                    type="is-warning"
+                    size="is-small"
+                    tag="router-link"
+                    :to="`/pengajuan/${props.row.id}`"
+                  >
+                    Edit
+                  </b-button>
+                </p>
+              </template>
             </template>
             <template v-if="isAnalis || isBkpsdm">
               <template v-if="props.row.status === 'dikirim_skpd'">
@@ -243,6 +261,24 @@
                     :to="`/draft/${props.row.id}`"
                   >
                     Buat Draft
+                  </b-button>
+                </p>
+              </template>
+              <template
+                v-if="
+                  props.row.status === 'ditolak_administrator_1' ||
+                  props.row.status === 'ditolak_administrator_2'
+                "
+              >
+                <p class="control">
+                  <b-button
+                    icon-left="file"
+                    type="is-warning"
+                    size="is-small"
+                    tag="router-link"
+                    :to="`/draft/edit/${props.row.id_draft}`"
+                  >
+                    Edit Draft
                   </b-button>
                 </p>
               </template>
@@ -412,12 +448,13 @@ export default {
     this.loadAsyncData()
   },
   methods: {
-    updateStatus(idPengajuan, Status) {
+    updateStatus(idPengajuan, Status, Deskripsi) {
       this.isLoading = true
       this.$axios
         .patch('/pengajuan/update/status', {
           id_pengajuan: idPengajuan,
           status: Status,
+          deskripsi: Deskripsi,
         })
         .then((resp) => {
           if (resp.data.success) {
@@ -440,8 +477,8 @@ export default {
         })
     },
     confirmTolak(id, status) {
-      this.$buefy.dialog.confirm({
-        title: 'Deleting account',
+      /* this.$buefy.dialog.confirm({
+        title: 'Tolak Draft',
         message: 'Anda yakin <b>Menolak Draft</b> ini tidak bisa dibatalkan.',
         confirmText: 'Tolak Draft',
         type: 'is-danger',
@@ -452,12 +489,29 @@ export default {
             this.updateStatus(id, status)
           }, 2000)
         },
+      }) */
+      this.$buefy.dialog.prompt({
+        message: `Alasan Penolakan`,
+        inputAttrs: {
+          placeholder: 'e.g. Draft Salah pada nomor surat',
+          minlength: 10,
+          type: 'textarea',
+          required: 'required',
+        },
+        type: 'is-danger',
+        trapFocus: true,
+        onConfirm: (value) => {
+          this.$buefy.toast.open(value)
+          setTimeout(() => {
+            this.updateStatus(id, status, value)
+          }, 2000)
+        },
       })
     },
     parafOk(id, status) {
       this.$buefy.toast.open(`Paraf sedang di proses`)
       setTimeout(() => {
-        this.updateStatus(id, status)
+        this.updateStatus(id, status, null)
       }, 2000)
     },
 

@@ -28,10 +28,25 @@
                   {{ item.aktor.toUpperCase() }}
                 </p>
                 <div class="control">
-                  <b-taglist attached>
-                    <b-tag type="is-dark">{{ item.deskripsi }}</b-tag>
+                  <template v-if="item.deskripsi.slice(0, 7) === 'ditolak'">
+                    <b-taglist attached>
+                      <b-tag type="is-danger">{{ item.deskripsi }}</b-tag>
+                      <b-tag type="is-info">{{ item.tanggal_selisih }}</b-tag>
+                    </b-taglist>
+                    <ol>
+                      <li
+                        v-for="ket in keterangan(item.pengajuan.verifikasi)"
+                        :key="ket.id"
+                      >
+                        {{ ket.syarat_pengajuan.nama }}
+                        <b-tag type="is-danger">{{ ket.keterangan }}</b-tag>
+                      </li>
+                    </ol>
+                  </template>
+                  <template v-else>
+                    <b-tag type="is-success">{{ item.deskripsi }}</b-tag>
                     <b-tag type="is-info">{{ item.tanggal_selisih }}</b-tag>
-                  </b-taglist>
+                  </template>
                 </div>
               </div>
             </div>
@@ -42,6 +57,11 @@
         </div>
       </div>
     </b-card>
+    <b-loading
+      v-model="isLoading"
+      :is-full-page="isFullPage"
+      :can-cancel="true"
+    ></b-loading>
   </section>
 </template>
 <script>
@@ -50,13 +70,21 @@ export default {
     return {
       tracking: [],
       finish: false,
+      isLoading: true,
+      isFullPage: true,
     }
   },
   mounted() {
     this.loadAsyncData(this.$route.params.id)
   },
   methods: {
+    keterangan(data) {
+      return data.filter(function (item) {
+        return item.status === 'tms'
+      })
+    },
     loadAsyncData(id) {
+      this.isLoading = true
       this.$axios
         .get(`tracking/pengajuan/${id}`)
         .then((resp) => {
@@ -67,14 +95,7 @@ export default {
               return (this.finish = true)
             }
           })
-
-          if (resp.data.success) {
-            this.$buefy.toast.open({
-              message: `Success: ${resp.data.message}`,
-              type: 'is-success',
-              queue: false,
-            })
-          }
+          this.isLoading = false
         })
         .catch((err) => {
           this.isLoading = false

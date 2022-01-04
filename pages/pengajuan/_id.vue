@@ -15,8 +15,6 @@
             header-icon="pencil"
           >
             <section class="section is-main-section">
-              {{ typeof activeStep }}
-
               <div v-if="activeStep === '0'">
                 <FormPengajuanPegawai class="tile is-child" />
               </div>
@@ -91,6 +89,9 @@ export default {
           if (resp.success) {
             const data = resp.data
             if (data.status === 'form') {
+              this.activeStep = '1'
+              this.id_pegawai = data.id_pegawai
+            } else if (data.status !== 'cetak_sk') {
               this.activeStep = '1'
               this.id_pegawai = data.id_pegawai
             }

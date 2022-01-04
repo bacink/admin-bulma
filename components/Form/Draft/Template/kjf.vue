@@ -34,7 +34,6 @@
       </template>
       <template v-else>
         <b-skeleton size="is-large" :active="loading"></b-skeleton>
-
         <b-skeleton size="is-large" :active="loading"></b-skeleton>
         <b-skeleton size="is-large" :active="loading"></b-skeleton>
         <b-skeleton size="is-large" :active="loading"></b-skeleton>
