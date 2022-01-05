@@ -407,11 +407,11 @@ export default {
       this.formData.kode = this.pengajuan.jenis_jafung.kode
       this.formData.id_pengajuan = this.pengajuan.id
 
-      this.formData.pegawai.nama = this.pengajuan.pegawai.nama_lengkap
+      this.formData.pegawai.nama = this.pengajuan.pegawai.nama
       this.formData.pegawai.nip = this.pengajuan.pegawai.nip
-      this.formData.pegawai.ttl = `${this.pengajuan.pegawai.tempat_lahir}, ${this.pengajuan.pegawai.tanggal_lahir}`
-      this.formData.pegawai.pangkat_gol = `${this.pengajuan.golongan.referensi.pangkat}, ${this.pengajuan.golongan.referensi.golongan}`
-      this.formData.pegawai.pendidikan = `${this.pengajuan.pegawai.pendidikan.tingkat.singkatan}, ${this.pengajuan.pegawai.pendidikan.jurusan}`
+      this.formData.pegawai.ttl = this.pengajuan.pegawai.ttl
+      this.formData.pegawai.pangkat_gol = this.pengajuan.pegawai.golongan
+      this.formData.pegawai.pendidikan = this.pengajuan.pegawai.pendidikan
       this.formData.pegawai.jabatan_lama =
         this.pengajuan.jabatan_lama.jabatan.nama
       this.formData.pegawai.unit_kerja =
