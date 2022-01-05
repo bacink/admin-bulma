@@ -27,7 +27,7 @@
             <strong>
               TENTANG <br />
               {{ formData.tentang.toUpperCase() }} <br />
-              BUPATI KARAWANG, {{ this.pengajuan.pegawai.nama }}
+              BUPATI KARAWANG,
             </strong>
           </p>
         </center>
