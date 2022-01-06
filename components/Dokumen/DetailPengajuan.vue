@@ -100,15 +100,16 @@ export default {
       isFullPage: true,
     }
   },
+  computed: {
+    ...mapState(['role']),
+  },
   created() {
     this.loadPengajuan()
   },
   mounted() {
     this.loadSyaratPengajuan()
   },
-  computed: {
-    ...mapState(['role']),
-  },
+
   methods: {
     forceRerender() {
       this.keyComponent += 1

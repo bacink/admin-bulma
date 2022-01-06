@@ -43,7 +43,7 @@ export default {
   },
   data() {
     return {
-      activeStep: 0,
+      activeStep: '0',
       stepType: 'is-warning',
       stepItems: [
         {
@@ -51,21 +51,21 @@ export default {
           icon: 'account-key',
           title: 'Identitas Pegawai',
           type: 'is-success',
-          value: 1,
+          value: '1',
         },
         {
           label: 'Upload Berkas Persyaratan',
           icon: 'upload',
           title: 'Account',
           type: 'is-primary',
-          value: 2,
+          value: '2',
         },
         {
           label: 'Selesai',
           icon: 'certificate',
           title: 'Selesai',
           type: 'is-success',
-          value: 3,
+          value: '3',
         },
       ],
     }

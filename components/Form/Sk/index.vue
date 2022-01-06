@@ -208,7 +208,6 @@ export default {
       this.$axios
         .post('/surat/keputusan', this.formData)
         .then((resp) => {
-          console.log(resp)
           if (resp.data.success) {
             this.isLoading = false
             this.$buefy.toast.open({

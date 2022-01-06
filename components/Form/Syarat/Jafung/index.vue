@@ -129,7 +129,7 @@ export default {
           this.getSyaratJafung()
         })
         .catch((err) => {
-          console.log(err)
+          throw err
         })
     },
     simpanUrutan() {
@@ -146,7 +146,7 @@ export default {
           })
         })
         .catch((err) => {
-          console.log(err)
+          throw err
         })
         .finally(() => {
           this.loading = false

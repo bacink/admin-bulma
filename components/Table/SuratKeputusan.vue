@@ -97,6 +97,43 @@
         </template>
         <template v-slot="props">
           <b-field>
+            <template v-if="props.row.dokumen === null">
+              <p class="control">
+                <b-button
+                  type="is-primary"
+                  size="is-small"
+                  icon-left="upload"
+                  @click="cardModal(props.row.id, false)"
+                >
+                  Upload
+                </b-button>
+              </p>
+            </template>
+            <template v-if="props.row.dokumen !== null">
+              <p class="control">
+                <b-button
+                  type="is-warning"
+                  size="is-small"
+                  icon-left="upload"
+                  @click="cardModal(props.row.id, true)"
+                >
+                  Re Upload
+                </b-button>
+              </p>
+              <p class="control">
+                <b-button
+                  tag="a"
+                  :href="props.row.url"
+                  target="_blank"
+                  type="is-success"
+                  size="is-small"
+                  icon-left="eye"
+                >
+                  View SK
+                </b-button>
+              </p>
+            </template>
+
             <p class="control">
               <b-button
                 tag="router-link"
@@ -147,6 +184,7 @@
 </template>
 <script>
 import { mapState } from 'vuex'
+import ModalFormSk from '@/components/Modal/FormUploadSk.vue'
 
 export default {
   filters: {
@@ -227,6 +265,22 @@ export default {
     this.loadAsyncData()
   },
   methods: {
+    cardModal(x, y) {
+      const modal = this.$buefy.modal.open({
+        parent: this,
+        component: ModalFormSk,
+        hasModalCard: true,
+        customClass: 'custom-class custom-class-2',
+        trapFocus: true,
+        props: {
+          id: x,
+          reupload: y,
+        },
+      })
+      modal.$on('close', () => {
+        this.loadAsyncData()
+      })
+    },
     loadAsyncData() {
       const params = [
         `search=${this.search}`,

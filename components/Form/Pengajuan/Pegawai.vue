@@ -21,7 +21,6 @@
           </template>
         </b-field>
       </div>
-
       <div class="columns">
         <div v-if="infoPegawai" class="column box">
           <b-card title="Informasi Pegawai">
@@ -216,6 +215,9 @@ export default {
       isLoading: false,
     }
   },
+  computed: {
+    ...mapState(['role', 'user']),
+  },
   watch: {
     'formData.skpd'() {
       this.formData.unit_kerja = null
@@ -223,9 +225,6 @@ export default {
     'formData.unit_kerja'() {
       this.formData.karir_baru.jabatan = null
     },
-  },
-  computed: {
-    ...mapState(['role', 'user']),
   },
   created() {
     const role = this.role.toLowerCase()
@@ -399,7 +398,6 @@ export default {
     },
     submit() {
       this.isLoading = true
-      console.log(this.formData)
       this.$axios
         .$post('/pengajuan', this.formData)
         .then((resp) => {

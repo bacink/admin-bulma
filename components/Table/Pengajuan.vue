@@ -477,19 +477,6 @@ export default {
         })
     },
     confirmTolak(id, status) {
-      /* this.$buefy.dialog.confirm({
-        title: 'Tolak Draft',
-        message: 'Anda yakin <b>Menolak Draft</b> ini tidak bisa dibatalkan.',
-        confirmText: 'Tolak Draft',
-        type: 'is-danger',
-        hasIcon: true,
-        onConfirm: () => {
-          this.$buefy.toast.open(`Paraf sedang di proses`)
-          setTimeout(() => {
-            this.updateStatus(id, status)
-          }, 2000)
-        },
-      }) */
       this.$buefy.dialog.prompt({
         message: `Alasan Penolakan`,
         inputAttrs: {
