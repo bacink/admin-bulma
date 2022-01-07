@@ -50,7 +50,7 @@
           <p class="subtitle is-5">Or login with</p>
           <a
             class="button is-block is-fullwidth is-danger is-medium"
-            href="https://sim-asn.bkpsdm.karawangkab.go.id/oauth/authorize?client_id=949304c6-ecd1-460a-a8fb-c5c4abf9e34e&redirect_uri=https://https://api.jafung.bkpsdm.karawangkab.go.id/api/callback/sim-asn&response_type=code"
+            href="https://sim-asn.bkpsdm.karawangkab.go.id/oauth/authorize?client_id=949304c6-ecd1-460a-a8fb-c5c4abf9e34e&redirect_uri=https://api.jafung.bkpsdm.karawangkab.go.id/api/callback/sim-asn&response_type=code&scope=*&state=login"
           >
             <img class="logo-sim-asn" src="/logo-sim-asn.png" />
             <span class="has-text-white">SIM-ASN</span>
