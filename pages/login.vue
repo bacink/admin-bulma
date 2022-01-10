@@ -6,7 +6,7 @@
         <b-progress v-show="progress" size="is-medium" show-value
           >trying to access</b-progress
         >
-        <h1>SIUL JAFA</h1>
+        <h1>SIUJANG</h1>
         <hr />
         <form @submit.prevent="addUser">
           <div class="field">
@@ -98,8 +98,7 @@ export default {
       this.pass.msg = this.$route.query.error
     }
     if (this.$route.query.access_token) {
-      this.progress = true
-
+      // this.progress = true
       this.$auth.setUserToken(this.$route.query.access_token).catch((error) => {
         this.pass.msg = error.message || 'Error login'
       })

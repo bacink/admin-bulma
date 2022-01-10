@@ -1,134 +1,23 @@
 <template>
-  <div>
-    <hero-bar :has-right-visible="false">
-      Dashboard
-      <div class="container">
-        <p v-if="loggedIn">Hello {{ user.name }}</p>
-        <p v-if="!loggedIn">Please sign in</p>
-      </div>
-    </hero-bar>
-    <section class="section is-main-section">
-      <WidgetJumlahPengajuan />
-      <card-component
-        title="Performance"
-        icon="finance"
-        header-icon="reload"
-        @header-icon-click="fillChartData"
-      >
-        <div v-if="defaultChart.chartData" class="chart-area">
-          <line-chart
-            ref="bigChart"
-            style="height: 100%"
-            chart-id="big-line-chart"
-            :chart-data="defaultChart.chartData"
-            :extra-options="defaultChart.extraOptions"
-          />
-        </div>
-      </card-component>
-    </section>
-  </div>
+  <section v-if="role !== 'User'" class="section is-main-section">
+    <admin />
+  </section>
+  <section v-else-if="role === 'User'" class="section is-main-section">
+    <user />
+  </section>
 </template>
-
 <script>
-// @ is an alias to /src
-import * as chartConfig from '@/components/Charts/chart.config'
-import HeroBar from '@/components/HeroBar'
-import WidgetJumlahPengajuan from '@/components/Widget/JumlahPengajuan'
-import CardComponent from '@/components/CardComponent'
-import LineChart from '@/components/Charts/LineChart'
+import { mapState } from 'vuex'
+import Admin from '@/components/Dashboard/Admin'
+import User from '~/components/Dashboard/User'
+
 export default {
-  name: 'Home',
-  components: {
-    WidgetJumlahPengajuan,
-    LineChart,
-    CardComponent,
-
-    HeroBar,
-  },
+  components: { Admin, User },
   data() {
-    return {
-      defaultChart: {
-        chartData: null,
-        extraOptions: chartConfig.chartOptionsMain,
-      },
-    }
+    return {}
   },
-  computed: {},
-  mounted() {
-    this.fillChartData()
-
-    this.$buefy.snackbar.open({
-      message: 'Welcome back',
-      queue: false,
-    })
-  },
-  methods: {
-    randomChartData(n) {
-      const data = []
-
-      for (let i = 0; i < n; i++) {
-        data.push(Math.round(Math.random() * 200))
-      }
-
-      return data
-    },
-    fillChartData() {
-      this.defaultChart.chartData = {
-        datasets: [
-          {
-            fill: false,
-            borderColor: chartConfig.chartColors.default.primary,
-            borderWidth: 2,
-            borderDash: [],
-            borderDashOffset: 0.0,
-            pointBackgroundColor: chartConfig.chartColors.default.primary,
-            pointBorderColor: 'rgba(255,255,255,0)',
-            pointHoverBackgroundColor: chartConfig.chartColors.default.primary,
-            pointBorderWidth: 20,
-            pointHoverRadius: 4,
-            pointHoverBorderWidth: 15,
-            pointRadius: 4,
-            data: this.randomChartData(9),
-          },
-          {
-            fill: false,
-            borderColor: chartConfig.chartColors.default.info,
-            borderWidth: 2,
-            borderDash: [],
-            borderDashOffset: 0.0,
-            pointBackgroundColor: chartConfig.chartColors.default.info,
-            pointBorderColor: 'rgba(255,255,255,0)',
-            pointHoverBackgroundColor: chartConfig.chartColors.default.info,
-            pointBorderWidth: 20,
-            pointHoverRadius: 4,
-            pointHoverBorderWidth: 15,
-            pointRadius: 4,
-            data: this.randomChartData(9),
-          },
-          {
-            fill: false,
-            borderColor: chartConfig.chartColors.default.danger,
-            borderWidth: 2,
-            borderDash: [],
-            borderDashOffset: 0.0,
-            pointBackgroundColor: chartConfig.chartColors.default.danger,
-            pointBorderColor: 'rgba(255,255,255,0)',
-            pointHoverBackgroundColor: chartConfig.chartColors.default.danger,
-            pointBorderWidth: 20,
-            pointHoverRadius: 4,
-            pointHoverBorderWidth: 15,
-            pointRadius: 4,
-            data: this.randomChartData(9),
-          },
-        ],
-        labels: ['01', '02', '03', '04', '05', '06', '07', '08', '09'],
-      }
-    },
-  },
-  head() {
-    return {
-      title: 'Dashboard — Siul Jafa',
-    }
+  computed: {
+    ...mapState(['role']),
   },
 }
 </script>

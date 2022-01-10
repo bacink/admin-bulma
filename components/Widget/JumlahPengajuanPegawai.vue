@@ -14,6 +14,7 @@
 
 <script>
 import CardWidget from '@/components/CardWidget'
+import { mapState } from 'vuex'
 export default {
   components: { CardWidget },
   props: {
@@ -30,6 +31,9 @@ export default {
     return {
       data: {},
     }
+  },
+  computed: {
+    ...mapState(['auth']),
   },
   mounted() {
     this.getDashboard(this.status)
@@ -48,7 +52,7 @@ export default {
     },
     getDashboard(status) {
       this.$axios
-        .$get(`dashboard/${status}`)
+        .$get(`dashboard/${status}/${this.auth.user.id_pegawai}`)
         .then((response) => {
           this.data = response
         })

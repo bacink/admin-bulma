@@ -85,9 +85,7 @@ export default {
    */
   // components: false,
   components: [
-    {
-      path: '~/components/Form/Draft/Template', prefix: 'draft'
-    }
+    { path: '~/components/Form/Draft/Template', prefix: 'draft' }
   ],
   /*
    ** Nuxt.js dev-modules

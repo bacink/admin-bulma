@@ -1,12 +1,5 @@
 <template>
   <form @submit.prevent="simpan">
-    <b-field label="Nomor Urut">
-      <b-numberinput
-        v-model="formData.urutan"
-        min="1"
-        controls-position="compact"
-      ></b-numberinput>
-    </b-field>
     <b-field label="Nama">
       <b-input v-model="formData.nama" :loading="isLoading"></b-input>
     </b-field>
@@ -60,7 +53,6 @@ export default {
       ],
       formData: {
         id: null,
-        urutan: null,
         nama: null,
         is_upload: true,
         simpeg_dokumen: null,
