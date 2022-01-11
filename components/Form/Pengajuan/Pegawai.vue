@@ -216,7 +216,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['role', 'user']),
+    ...mapState(['role', 'auth']),
   },
   watch: {
     'formData.skpd'() {
@@ -226,9 +226,11 @@ export default {
       this.formData.karir_baru.jabatan = null
     },
   },
-  created() {
+  mounted() {
     const role = this.role.toLowerCase()
-    const user = this.user
+
+    const user = this.auth.user
+
     if (role === 'user') {
       this.isRoleUser = true
     }
