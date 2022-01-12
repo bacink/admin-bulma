@@ -4,14 +4,8 @@
       <div class="block">
         <b-field position="is-centered">
           <template v-if="isRoleUser">
-            <b-input
-              v-model="formData.pegawai.nama"
-              custom-class="is-static"
-              readonly
-              expanded
-            />
+            <notif type="is-info is-light">{{ formData.pegawai.nama }}</notif>
           </template>
-
           <template v-else>
             <AcPegawai
               v-model="formData.pegawai.nama"
@@ -22,8 +16,8 @@
         </b-field>
       </div>
       <div class="columns">
-        <div v-if="infoPegawai" class="column box">
-          <b-card title="Informasi Pegawai">
+        <div v-if="infoPegawai" class="column">
+          <b-card title="Informasi Pegawai" class="has-background-primary">
             <div v-if="animated">
               <b-skeleton :animated="animated"></b-skeleton>
               <b-skeleton width="20%" :animated="animated"></b-skeleton>
@@ -77,7 +71,7 @@
               </ul>
             </div>
           </b-card>
-          <b-card title="Informasi Jabatan">
+          <b-card title="Informasi Jabatan" class="has-background-primary">
             <ul>
               <template v-if="formData.jabatan_lama">
                 <li>
@@ -145,8 +139,8 @@
           </b-card>
         </div>
 
-        <div v-if="infoPegawai" class="column box">
-          <b-card title="Form Pengajuan">
+        <div v-if="infoPegawai" class="column">
+          <b-card title="Form Pengajuan" class="has-background-primary">
             <div>
               <b-field label="Jenis Pengajuan">
                 <AcJenisJafung
@@ -177,7 +171,6 @@
           </b-card>
         </div>
       </div>
-
       <hr />
       <b-field>
         <b-button type="is-primary" :loading="isLoading" native-type="submit">
@@ -197,8 +190,16 @@ import AcSkpd from '@/components/AutoComplete/Skpd'
 import AcUnitKerja from '@/components/AutoComplete/UnitKerja'
 import AcJabatan from '@/components/AutoComplete/Jabatan'
 import AcJenisJafung from '@/components/AutoComplete/JenisJafung'
+import Notif from '@/components/Notif'
 export default {
-  components: { AcPegawai, AcSkpd, AcUnitKerja, AcJabatan, AcJenisJafung },
+  components: {
+    AcPegawai,
+    AcSkpd,
+    AcUnitKerja,
+    AcJabatan,
+    AcJenisJafung,
+    Notif,
+  },
   data() {
     return {
       formError: {
