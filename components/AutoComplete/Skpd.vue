@@ -10,6 +10,7 @@
         field="nama"
         icon="magnify"
         clearable
+        required
         @typing="getAsyncData"
         @select="(option) => (selected = option)"
         @input="$emit('input', $event, selected)"

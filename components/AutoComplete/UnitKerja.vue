@@ -4,14 +4,14 @@
       <b-autocomplete
         :value="value"
         :data="data"
-        :loading="isFetching"
         :id-skpd="idSkpd"
+        :loading="isFetching"
         :keep-first="true"
         placeholder="Cari Unit Kerja"
-        field="nama"
+        field="unit_kerja.nama"
         icon="magnify"
         clearable
-        required
+        open-on-focus
         @typing="getAsyncData"
         @select="(option) => (selected = option)"
         @input="$emit('input', $event, selected)"
@@ -19,8 +19,8 @@
         <template slot-scope="props">
           <div class="media">
             <div class="media-content">
-              <b>{{ props.option.jenis }}</b
-              >, {{ props.option.nama }}
+              <b>{{ props.option.unit_kerja.jenis }}</b
+              >, {{ props.option.unit_kerja.nama }}
             </div>
           </div>
         </template>
@@ -42,8 +42,13 @@ export default {
       type: Number,
       default: null,
     },
-    required: {
-      type: Boolean,
+    jenjang: {
+      type: String,
+      default: null,
+    },
+    jabatan: {
+      type: String,
+      default: null,
     },
   },
   data() {
@@ -53,16 +58,35 @@ export default {
       selected: null,
     }
   },
+
   methods: {
     // You have to install and import debounce to use it,
     // it's not mandatory though.
     getAsyncData: debounce(function (query) {
       if (!query.length) {
-        this.data = []
+        this.$axios
+          .$get(
+            `/sotk/unit_kerja/byJabatan?jabatan=${this.jabatan}&id_skpd=${this.idSkpd}&jenjang=${this.jenjang}`
+          )
+          .then(({ data }) => {
+            this.data = []
+            data.forEach((item) => this.data.push(item))
+          })
+          .catch((error) => {
+            this.data = []
+            throw error
+          })
+          .finally(() => {
+            this.isFetching = false
+          })
       }
       this.isFetching = true
+
       this.$axios
-        .$get(`/sotk/unit_kerja/search?search=${query}&id_skpd=${this.idSkpd}`)
+        .$get(
+          `/sotk/unit_kerja/byJabatan?unit_kerja=${query}&jabatan=${this.jabatan}&id_skpd=${this.idSkpd}&jenjang=${this.jenjang}`
+        )
+
         .then(({ data }) => {
           this.data = []
           data.forEach((item) => this.data.push(item))

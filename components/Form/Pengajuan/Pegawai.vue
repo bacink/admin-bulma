@@ -18,12 +18,6 @@
       <div class="columns">
         <div v-if="infoPegawai" class="column">
           <b-card title="Informasi Pegawai" class="has-background-primary">
-            <div v-if="animated">
-              <b-skeleton :animated="animated"></b-skeleton>
-              <b-skeleton width="20%" :animated="animated"></b-skeleton>
-              <b-skeleton width="40%" :animated="animated"></b-skeleton>
-              <b-skeleton width="80%" :animated="animated"></b-skeleton>
-            </div>
             <div>
               <ul>
                 <li>
@@ -32,6 +26,7 @@
                     <span class="has-text-right">
                       {{ formData.pegawai.nama }}</span
                     >
+                    <b-skeleton size="is-large" :active="animated"></b-skeleton>
                   </p>
                 </li>
                 <li>
@@ -40,6 +35,7 @@
                     <span class="has-text.nama-right">
                       {{ formData.pegawai.nip }}</span
                     >
+                    <b-skeleton size="is-large" :active="animated"></b-skeleton>
                   </p>
                 </li>
                 <li>
@@ -48,6 +44,7 @@
                     <span class="has-text.nama-right">
                       {{ formData.pegawai.ttl }}</span
                     >
+                    <b-skeleton size="is-large" :active="animated"></b-skeleton>
                   </p>
                 </li>
                 <template v-if="formData.jabatan_lama">
@@ -57,6 +54,10 @@
                       <span class="has-text-right">
                         {{ formData.pegawai.golongan }}
                       </span>
+                      <b-skeleton
+                        size="is-large"
+                        :active="animated"
+                      ></b-skeleton>
                     </p>
                   </li>
                   <li>
@@ -65,6 +66,10 @@
                       <span class="has-text-right">
                         {{ formData.pegawai.pendidikan }}
                       </span>
+                      <b-skeleton
+                        size="is-large"
+                        :active="animated"
+                      ></b-skeleton>
                     </p>
                   </li>
                 </template>
@@ -80,6 +85,7 @@
                     <span class="has-text-right">
                       {{ formData.karir_lama.jabatan }}</span
                     >
+                    <b-skeleton size="is-large" :active="animated"></b-skeleton>
                   </p>
                 </li>
                 <li>
@@ -88,6 +94,7 @@
                     <span class="has-text-right">
                       {{ formData.karir_lama.skpd }}</span
                     >
+                    <b-skeleton size="is-large" :active="animated"></b-skeleton>
                   </p>
                 </li>
                 <li>
@@ -96,6 +103,7 @@
                     <span class="has-text-right">
                       {{ formData.karir_lama.unit_kerja }}</span
                     >
+                    <b-skeleton size="is-large" :active="animated"></b-skeleton>
                   </p>
                 </li>
                 <li>
@@ -113,6 +121,10 @@
                             : formData.karir_lama.kelas_jabatan
                         }}
                       </b-notification>
+                      <b-skeleton
+                        size="is-large"
+                        :active="animated"
+                      ></b-skeleton>
                     </span>
                   </p>
                 </li>
@@ -131,6 +143,10 @@
                             : formData.karir_lama.tunjangan
                         }}
                       </b-notification>
+                      <b-skeleton
+                        size="is-large"
+                        :active="animated"
+                      ></b-skeleton>
                     </span>
                   </p>
                 </li>
@@ -138,7 +154,6 @@
             </ul>
           </b-card>
         </div>
-
         <div v-if="infoPegawai" class="column">
           <b-card title="Form Pengajuan" class="has-background-primary">
             <div>
@@ -151,22 +166,12 @@
               <b-field label="SKPD Baru Yang dilamar">
                 <AcSkpd v-model="formData.skpd" @input="getSkpd" />
               </b-field>
-              <b-field label="Unit Kerja Baru Yang dilamar">
-                <AcUnitKerja
-                  v-model="formData.unit_kerja"
-                  :id-skpd="idSkpd"
-                  :required="true"
-                  @input="getUnitKerja"
-                />
-              </b-field>
-              <b-field label="Jabatan Baru Yang dilamar">
-                <AcJabatan
-                  v-model="formData.karir_baru.jabatan"
-                  :id-skpd="idSkpd"
-                  :id-unit-kerja="idUnitKerja"
-                  @input="getJabatanBaru"
-                />
-              </b-field>
+              <SelectOptionJabatan
+                v-if="idSkpd"
+                v-model="formData.karir_baru.jabatan"
+                :jabatans="jabatans"
+                :id-skpd="idSkpd"
+              />
             </div>
           </b-card>
         </div>
@@ -183,20 +188,19 @@
 
 <script>
 import { mapState } from 'vuex'
-
 import dayjs from 'dayjs'
 import AcPegawai from '@/components/AutoComplete/Pegawai'
+// import SelectUnitKerja from '@/components/SelectOption/UnitKerja'
 import AcSkpd from '@/components/AutoComplete/Skpd'
-import AcUnitKerja from '@/components/AutoComplete/UnitKerja'
-import AcJabatan from '@/components/AutoComplete/Jabatan'
+// import AcJabatan from '@/components/AutoComplete/Jabatan'
+import SelectOptionJabatan from '@/components/SelectOption/Jabatan'
 import AcJenisJafung from '@/components/AutoComplete/JenisJafung'
 import Notif from '@/components/Notif'
 export default {
   components: {
     AcPegawai,
     AcSkpd,
-    AcUnitKerja,
-    AcJabatan,
+    SelectOptionJabatan,
     AcJenisJafung,
     Notif,
   },
@@ -214,6 +218,8 @@ export default {
       animated: false,
       infoPegawai: false,
       isLoading: false,
+      componentKey: null,
+      jabatans: null,
     }
   },
   computed: {
@@ -223,19 +229,16 @@ export default {
     'formData.skpd'() {
       this.formData.unit_kerja = null
     },
-    'formData.unit_kerja'() {
-      this.formData.karir_baru.jabatan = null
+    'formData.karir_baru.jabatan'(newValue) {
+      this.formData.jabatan_baru = newValue
     },
   },
   mounted() {
     const role = this.role.toLowerCase()
-
     const user = this.auth.user
-
     if (role === 'user') {
       this.isRoleUser = true
     }
-
     if (this.isRoleUser) {
       this.formData.id_pegawai = user.pegawai.id
       this.formData.pegawai.id = user.pegawai.id
@@ -252,6 +255,7 @@ export default {
         id_jenis_jafung: null,
         id_pegawai: null,
         id_skpd: null,
+        skpd: null,
         jabatan_lama: null,
         jabatan_baru: null,
 
@@ -281,12 +285,28 @@ export default {
         },
       }
     },
+    loadDataJabatan(idSkpd) {
+      this.isLoading = true
+      this.$axios
+        .$get(`/sotk/jabatan/q?search=null&id_skpd=${idSkpd}`)
+        .then(({ data }) => {
+          this.jabatans = data
+        })
+        .catch((error) => {
+          this.jabatans = []
+          throw error
+        })
+        .finally(() => {
+          this.isLoading = false
+        })
+    },
     getJenisJafung(payload, payload2) {
       if (payload2) {
         this.formData.id_jenis_jafung = payload2.id
       }
     },
     getJabatanBaru(payload, payload2) {
+      this.jenjang = null
       if (payload2) {
         this.formData.jabatan_baru = payload2
       }
@@ -295,6 +315,7 @@ export default {
       if (payload2) {
         this.idSkpd = payload2.id
         this.formData.id_skpd = payload2.id
+        this.loadDataJabatan(payload2.id)
       }
     },
     getUnitKerja(payload, payload2) {
@@ -318,6 +339,8 @@ export default {
       }
     },
     getJabatanAktif(id) {
+      this.animated = true
+
       this.$axios
         .$get('/jabatan/aktif/' + id)
         .then((resp) => {
@@ -368,6 +391,7 @@ export default {
         })
     },
     getGolonganAktif(id) {
+      this.animated = true
       this.$axios
         .$get('/golongan/' + id)
         .then((resp) => {
@@ -416,7 +440,7 @@ export default {
           }
         })
         .catch((err) => {
-          this.formData = this.getClearFormObject()
+          // this.formData = this.getClearFormObject()
           this.isLoading = false
           this.$buefy.toast.open({
             message: `Error: ${err.message}`,

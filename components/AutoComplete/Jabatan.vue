@@ -4,14 +4,15 @@
       <b-autocomplete
         :value="value"
         :id-skpd="idSkpd"
-        :id-unit-kerja="idUnitKerja"
         :data="data"
         :loading="isFetching"
-        :keep-first="true"
+        :keep-first="keepFirst"
+        open-on-focus
         placeholder="Cari Jabatan"
         field="nama_lengkap"
         icon="magnify"
         clearable
+        required
         @typing="getAsyncData"
         @focus="getAsyncData"
         @select="(option) => (selected = option)"
@@ -42,16 +43,13 @@ export default {
       type: Number,
       default: null,
     },
-    idUnitKerja: {
-      type: Number,
-      default: null,
-    },
   },
   data() {
     return {
       data: [],
       isFetching: false,
       selected: null,
+      keepFirst: true,
     }
   },
   methods: {
@@ -60,13 +58,11 @@ export default {
     getAsyncData: debounce(function (query) {
       if (!query.length) {
         this.data = []
-        query = ''
+        return
       }
       this.isFetching = true
       this.$axios
-        .$get(
-          `/sotk/jabatan/search?search=${query}&id_skpd=${this.idSkpd}&id_unit_kerja=${this.idUnitKerja}`
-        )
+        .$get(`/sotk/jabatan/q?search=${query}&id_skpd=${this.idSkpd}`)
         .then(({ data }) => {
           this.data = []
           data.forEach((item) => this.data.push(item))

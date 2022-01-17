@@ -11,7 +11,6 @@ const routerBase =
     : {}
 
 export default {
-
   static: {
     prefix: false
   },
