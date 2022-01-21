@@ -61,23 +61,18 @@
         </template>
         <template v-slot="props">
           <b-field>
-            <p class="control">
-              <b-button
-                icon-left="pencil"
-                tag="router-link"
-                type="is-warning"
-                :to="`/syarat/pengajuan/${props.row.id}`"
-                size="is-small"
-              >
-              </b-button>
-            </p>
             <button-delete
               :label="isLabel"
               :value="props.row.id"
-              action="syarat_pengajuan"
+              action="syarat_pengajuan/trash"
               name="Syarat Pengajuan"
-              @close="alert('test')"
             ></button-delete>
+            <button-restore
+              :label="isLabel"
+              :value="props.row.id"
+              action="syarat_pengajuan/trash"
+              name="Syarat Pengajuan"
+            ></button-restore>
           </b-field>
         </template>
       </b-table-column>
@@ -88,9 +83,10 @@
   </section>
 </template>
 <script>
-import ButtonDelete from '@/components/Button/Delete'
+import ButtonDelete from '@/components/Button/ForceDelete'
+import ButtonRestore from '@/components/Button/Restore'
 export default {
-  components: { ButtonDelete },
+  components: { ButtonDelete, ButtonRestore },
   data() {
     return {
       isLabel: false,
@@ -122,6 +118,7 @@ export default {
         `order_direction=${this.sortOrder}`,
         `page=${this.page}`,
         `take=${this.perPage}`,
+        `trash=true`,
       ].join('&')
 
       this.loading = true

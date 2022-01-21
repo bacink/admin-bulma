@@ -1,5 +1,15 @@
 <template>
   <section>
+    <b-message
+      v-show="errorPegawai"
+      title="Data pegawai tidak ditemukan"
+      type="is-danger"
+      has-icon
+      aria-close-label="Close message"
+    >
+      Silahkan lengkapi terlebuh dahulu data pegawai di <b>SIM-ASN</b> Seperti:
+      Jabatan, Golongan dan data pendidikan terakhir
+    </b-message>
     <form name="formData" @submit.prevent="submit">
       <div class="block">
         <b-field position="is-centered">
@@ -178,7 +188,12 @@
       </div>
       <hr />
       <b-field>
-        <b-button type="is-primary" :loading="isLoading" native-type="submit">
+        <b-button
+          v-show="!errorPegawai"
+          type="is-primary"
+          :loading="isLoading"
+          native-type="submit"
+        >
           Lanjut
         </b-button>
       </b-field>
@@ -206,6 +221,7 @@ export default {
   },
   data() {
     return {
+      errorPegawai: false,
       formError: {
         kelas_jabatan: false,
         tunjangan: false,
@@ -345,6 +361,8 @@ export default {
         .$get('/jabatan/aktif/' + id)
         .then((resp) => {
           if (resp.success) {
+            this.errorPegawai = false
+
             this.animated = false
             this.infoPegawai = true
             const data = resp.data
@@ -385,6 +403,7 @@ export default {
           }
         })
         .catch((err) => {
+          this.errorPegawai = true
           this.animated = false
           this.infoPegawai = false
           throw err
@@ -395,6 +414,7 @@ export default {
       this.$axios
         .$get('/golongan/' + id)
         .then((resp) => {
+          this.errorPegawai = false
           if (resp.success) {
             const data = resp.data
             this.formData.karir_lama.golongan = `${data.referensi.pangkat} / ${data.referensi.golongan}`
@@ -402,6 +422,7 @@ export default {
           }
         })
         .catch((err) => {
+          this.errorPegawai = true
           throw err
         })
     },
@@ -410,8 +431,8 @@ export default {
         .$get('/pendidikan/' + id)
         .then((resp) => {
           if (resp.success) {
+            this.errorPegawai = false
             let tingkat = null
-
             if (resp.data.tingkat) {
               tingkat = resp.data.tingkat.singkatan
             }
@@ -420,6 +441,7 @@ export default {
           }
         })
         .catch((err) => {
+          this.errorPegawai = true
           throw err
         })
     },

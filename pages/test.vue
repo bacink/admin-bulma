@@ -1,13 +1,19 @@
 <template>
-  <SelectOptionJabatan v-model="jabatan" />
+  <button-delete
+    v-model="formData.id"
+    action="syarat_pengajuan"
+    name="Syarat Pengajuan"
+  />
 </template>
 <script>
-import SelectOptionJabatan from '@/components/SelectOption/Jabatan'
+import ButtonDelete from '@/components/Button/Delete'
 export default {
-  components: { SelectOptionJabatan },
+  components: { ButtonDelete },
   data() {
     return {
-      jabatan: null,
+      formData: {
+        id: 1,
+      },
     }
   },
 }

@@ -75,6 +75,28 @@ const data = [
         },
       ],
     },
+    {
+      label: 'Trash',
+      subLabel: 'Setting',
+      icon: 'delete-sweep',
+      role: 'admin bkpsdm,analis jabatan',
+      menu: [
+        {
+          to: '/pengajuan/trash/table',
+          label: 'Pengajuan',
+          icon: 'table-remove',
+          updateMark: false,
+          role: 'admin bkpsdm,analis jabatan',
+        },
+        {
+          to: '/syarat/pengajuan/trash/table',
+          label: 'Syarat Pengajuan',
+          icon: 'table-remove',
+          updateMark: false,
+          role: 'admin bkpsdm,analis jabatan',
+        },
+      ],
+    },
   ],
   {
     label: 'About',

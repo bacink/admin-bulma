@@ -233,6 +233,12 @@
                   </b-button>
                 </p>
               </template>
+
+              <ButtonDelete
+                :value="props.row.id"
+                action="pengajuan"
+                name="Pengajuan"
+              />
             </template>
             <template v-if="isAnalis || isBkpsdm">
               <template v-if="props.row.status === 'dikirim_skpd'">
@@ -357,13 +363,14 @@
 <script>
 import { mapState } from 'vuex'
 
+import ButtonDelete from '@/components/Button/Delete'
 import ModalForm from '@/components/Modal/FormUploadSuratPengantar.vue'
 import BtnSuratPengantar from '@/components/Form/Pengajuan/BtnSuratPengantar.vue'
 import BtnDraft from '@/components/Form/Pengajuan/BtnDraft.vue'
 import JenisJafung from '@/components/SelectOption/JenisJafung.vue'
 
 export default {
-  components: { BtnSuratPengantar, BtnDraft, JenisJafung },
+  components: { BtnSuratPengantar, BtnDraft, JenisJafung, ButtonDelete },
   filters: {
     /**
      * Filter to truncate string, accepts a length parameter
@@ -374,6 +381,7 @@ export default {
   },
   data() {
     return {
+      isLabel: true,
       data: [],
       search: '',
       total: 0,
@@ -448,6 +456,36 @@ export default {
     this.loadAsyncData()
   },
   methods: {
+    /*   confirmHapusPengajuan(idPengajuan) {
+      this.$buefy.dialog.confirm({
+        title: 'Hapus Pengajuan',
+        message:
+          'Anda yakin akan <b>menghapus</b> pengajuan ini? Pengajuan akan disimpan di <b>Trash Pengajuan.</b>',
+        confirmText: 'Delete Pengajuan',
+        type: 'is-danger',
+        hasIcon: true,
+        onConfirm: () => this.hapusPengajuan(idPengajuan),
+      })
+    },
+    hapusPengajuan(idPengajuan) {
+      this.isLoading = true
+      this.$axios
+        .delete(`/pengajuan/${idPengajuan}`)
+        .then((resp) => {
+          if (resp.data.success) {
+            this.loadAsyncData()
+            this.$buefy.toast.open({
+              message: `Success: ${resp.data.message}`,
+              type: 'is-success',
+              queue: false,
+            })
+          }
+        })
+        .catch((err) => {
+          this.isLoading = false
+          throw err
+        })
+    }, */
     updateStatus(idPengajuan, Status, Deskripsi) {
       this.isLoading = true
       this.$axios
