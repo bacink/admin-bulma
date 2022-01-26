@@ -143,17 +143,18 @@
                   <p>
                     <strong>Tunjangan :</strong>
                     <span class="has-text-right">
-                      <b-notification
-                        :type="formError.tunjangan ? 'is-danger' : ''"
+                      <template v-if="formError.tunjangan">
+                        <b-notification
+                        type="is-danger"
                         aria-close-label="Close notification"
                         role="alert"
-                      >
-                        {{
-                          formError.tunjangan
-                            ? 'Perbaiki Tunjangan di SOTK'
-                            : formData.karir_lama.tunjangan
-                        }}
-                      </b-notification>
+                        >
+                        Perbaiki Tunjangan di SOTK
+                        </b-notification>
+                      </template>
+                      <template v-else>
+                        <b-input v-model="formData.karir_lama.tunjangan">
+                      </template>
                       <b-skeleton
                         size="is-large"
                         :active="animated"
