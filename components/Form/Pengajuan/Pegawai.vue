@@ -120,17 +120,18 @@
                   <p>
                     <strong>Kelas Jabatan :</strong>
                     <span class="has-text-right">
-                      <b-notification
-                        :type="formError.kelas_jabatan ? 'is-danger' : ''"
-                        aria-close-label="Close notification"
-                        role="alert"
-                      >
-                        {{
-                          formError.kelas_jabatan
-                            ? 'Perbaiki Kelas Jabatan di SOTK'
-                            : formData.karir_lama.kelas_jabatan
-                        }}
-                      </b-notification>
+                      <template v-if="formError.kelas_jabatan">
+                        <b-notification
+                          type="is-danger"
+                          aria-close-label="Close notification"
+                          role="alert"
+                        >
+                          Perbaiki Kelas Jabatan di SOTK
+                        </b-notification>
+                      </template>
+                      <template v-else>
+                        <b-input v-model="formData.karir_lama.kelas_jabatan">
+                      </template>
                       <b-skeleton
                         size="is-large"
                         :active="animated"

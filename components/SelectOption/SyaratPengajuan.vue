@@ -1,6 +1,6 @@
 <template>
   <b-select
-    placeholder="Pilih Jenis Jafung"
+    placeholder="Pilih Syarat Pengajuan"
     :loading="isLoading"
     @input="$emit('input', $event, value)"
   >
