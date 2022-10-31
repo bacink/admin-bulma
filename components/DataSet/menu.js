@@ -19,7 +19,7 @@ const data = [
   [
     {
       to: '/pegawai/table',
-      label: 'Pegawai JFU',
+      label: 'Pegawai',
       icon: 'account',
       updateMark: false,
       role: 'admin bkpsdm,analis jabatan',

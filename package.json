@@ -19,6 +19,7 @@
     "@develoka/angka-terbilang-js": "^1.4.2",
     "@nuxtjs/auth": "^4.9.1",
     "@nuxtjs/axios": "^5.12.1",
+    "@nuxtjs/dotenv": "^1.4.1",
     "@nuxtjs/pwa": "^3.0.0",
     "@vue/composition-api": "^1.1.5",
     "buefy": "^0.9.8",

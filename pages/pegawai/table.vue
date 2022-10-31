@@ -2,7 +2,7 @@
   <section class="section is-main-section">
     <b-card
       class="has-table has-mobile-sort-spaced is-primary"
-      title="Data Surat Keputusan"
+      title="Data Pegawai"
     >
       <Pegawai />
     </b-card>

@@ -62,7 +62,7 @@ export default {
   /*
    ** Customize the progress-bar color
    */
-  loading: { color: '#fff' },
+  // loading: { color: '#fff' },
   /*
    ** Global CSS
    */
@@ -72,7 +72,10 @@ export default {
    ** https://nuxtjs.org/guide/plugins
    */
   plugins: [
-    { src: '~/plugins/after-each.js', mode: 'client' },
+    {
+      src: '~/plugins/after-each.js',
+      mode: 'client'
+    },
     '~plugins/mixins/user.js',
     '~plugins/mixins/print.js',
     '~plugins/buefyComponents.js',
@@ -84,7 +87,7 @@ export default {
    */
   // components: false,
   components: [
-    { path: '~/components/Form/Draft/Template', prefix: 'draft' }
+    // { path: '~/components/Form/Draft/Template', prefix: 'draft' }
   ],
   /*
    ** Nuxt.js dev-modules
@@ -105,13 +108,14 @@ export default {
     '@nuxtjs/axios',
     '@nuxtjs/pwa',
     '@nuxtjs/auth',
+    '@nuxtjs/dotenv',
   ],
   /*
    ** Axios module configuration
    ** See https://axios.nuxtjs.org/options
    */
   axios: {
-    baseURL: 'https://api.jafung.test/api',
+    baseURL: process.env.BASE_URL,
     proxyHeaders: false,
     credentials: false,
   },

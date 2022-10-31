@@ -31,11 +31,6 @@ export const getters = {
 }
 
 export const mutations = {
-  /* A fit-them-all commit */
-  basic(state, payload) {
-    state[payload.key] = payload.value
-  },
-
   /* User */
   user(state, payload) {
     if (payload.name) {

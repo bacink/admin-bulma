@@ -130,7 +130,9 @@
                         </b-notification>
                       </template>
                       <template v-else>
-                        <b-input v-model="formData.karir_lama.kelas_jabatan">
+                        <b-input
+                          v-model="formData.karir_lama.kelas_jabatan"
+                        ></b-input>
                       </template>
                       <b-skeleton
                         size="is-large"
@@ -145,15 +147,17 @@
                     <span class="has-text-right">
                       <template v-if="formError.tunjangan">
                         <b-notification
-                        type="is-danger"
-                        aria-close-label="Close notification"
-                        role="alert"
+                          type="is-danger"
+                          aria-close-label="Close notification"
+                          role="alert"
                         >
-                        Perbaiki Tunjangan di SOTK
+                          Perbaiki Tunjangan di SOTK
                         </b-notification>
                       </template>
                       <template v-else>
-                        <b-input v-model="formData.karir_lama.tunjangan">
+                        <b-input
+                          v-model="formData.karir_lama.tunjangan"
+                        ></b-input>
                       </template>
                       <b-skeleton
                         size="is-large"
